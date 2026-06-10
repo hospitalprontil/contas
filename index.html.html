@@ -1,0 +1,1140 @@
+<!DOCTYPE html>
+<html lang="pt-BR" class="h-full bg-slate-50">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PRONTIL - Classificador Inteligente de Custos</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        @keyframes bounce-short {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-4px); }
+        }
+        .animate-bounce-short {
+            animation: bounce-short 1.5s infinite;
+        }
+    </style>
+</head>
+<body class="flex flex-col min-h-screen text-slate-800 font-sans antialiased">
+
+    <!-- CABEÇALHO -->
+    <header class="bg-slate-900 text-white shadow-md sticky top-0 z-40">
+        <div class="max-w-7xl mx-auto px-4 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-blue-600 p-2.5 rounded-lg flex items-center justify-center shadow-lg">
+                    <i data-lucide="activity" class="h-6 w-6 text-white animate-pulse"></i>
+                </div>
+                <div>
+                    <h1 class="text-xl font-bold tracking-tight">Hospital PRONTIL</h1>
+                    <p class="text-xs text-slate-400">Classificação Inteligente de Custos</p>
+                </div>
+            </div>
+            
+            <div class="flex items-center gap-2">
+                <div id="connectionStatus" class="hidden items-center gap-2 px-3 py-1.5 rounded-lg text-xs font-semibold bg-emerald-900/50 text-emerald-400 border border-emerald-500/30">
+                    <i data-lucide="wifi" class="h-3 w-3"></i>
+                    <span>Conectado à Nuvem</span>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- ÁREA PRINCIPAL -->
+    <main class="flex-1 max-w-7xl w-full mx-auto p-4 lg:p-6 grid grid-cols-1 lg:grid-cols-12 gap-6">
+        
+        <!-- COLUNA ESQUERDA: CLASSIFICADOR (Ações e Resultados) -->
+        <div class="lg:col-span-7 flex flex-col gap-6">
+            
+            <!-- Painel de Ações -->
+            <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6">
+                <h2 class="text-lg font-bold text-slate-900 mb-2 flex items-center gap-2">
+                    <span>Classificar Itens em Lote</span>
+                    <span class="text-xs font-normal text-slate-500">(Módulos 1 a 9)</span>
+                </h2>
+                <p class="text-sm text-slate-500 mb-4">
+                    Insira a descrição dos artigos ou serviços médicos abaixo (um por linha) para obter a classificação imediata no plano de contas.
+                </p>
+
+                <div class="flex flex-col gap-4">
+                    <textarea 
+                        id="inputLote"
+                        rows="6"
+                        placeholder="Ex: Seringa Descartável Luer Lock 3ml&#10;Meropenem 1g IV&#10;Manutenção de Autoclave"
+                        class="w-full p-4 bg-slate-50 border border-slate-300 rounded-lg text-base text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors resize-y"
+                    ></textarea>
+
+                    <button
+                        onclick="handleClassify()"
+                        id="btnClassificar"
+                        class="w-full bg-blue-600 text-white font-bold py-3.5 px-6 rounded-lg shadow-md hover:bg-blue-700 disabled:bg-blue-400 flex items-center justify-center gap-2 transition-all cursor-pointer"
+                    >
+                        <span>Analisar e Classificar Lote</span>
+                        <i data-lucide="arrow-right" class="h-5 w-5"></i>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Painel de Resultados -->
+            <section class="bg-white rounded-xl shadow-sm border border-slate-200 p-5 md:p-6 flex-1 flex flex-col min-h-[300px]">
+                <h2 class="text-lg font-bold text-slate-900 mb-4 pb-3 border-b border-slate-100 flex justify-between items-center">
+                    <span>Resultado da Classificação</span>
+                    <button
+                        id="btnCopiarResultados"
+                        onclick="copyBatchClassifications()"
+                        class="hidden flex items-center gap-1.5 px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 font-semibold rounded-md text-xs transition-colors cursor-pointer"
+                    >
+                        <i data-lucide="clipboard" class="h-3.5 w-3.5"></i>
+                        <span>Copiar Todos</span>
+                    </button>
+                </h2>
+
+                <div id="resultadoLoading" class="hidden flex-1 flex flex-col items-center justify-center text-slate-400 py-12">
+                    <i data-lucide="loader-2" class="h-12 w-12 text-blue-500 animate-spin mb-4"></i>
+                    <p class="text-sm font-medium">Analisando a estrutura da despesa...</p>
+                    <p class="text-xs text-slate-400 mt-1">Isso pode levar alguns segundos.</p>
+                </div>
+
+                <div id="resultadoPronto" class="hidden flex-1 flex flex-col">
+                    <div id="resultadosContainer" class="space-y-4 overflow-y-auto max-h-[500px] pr-2">
+                        <!-- Resultados inseridos aqui -->
+                    </div>
+                </div>
+
+                <div id="resultadoVazio" class="flex-1 flex flex-col items-center justify-center text-slate-400 py-12 text-center">
+                    <i data-lucide="help-circle" class="h-16 w-16 text-slate-300 mb-3"></i>
+                    <p class="text-base font-medium text-slate-500">Nenhum item analisado nesta consulta</p>
+                    <p class="text-sm text-slate-400 max-w-sm mt-1">
+                        Insira as descrições no campo acima, uma por linha, para iniciar a auditoria do Gemini.
+                    </p>
+                </div>
+            </section>
+        </div>
+
+        <!-- COLUNA DIREITA: EXPLORADOR / HISTÓRICO -->
+        <div class="lg:col-span-5 flex flex-col gap-6">
+            
+            <!-- Navegador por Abas -->
+            <div class="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden flex flex-col h-full max-h-[700px]">
+                <div class="flex border-b border-slate-200 bg-slate-50">
+                    <button 
+                        id="tabExplorerBtn"
+                        onclick="switchTab('explorer')"
+                        class="flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-2 border-blue-600 text-blue-600 bg-white transition-colors cursor-pointer"
+                    >
+                        <i data-lucide="book-open" class="h-4 w-4"></i>
+                        <span>Explorar Contas</span>
+                    </button>
+                    <button 
+                        id="tabHistoryBtn"
+                        onclick="switchTab('history')"
+                        class="flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100/50 transition-colors cursor-pointer relative"
+                    >
+                        <i data-lucide="history" class="h-4 w-4"></i>
+                        <span>Histórico</span>
+                        <span id="historyCount" class="absolute top-1 right-2 bg-slate-200 text-slate-700 text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+                    </button>
+                    <button 
+                        id="tabGestaoBtn"
+                        onclick="switchTab('gestao')"
+                        class="flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-2 border-transparent text-rose-500 hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer relative"
+                    >
+                        <i data-lucide="shield-alert" class="h-4 w-4"></i>
+                        <span>Gestão</span>
+                        <span id="gestaoCount" class="absolute top-1 right-2 bg-rose-200 text-rose-800 text-[10px] font-bold px-1.5 py-0.5 rounded-full">0</span>
+                    </button>
+                </div>
+
+                <div class="p-4 flex-1 flex flex-col overflow-y-auto">
+                    
+                    <!-- ABA DE EXPLORAÇÃO DE CONTAS -->
+                    <div id="tabExplorer" class="flex-1 flex flex-col gap-4">
+                        <div class="relative">
+                            <i data-lucide="search" class="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-slate-400"></i>
+                            <input 
+                                type="text" 
+                                id="explorerSearch"
+                                oninput="handleSearch()"
+                                placeholder="Pesquisar no plano de contas..." 
+                                class="w-full pl-9 pr-4 py-2 text-sm bg-slate-50 border border-slate-300 rounded-lg text-slate-900 placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                        </div>
+
+                        <div id="explorerList" class="flex-1 space-y-4 overflow-y-auto max-h-[500px] pr-1">
+                            <!-- Inserido dinamicamente pelo JavaScript -->
+                        </div>
+                    </div>
+
+                    <!-- ABA DE HISTÓRICO -->
+                    <div id="tabHistory" class="hidden flex-1 flex flex-col gap-3 overflow-y-auto max-h-[550px]">
+                        <div id="historyList" class="space-y-3">
+                            <!-- Inserido dinamicamente pelo JavaScript -->
+                        </div>
+                        <div id="historyVazio" class="text-center py-12 text-slate-400 text-sm">
+                            Nenhum item classificado recentemente no sistema.
+                        </div>
+                    </div>
+
+                    <!-- ABA DE GESTÃO (DASHBOARD) -->
+                    <div id="tabGestao" class="hidden flex-1 flex flex-col gap-3 overflow-y-auto max-h-[550px]">
+                        
+                        <!-- CONFIGURAÇÕES DE API -->
+                        <div class="hidden">
+                            <div class="flex items-center justify-between">
+                                <div class="flex items-center gap-2 text-white">
+                                    <i data-lucide="key" class="h-4 w-4 text-blue-400"></i>
+                                    <h3 class="font-bold text-sm">Chave de API do Gemini</h3>
+                                </div>
+                                <span id="apiStatusTextGestao" class="text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30">Não Configurada</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <input 
+                                    type="password" 
+                                    id="tempApiKeyInput"
+                                    placeholder="Cole sua AI_STUDIO_API_KEY aqui" 
+                                    class="flex-1 px-3 py-2 text-sm rounded-md bg-slate-800 border border-slate-700 text-white placeholder-slate-500 focus:outline-none focus:border-blue-500"
+                                >
+                                <button 
+                                    onclick="saveSettings()" 
+                                    class="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-bold rounded-md transition-colors cursor-pointer shadow-sm"
+                                >
+                                    Salvar
+                                </button>
+                            </div>
+                            <p class="text-[10px] text-slate-400 mt-1">A chave é salva apenas neste navegador. Cada departamento deve inserir a sua própria chave ou a chave corporativa.</p>
+                        </div>
+
+                        <div class="bg-rose-50 border border-rose-200 rounded-lg p-3 mt-2 mb-2 flex gap-2">
+                            <i data-lucide="shield-alert" class="h-5 w-5 text-rose-600 shrink-0"></i>
+                            <p class="text-xs text-rose-800">Itens reportados por toda a rede que precisam de revisão manual da auditoria ou criação de nova conta no sistema.</p>
+                        </div>
+                        <div id="gestaoList" class="space-y-3">
+                            <!-- Inserido dinamicamente pelo JavaScript -->
+                        </div>
+                        <div id="gestaoVazio" class="text-center py-12 text-slate-400 text-sm">
+                            Nenhuma falha pendente de análise. Ótimo trabalho!
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- RODAPÉ -->
+    <footer class="bg-white border-t border-slate-200 text-center py-4 text-xs text-slate-400 mt-6">
+        <p>© 2026 Hospital PRONTIL. Conectado em Nuvem para todos os departamentos.</p>
+    </footer>
+
+    <!-- TOAST NOTIFICATION -->
+    <div id="toast" class="fixed bottom-6 right-6 z-50 hidden flex items-center gap-3 px-4 py-3.5 rounded-lg shadow-xl border bg-slate-900 border-slate-800 text-white">
+        <i id="toastIcon" data-lucide="alert-circle" class="h-5 w-5"></i>
+        <span id="toastMessage" class="text-sm font-semibold">Mensagem de teste</span>
+    </div>
+
+    <!-- JAVASCRIPT DO SISTEMA COM FIREBASE -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, collection, addDoc, onSnapshot, doc, deleteDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        // Dados Estruturados do Plano de Contas
+        const PLANO_DE_CONTAS = [
+            {
+                modulo: "MÓDULO 1 – MEDICAMENTOS (OPEX – PRODUTO)",
+                contas: [
+                    "1.1 Antibióticos e Antimicrobianos",
+                    "1.2 Anestésicos, Sedativos e Controlados",
+                    "1.3 Psicotrópicos / Controlados",
+                    "1.4 Soluções Parenterais, Diluentes e Eletrólitos",
+                    "1.5 Gases Medicinais",
+                    "1.6 Cardiovasculares e Respiratórios",
+                    "1.7 Medicamentos Especiais, Alto Custo e Imunobiológicos",
+                    "1.8 Endócrino / Hematologia",
+                    "1.9 Gastrointestinais",
+                    "1.10 Medicamentos de Uso Geral e Sintomáticos",
+                    "1.11 Medicamentos Tópicos e Cuidados de Pele",
+                    "1.12 Não Padronizados"
+                ]
+            },
+            {
+                modulo: "MÓDULO 2 – MATERIAL HOSPITALAR (OPEX – PRODUTO)",
+                contas: [
+                    "2.1 Descartáveis / Alto Giro Assistencial",
+                    "2.2 Acessórios de Equipamentos Médicos",
+                    "2.3 Materiais Respiratórios, Aspiração e Cateteres",
+                    "2.4 OPME",
+                    "2.5 Insumos de Esterilização e Consumíveis de CME",
+                    "2.6 Testes Rápidos / Reagentes / Kits de Laboratório",
+                    "2.7 Bens Duráveis de Pequeno Valor",
+                    "2.8 Curativos, Coberturas e Hemostáticos",
+                    "2.9 Fios Cirúrgicos",
+                    "2.10 Materiais Cirúrgicos",
+                    "2.11 Materiais de Infusão e Acesso Vascular",
+                    "2.12 Sondas Diversas"
+                ]
+            },
+            {
+                modulo: "MÓDULO 3 – NUTRIÇÃO / SND (OPEX – PRODUTO)",
+                contas: [
+                    "3.1 Dietas e Suplementos Industrializados",
+                    "3.2 Gêneros Alimentícios (Perecíveis e Secos / Cozinha e Refeitório)",
+                    "3.3 Utensílios de Cozinha e Refeitório",
+                    "3.4 Descartáveis e Embalagens de Cozinha"
+                ]
+            },
+            {
+                modulo: "MÓDULO 4 – INFRAESTRUTURA E MANUTENÇÃO (OPEX – PRODUTO)",
+                contas: [
+                    "4.1 Peças e Componentes de Reposição para Equipamentos Médicos",
+                    "4.2 Peças e Conexões de Reposição Predial Diária",
+                    "4.3 Materiais de Construção e Acabamento",
+                    "4.4 Insumos e Materiais de Apoio à Infraestrutura",
+                    "4.5 Ferramentas e Utensílios Manuais",
+                    "4.6 Combustíveis, Aditivos e Óleos Lubrificantes"
+                ]
+            },
+            {
+                modulo: "MÓDULO 5 – HIGIENE, HOTELARIA E ADMINISTRATIVO (OPEX – PRODUTO)",
+                contas: [
+                    "5.1 Materiais de Limpeza, Higienização e Saneantes Hospitalares",
+                    "5.2 Enxoval, Encapamentos e Hotelaria de Leito",
+                    "5.3 Brinquedoteca, Humanização e Recreação",
+                    "5.4 Material de Escritório e Apoio Operacional",
+                    "5.5 Impressos Padronizados e Formulários",
+                    "5.6 Consumo de Apoio e Copa Geral",
+                    "5.7 Material de Informática"
+                ]
+            },
+            {
+                modulo: "MÓDULO 6 – PESSOAL, ENCARGOS E RH (OPEX – DESPESA)",
+                contas: [
+                    "6.1 Uniformes, Enxoval Profissional e Vestuários",
+                    "6.2 EPIs",
+                    "6.3 Benefícios de Pessoal",
+                    "6.4 Eventos e Programas Institucionais",
+                    "6.5 Folha de Pagamento, Encargos Sociais e Obrigações Trabalhistas",
+                    "6.6 Treinamento, Educação Continuada e Desenvolvimento",
+                    "6.7 Medicina e Segurança do Trabalho"
+                ]
+            },
+            {
+                modulo: "MÓDULO 7 – SERVIÇOS DE TERCEIROS, TAXAS E CONTRATOS",
+                contas: [
+                    "7.1 Corpo Clínico e Honorários Médicos",
+                    "7.2 Serviços Assistenciais Terceirizados",
+                    "7.3 Serviços de Apoio Logístico / Hoteleiro",
+                    "7.4 Contratos de Equipamentos, Manutenção e Calibração",
+                    "7.5 Serviços de Pequenos Reparos e Consertos Prediais Diários",
+                    "7.6 Mão de Obra de Engenharia, Reformas Estruturais e Empreitadas",
+                    "7.7 Sistemas de Gestão, Licenças de Software",
+                    "7.8 Utilidades Básicas e Telecomunicações",
+                    "7.9 Marketing, Publicidade e Comunicação",
+                    "7.10 Recrutamento, Seleção e Mão de Obra Temporária",
+                    "7.11 Serviços Administrativos e Profissionais Especializados",
+                    "7.12 Serviços Diagnósticos Externos"
+                ]
+            },
+            {
+                modulo: "MÓDULO 8 – INVESTIMENTOS / CAPEX",
+                contas: [
+                    "8.1 Equipamentos Médicos e Hospitalares",
+                    "8.2 Instrumental Cirúrgico Reutilizável e Caixas Cirúrgicas",
+                    "8.3 Mobiliário, Utensílios e Infraestrutura Não Assistencial",
+                    "8.4 T.I. e Hardware",
+                    "8.5 Infraestrutura Predial e Obras"
+                ]
+            },
+            {
+                modulo: "MÓDULO 9 – FINANCEIRO, TRIBUTÁRIO E SOCIETÁRIO",
+                contas: [
+                    "9.1 Despesas Financeiras",
+                    "9.2 Empréstimos e Financiamentos",
+                    "9.3 Tributos e Obrigações Governamentais",
+                    "9.4 Retenções Tributárias",
+                    "9.5 Seguros Corporativos",
+                    "9.6 Eventos Societários e Distribuição de Resultados",
+                    "9.7 Contingências, Processos e Acordos Judiciais",
+                    "9.8 Ajustes Contábeis e Exceções"
+                ]
+            }
+        ];
+
+        // Estado Geral do Aplicativo
+        const state = {
+            apiKey: 'AQ.Ab8RN6IzjijvlqpubLotqBclO5B6VJ8l3PRPaFfu_NJ2k5J47g',
+            loading: false,
+            activeTab: 'explorer',
+            history: [],
+            classification: null,
+            currentBatch: [],
+            reportedFailures: [],
+            gestaoAuthenticated: false, // Controle de acesso
+            db: null,
+            appId: 'hospitaclass-default'
+        };
+
+        // ==========================================
+        // INICIALIZAÇÃO FIREBASE (A NUVEM)
+        // ==========================================
+        let firebaseConfig;
+        if (typeof __firebase_config !== 'undefined') {
+            // Ambiente do Canvas
+            firebaseConfig = JSON.parse(__firebase_config);
+            state.appId = typeof __app_id !== 'undefined' ? __app_id : state.appId;
+        } else {
+
+firebaseConfig = {
+  apiKey: "AIzaSyCDzbDhQ3Fgi_JzpCoUOcDokaSyohX1Qgs",
+  authDomain: "plano-de-contas-8c8cd.firebaseapp.com",
+  projectId: "plano-de-contas-8c8cd",
+  storageBucket: "plano-de-contas-8c8cd.firebasestorage.app",
+  messagingSenderId: "734002260923",
+  appId: "1:734002260923:web:f5e457083c0e4bccdb729e"
+};
+
+
+
+        }
+
+        let app, auth, db;
+        
+        // Só inicializa se houver configuração
+        if (Object.keys(firebaseConfig).length > 0) {
+            app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            state.db = db;
+        }
+
+        window.addEventListener('load', async () => {
+            // Carrega a chave de API do Gemini (Isso continua LOCAL por máquina)
+            document.getElementById('tempApiKeyInput').value = state.apiKey; updateApiButtonUI(true);
+
+            // Renderiza o explorador de contas vazio
+            renderExplorer();
+            lucide.createIcons();
+
+            // Configura o Firebase e Listeners
+            if (auth && db) {
+                try {
+                    if (typeof __initial_auth_token !== 'undefined' && __initial_auth_token) {
+                        await signInWithCustomToken(auth, __initial_auth_token);
+                    } else {
+                        await signInAnonymously(auth);
+                    }
+                    
+                    onAuthStateChanged(auth, (user) => {
+                        if (!user) return;
+                        
+                        document.getElementById('connectionStatus').classList.remove('hidden');
+                        document.getElementById('connectionStatus').classList.add('flex');
+                        
+                        setupFirebaseListeners();
+                    });
+                } catch (e) {
+                    console.error("Erro ao autenticar no Firebase:", e);
+                }
+            } else {
+                console.warn("Firebase não configurado. As abas de Histórico e Gestão não vão sincronizar.");
+            }
+        });
+
+        function setupFirebaseListeners() {
+            const historyRef = collection(db, 'artifacts', state.appId, 'public', 'data', 'history');
+            const failuresRef = collection(db, 'artifacts', state.appId, 'public', 'data', 'failures');
+
+            // Escuta o histórico em tempo real
+            onSnapshot(historyRef, (snapshot) => {
+                const hist = [];
+                snapshot.forEach(doc => hist.push({ docId: doc.id, ...doc.data() }));
+                // Ordena por data mais recente
+                hist.sort((a, b) => b.timestamp - a.timestamp);
+                
+                state.history = hist;
+                updateHistoryCountUI();
+                if (state.activeTab === 'history') renderHistory();
+            }, (error) => {
+                console.error("Erro ao ler histórico:", error);
+            });
+
+            // Escuta as falhas reportadas em tempo real
+            onSnapshot(failuresRef, (snapshot) => {
+                const fails = [];
+                snapshot.forEach(doc => fails.push({ docId: doc.id, ...doc.data() }));
+                // Ordena por data mais recente
+                fails.sort((a, b) => b.timestamp - a.timestamp);
+                
+                state.reportedFailures = fails;
+                updateGestaoCountUI();
+                if (state.activeTab === 'gestao') renderGestao();
+            }, (error) => {
+                console.error("Erro ao ler falhas:", error);
+            });
+        }
+
+        // ==========================================
+        // EXPORTANDO FUNÇÕES PARA O HTML
+        // ==========================================
+        // Como o script agora é "module", precisamos anexar as funções ao window
+        window.switchTab = switchTab;
+        window.saveSettings = saveSettings;
+        window.handleSearch = handleSearch;
+        window.handleClassify = handleClassify;
+        window.copyBatchClassifications = copyBatchClassifications;
+        window.copyText = copyText;
+        window.reviewItem = reviewItem;
+        window.acceptReview = acceptReview;
+        window.rejectReview = rejectReview;
+        window.reportFailure = reportFailure;
+        window.resolveFailure = resolveFailure;
+
+
+        // Alterna a exibição das Abas
+        function switchTab(tab) {
+            // TRAVA DA ABA GESTÃO
+            if (tab === 'gestao' && !state.gestaoAuthenticated) {
+                const senha = prompt("Acesso Restrito. Digite a senha da Gestão:");
+                if (senha !== "admin") { // Senha configurada
+                    showToast("Senha incorreta! Acesso negado.", "error");
+                    return; 
+                }
+                state.gestaoAuthenticated = true;
+                showToast("Acesso liberado à Gestão.", "success");
+            }
+
+            state.activeTab = tab;
+            const btnExplorer = document.getElementById('tabExplorerBtn');
+            const btnHistory = document.getElementById('tabHistoryBtn');
+            const btnGestao = document.getElementById('tabGestaoBtn');
+            
+            const viewExplorer = document.getElementById('tabExplorer');
+            const viewHistory = document.getElementById('tabHistory');
+            const viewGestao = document.getElementById('tabGestao');
+
+            // Reset estilos
+            btnExplorer.className = "flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100/50 transition-colors cursor-pointer";
+            btnHistory.className = "flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-2 border-transparent text-slate-500 hover:text-slate-900 hover:bg-slate-100/50 transition-colors cursor-pointer relative";
+            btnGestao.className = "flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-2 border-transparent text-rose-400 hover:text-rose-700 hover:bg-rose-50 transition-colors cursor-pointer relative";
+            
+            viewExplorer.classList.add('hidden');
+            viewHistory.classList.add('hidden');
+            viewGestao.classList.add('hidden');
+
+            if (tab === 'explorer') {
+                btnExplorer.className = "flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-2 border-blue-600 text-blue-600 bg-white transition-colors cursor-pointer";
+                viewExplorer.classList.remove('hidden');
+            } else if (tab === 'history') {
+                btnHistory.className = "flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-2 border-blue-600 text-blue-600 bg-white transition-colors cursor-pointer relative";
+                viewHistory.classList.remove('hidden');
+                renderHistory();
+            } else if (tab === 'gestao') {
+                btnGestao.className = "flex-1 py-3 text-sm font-bold flex items-center justify-center gap-2 border-b-2 border-rose-600 text-rose-600 bg-white transition-colors cursor-pointer relative";
+                viewGestao.classList.remove('hidden');
+                renderGestao();
+            }
+        }
+
+        // Salva a chave de API
+        function saveSettings() {
+            const inputVal = document.getElementById('tempApiKeyInput').value.trim();
+            if (!inputVal) {
+                showToast('Chave de API inválida!', 'error');
+                return;
+            }
+
+            state.apiKey = inputVal;
+            localStorage.setItem('hospitaClass_apiKey', inputVal);
+            updateApiButtonUI(true);
+            showToast('Chave de API configurada com sucesso!', 'success');
+        }
+
+        // Atualiza o aspeto do status da API na Gestão
+        function updateApiButtonUI(isActive) {
+            const txt = document.getElementById('apiStatusTextGestao');
+            if (!txt) return;
+
+            if (isActive) {
+                txt.className = "text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30";
+                txt.innerText = "Conectada";
+            } else {
+                txt.className = "text-[10px] font-bold uppercase tracking-wider px-2 py-1 rounded bg-amber-500/20 text-amber-400 border border-amber-500/30";
+                txt.innerText = "Não Configurada";
+            }
+        }
+
+        // Exibe Toasts Dinâmicos (Substitutos ideais de alerts)
+        function showToast(message, type = 'info') {
+            const toast = document.getElementById('toast');
+            const toastIcon = document.getElementById('toastIcon');
+            const toastMsg = document.getElementById('toastMessage');
+
+            toastMsg.innerText = message;
+            toast.className = "fixed bottom-6 right-6 z-50 flex items-center gap-3 px-4 py-3.5 rounded-lg shadow-xl border animate-bounce-short bg-slate-900 border-slate-800 text-white";
+
+            if (type === 'success') {
+                toastIcon.setAttribute('data-lucide', 'check');
+                toastIcon.className = "h-5 w-5 text-emerald-400";
+            } else if (type === 'error') {
+                toastIcon.setAttribute('data-lucide', 'alert-circle');
+                toastIcon.className = "h-5 w-5 text-rose-500";
+            } else {
+                toastIcon.setAttribute('data-lucide', 'info');
+                toastIcon.className = "h-5 w-5 text-amber-400";
+            }
+
+            lucide.createIcons();
+            toast.classList.remove('hidden');
+
+            setTimeout(() => {
+                toast.classList.add('hidden');
+            }, 4000);
+        }
+
+        // Copia todos os resultados
+        function copyBatchClassifications() {
+            if (!state.classification || !Array.isArray(state.classification)) return;
+            
+            const textToCopy = state.classification.map(item => 
+                `Item: ${item.item_original}\nClassificação: ${item.conta_selecionada}\nJustificativa: ${item.justificativa}\n`
+            ).join('\n');
+            
+            copyText(textToCopy);
+        }
+
+        // Função interna para cópia de dados
+        function copyText(text) {
+            const dummy = document.createElement("textarea");
+            document.body.appendChild(dummy);
+            dummy.value = text;
+            dummy.select();
+            document.execCommand("copy");
+            document.body.removeChild(dummy);
+            showToast('Copiado para a área de transferência!', 'success');
+        }
+
+        // Processa a pesquisa e filtragem na lista do Plano de Contas
+        function handleSearch() {
+            const q = document.getElementById('explorerSearch').value.toLowerCase();
+            renderExplorer(q);
+        }
+
+        // Renderiza a lista de Módulos e Contas filtrada
+        function renderExplorer(query = '') {
+            const listContainer = document.getElementById('explorerList');
+            listContainer.innerHTML = '';
+
+            const filtered = PLANO_DE_CONTAS.map(modulo => {
+                const contasFiltradas = modulo.contas.filter(conta => 
+                    conta.toLowerCase().includes(query) || 
+                    modulo.modulo.toLowerCase().includes(query)
+                );
+                return { ...modulo, contas: contasFiltradas };
+            }).filter(modulo => modulo.contas.length > 0);
+
+            if (filtered.length === 0) {
+                listContainer.innerHTML = `<div class="text-center py-12 text-slate-400 text-sm">Nenhuma conta encontrada com o termo "${query}".</div>`;
+                return;
+            }
+
+            filtered.forEach((modulo, mIdx) => {
+                const modCard = document.createElement('div');
+                modCard.className = "border border-slate-200/80 rounded-lg p-3 bg-slate-50/50";
+                
+                const modHeader = document.createElement('h4');
+                modHeader.className = "text-xs font-bold text-slate-500 uppercase tracking-wider mb-2";
+                modHeader.innerText = modulo.modulo;
+                modCard.appendChild(modHeader);
+
+                const list = document.createElement('ul');
+                list.className = "space-y-1.5";
+
+                modulo.contas.forEach((conta, cIdx) => {
+                    const cleanName = conta.replace(/^\d+\.\d+\s+/, '');
+                    const li = document.createElement('li');
+                    li.className = "text-xs font-medium text-slate-700 bg-white border border-slate-200 p-2 rounded transition-colors flex items-center justify-between";
+                    li.innerHTML = `
+                        <span>${conta}</span>
+                    `;
+                    list.appendChild(li);
+                });
+
+                modCard.appendChild(list);
+                listContainer.appendChild(modCard);
+            });
+        }
+
+        // Renderiza a lista de histórico de auditoria
+        function renderHistory() {
+            const listContainer = document.getElementById('historyList');
+            const vazioMsg = document.getElementById('historyVazio');
+            listContainer.innerHTML = '';
+
+            if (state.history.length === 0) {
+                vazioMsg.classList.remove('hidden');
+                return;
+            }
+
+            vazioMsg.classList.add('hidden');
+
+            state.history.forEach(record => {
+                const card = document.createElement('div');
+                card.className = "p-3 border border-slate-200 rounded-lg hover:border-blue-300 bg-slate-50 hover:bg-white transition-all relative flex flex-col gap-2";
+                
+                card.innerHTML = `
+                    <div class="flex items-start justify-between pr-8">
+                        <div>
+                            <span class="text-[10px] text-slate-400 font-semibold">${record.data}</span>
+                            <h4 class="text-sm font-bold text-slate-800">${record.item}</h4>
+                        </div>
+                        <button 
+                            onclick="copyText('${record.conta}')"
+                            class="absolute right-3 top-3 p-1.5 text-slate-400 hover:text-blue-600 rounded hover:bg-slate-100 transition-colors cursor-pointer"
+                            title="Copiar Conta"
+                        >
+                            <i data-lucide="clipboard" class="h-4 w-4"></i>
+                        </button>
+                    </div>
+                    <div class="text-xs font-semibold bg-blue-50 text-blue-800 border border-blue-200 p-1.5 rounded">
+                        ${record.conta}
+                    </div>
+                    <p class="text-[11px] text-slate-500 italic">
+                        "${record.justificativa}"
+                    </p>
+                `;
+                listContainer.appendChild(card);
+            });
+
+            lucide.createIcons();
+        }
+
+        function updateHistoryCountUI() {
+            let count = state.history.length;
+            document.getElementById('historyCount').innerText = count > 99 ? '99+' : count;
+        }
+
+        // Algoritmo de retry com Backoff Exponencial para lidar com picos na rede ou throttling da API
+        async function fetchWithRetry(url, options, maxRetries = 5) {
+            let delay = 1000;
+            for (let i = 0; i < maxRetries; i++) {
+                try {
+                    const response = await fetch(url, options);
+                    if (response.ok) return response;
+                    
+                    if (response.status === 429 || (response.status >= 500 && response.status < 600)) {
+                        if (i === maxRetries - 1) throw new Error(`Falha após ${maxRetries} tentativas de comunicação. Código: ${response.status}`);
+                        await new Promise(resolve => setTimeout(resolve, delay));
+                        delay *= 2; 
+                        continue;
+                    }
+                    return response;
+                } catch (error) {
+                    if (i === maxRetries - 1) throw error;
+                    await new Promise(resolve => setTimeout(resolve, delay));
+                    delay *= 2;
+                }
+            }
+        }
+
+        // Executa a classificação inteligente via Gemini API
+        async function handleClassify() {
+            const inputVal = document.getElementById('inputLote').value.trim();
+            const linhas = inputVal.split('\n').map(l => l.trim()).filter(l => l.length > 0);
+
+            if (!state.apiKey) {
+                showToast('Acesse a aba "Gestão" para configurar sua chave de API do Gemini!', 'warning');
+                return;
+            }
+
+            if (linhas.length === 0) {
+                showToast('Por favor, insira ao menos um item no lote.', 'warning');
+                return;
+            }
+
+            state.loading = true;
+            document.getElementById('btnClassificar').disabled = true;
+            document.getElementById('btnClassificar').innerHTML = `<i data-lucide="loader-2" class="h-5 w-5 animate-spin"></i><span>Analisando com o Gemini...</span>`;
+            lucide.createIcons();
+
+            document.getElementById('resultadoVazio').classList.add('hidden');
+            document.getElementById('resultadoPronto').classList.add('hidden');
+            document.getElementById('btnCopiarResultados').classList.add('hidden');
+            document.getElementById('resultadoLoading').classList.remove('hidden');
+
+            const planoTexto = PLANO_DE_CONTAS.map(mod => {
+                return `${mod.modulo}\n${mod.contas.map(c => ` - ${c}`).join('\n')}`;
+            }).join('\n\n');
+
+            const promptSystem = `Você é um robô classificador de despesas hospitalares extremamente rigoroso.
+Sua tarefa é ler uma lista de "Descrições de Artigos/Serviços" e encaixar cada um de forma perfeita e sem desvios dentro de uma das subcontas do "Plano de Contas Hospitalar" fornecido.
+
+REGRAS DE CLASSIFICAÇÃO:
+1. Escolha a subconta exata (ex: "1.1 Antibióticos e Antimicrobianos", "7.7 Sistemas de Gestão, Licenças de Software").
+2. Garanta a correta distinção entre:
+   - OPEX Produto (Medicamentos, Materiais, Nutrição, Infraestrutura, Higiene)
+   - OPEX Despesa (Pessoal, RH)
+   - Serviços de Terceiros e Contratos (Módulo 7)
+   - CAPEX / Investimento (Bens de valor relevante e permanente - Módulo 8)
+3. Forneça uma justificativa analítica em português do Brasil explicando de forma técnica e objetiva sua escolha.`;
+
+            const userPrompt = `Classifique os seguintes itens:\n${linhas.map((l, i) => `${i + 1}. ${l}`).join('\n')}
+
+Plano de Contas de Referência:
+${planoTexto}`;
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${state.apiKey}`;
+
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: promptSystem }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "ARRAY",
+                        items: {
+                            type: "OBJECT",
+                            properties: {
+                                item_original: { type: "STRING" },
+                                conta_selecionada: { type: "STRING" },
+                                justificativa: { type: "STRING" }
+                            },
+                            required: ["item_original", "conta_selecionada", "justificativa"]
+                        }
+                    }
+                }
+            };
+
+            try {
+                const response = await fetchWithRetry(url, {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(payload)
+                });
+
+                const responseData = await response.json();
+
+                if (!response.ok) {
+                    throw new Error(responseData.error?.message || 'Falha de comunicação com a API do Gemini.');
+                }
+
+                const rawText = responseData.candidates?.[0]?.content?.parts?.[0]?.text;
+                if (rawText) {
+                    const parsedResult = JSON.parse(rawText);
+                    
+                    state.currentBatch = parsedResult.map(res => ({
+                        id: crypto.randomUUID(),
+                        item_original: res.item_original,
+                        conta_selecionada: res.conta_selecionada,
+                        justificativa: res.justificativa,
+                        reviewState: 'none',
+                        reviewSuggestion: null
+                    }));
+
+                    state.classification = state.currentBatch;
+                    renderBatchResults();
+                    
+                    document.getElementById('resultadoLoading').classList.add('hidden');
+                    document.getElementById('resultadoPronto').classList.remove('hidden');
+                    document.getElementById('btnCopiarResultados').classList.remove('hidden');
+
+                    const dateNow = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+                    
+                    // Salvando na Nuvem (Firebase Firestore)
+                    if (state.db) {
+                        const historyRef = collection(state.db, 'artifacts', state.appId, 'public', 'data', 'history');
+                        // Invertemos para gravar e visualizar cronologicamente correto
+                        for (const res of state.currentBatch.slice().reverse()) {
+                            await addDoc(historyRef, {
+                                item: res.item_original,
+                                conta: res.conta_selecionada,
+                                justificativa: res.justificativa,
+                                data: dateNow,
+                                timestamp: Date.now()
+                            });
+                        }
+                    }
+
+                    showToast('Lote classificado com sucesso!', 'success');
+                } else {
+                    throw new Error('A API retornou uma resposta sem conteúdo utilizável.');
+                }
+            } catch (error) {
+                console.error(error);
+                document.getElementById('resultadoLoading').classList.add('hidden');
+                document.getElementById('resultadoVazio').classList.remove('hidden');
+                showToast(error.message || 'Erro ao processar classificação.', 'error');
+            } finally {
+                state.loading = false;
+                document.getElementById('btnClassificar').disabled = false;
+                document.getElementById('btnClassificar').innerHTML = `<span>Analisar e Classificar Lote</span><i data-lucide="arrow-right" class="h-5 w-5"></i>`;
+                lucide.createIcons();
+            }
+        }
+
+        // ==========================================
+        // FLUXO DE REVISÃO E GOVERNANÇA (GESTÃO)
+        // ==========================================
+
+        function renderBatchResults() {
+            const container = document.getElementById('resultadosContainer');
+            
+            container.innerHTML = state.currentBatch.map(res => {
+                let reviewFooterHTML = '';
+                
+                if (res.reviewState === 'none') {
+                    reviewFooterHTML = `
+                        <button onclick="reviewItem('${res.id}')" class="flex items-center gap-1.5 text-xs font-semibold text-slate-500 hover:text-blue-600 bg-white border border-slate-200 hover:border-blue-300 px-3 py-1.5 rounded transition-colors cursor-pointer">
+                            <i data-lucide="refresh-cw" class="h-3.5 w-3.5"></i>
+                            Revisar Classificação
+                        </button>
+                    `;
+                } else if (res.reviewState === 'loading') {
+                    reviewFooterHTML = `
+                        <div class="flex items-center gap-2 text-xs font-semibold text-blue-600 bg-blue-50 px-3 py-1.5 rounded border border-blue-100">
+                            <i data-lucide="loader-2" class="h-3.5 w-3.5 animate-spin"></i>
+                            Auditando novamente...
+                        </div>
+                    `;
+                } else if (res.reviewState === 'different') {
+                    reviewFooterHTML = `
+                        <div class="w-full bg-amber-50 border border-amber-200 p-3 rounded-lg flex flex-col gap-2">
+                            <div class="flex items-start gap-2">
+                                <i data-lucide="lightbulb" class="h-4 w-4 text-amber-500 mt-0.5 shrink-0"></i>
+                                <div>
+                                    <span class="text-xs font-bold text-amber-800 block">Nova Sugestão da IA:</span>
+                                    <span class="text-sm font-semibold text-slate-900">${res.reviewSuggestion.conta_selecionada}</span>
+                                    <p class="text-[11px] text-slate-600 italic mt-0.5">"${res.reviewSuggestion.justificativa}"</p>
+                                </div>
+                            </div>
+                            <div class="flex gap-2 mt-1">
+                                <button onclick="acceptReview('${res.id}')" class="flex-1 bg-amber-500 hover:bg-amber-600 text-white text-xs font-bold py-1.5 rounded cursor-pointer transition-colors shadow-sm">Aceitar Nova Sugestão</button>
+                                <button onclick="rejectReview('${res.id}')" class="flex-1 bg-white border border-amber-300 text-amber-700 hover:bg-amber-100 text-xs font-bold py-1.5 rounded cursor-pointer transition-colors shadow-sm">Manter Original</button>
+                            </div>
+                        </div>
+                    `;
+                } else if (res.reviewState === 'same') {
+                    reviewFooterHTML = `
+                        <div class="w-full bg-slate-100 border border-slate-200 p-3 rounded-lg flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                            <div class="flex items-center gap-2">
+                                <i data-lucide="check-circle-2" class="h-4 w-4 text-slate-500 shrink-0"></i>
+                                <span class="text-xs font-semibold text-slate-700">A IA revisou e garante a mesma categoria.</span>
+                            </div>
+                            <button onclick="reportFailure('${res.id}')" class="flex items-center justify-center gap-1.5 text-xs font-bold text-white bg-rose-500 hover:bg-rose-600 shadow-sm px-3 py-1.5 rounded transition-colors cursor-pointer shrink-0">
+                                <i data-lucide="flag" class="h-3.5 w-3.5"></i>
+                                Discordar e Reportar
+                            </button>
+                        </div>
+                    `;
+                } else if (res.reviewState === 'accepted') {
+                    reviewFooterHTML = `
+                        <div class="flex items-center gap-2 text-xs font-semibold text-emerald-600 bg-emerald-50 px-3 py-1.5 rounded border border-emerald-100">
+                            <i data-lucide="check" class="h-3.5 w-3.5"></i>
+                            Nova sugestão aceita
+                        </div>
+                    `;
+                } else if (res.reviewState === 'reported') {
+                    reviewFooterHTML = `
+                        <div class="flex items-center gap-2 text-xs font-semibold text-rose-600 bg-rose-50 px-3 py-1.5 rounded border border-rose-100">
+                            <i data-lucide="shield-alert" class="h-3.5 w-3.5"></i>
+                            Enviado para análise da Gestão
+                        </div>
+                    `;
+                }
+
+                return `
+                    <div class="space-y-3 bg-white border border-slate-200 rounded-xl p-4 shadow-sm mb-4 transition-all">
+                        <div class="border-b border-slate-100 pb-2 mb-2 flex justify-between items-center">
+                            <div>
+                                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Item Analisado</span>
+                                <h4 class="text-sm font-bold text-slate-800">${res.item_original}</h4>
+                            </div>
+                        </div>
+                        
+                        <div class="bg-blue-50 border border-blue-200/60 rounded-lg p-3">
+                            <span class="text-[10px] font-bold text-blue-600 uppercase tracking-wider block mb-1">Conta Classificada</span>
+                            <div class="text-sm font-bold text-slate-900 leading-tight">
+                                ${res.conta_selecionada}
+                            </div>
+                        </div>
+
+                        <div class="bg-slate-50 border border-slate-200 p-3 rounded-lg">
+                            <h5 class="text-[10px] font-bold text-slate-500 uppercase tracking-wider flex items-center gap-1 mb-1">
+                                <i data-lucide="info" class="h-3 w-3 text-blue-500"></i>
+                                Justificativa Técnica
+                            </h5>
+                            <p class="text-slate-600 text-xs leading-relaxed italic">
+                                "${res.justificativa}"
+                            </p>
+                        </div>
+                        
+                        <div class="pt-2 mt-2 border-t border-slate-100">
+                            ${reviewFooterHTML}
+                        </div>
+                    </div>
+                `;
+            }).join('');
+            
+            lucide.createIcons();
+        }
+
+        async function reviewItem(id) {
+            const item = state.currentBatch.find(i => i.id === id);
+            if (!item) return;
+
+            item.reviewState = 'loading';
+            renderBatchResults();
+
+            const planoTexto = PLANO_DE_CONTAS.map(mod => `${mod.modulo}\n${mod.contas.map(c => ` - ${c}`).join('\n')}`).join('\n\n');
+            const promptSystem = `Você é um Auditor Sênior Master. Você está fazendo a segunda revisão de uma despesa.
+Se a classificação inicial feita estiver 100% correta, retorne exatamente a mesma categoria.
+Se houver qualquer outra categoria do Plano de Contas que se encaixe melhor, retorne a nova. Forneça justificativa rigorosa.`;
+            
+            const userPrompt = `Reavalie este item:\nDescrição: "${item.item_original}"\nClassificação Atual: "${item.conta_selecionada}"\n\nPlano de Contas:\n${planoTexto}`;
+
+            const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent?key=${state.apiKey}`;
+            const payload = {
+                contents: [{ parts: [{ text: userPrompt }] }],
+                systemInstruction: { parts: [{ text: promptSystem }] },
+                generationConfig: {
+                    responseMimeType: "application/json",
+                    responseSchema: {
+                        type: "OBJECT",
+                        properties: {
+                            conta_selecionada: { type: "STRING" },
+                            justificativa: { type: "STRING" }
+                        },
+                        required: ["conta_selecionada", "justificativa"]
+                    }
+                }
+            };
+
+            try {
+                const response = await fetchWithRetry(url, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify(payload) });
+                const data = await response.json();
+                
+                if (!response.ok) throw new Error(data.error?.message || 'Erro na revisão');
+                
+                const reviewResult = JSON.parse(data.candidates[0].content.parts[0].text);
+
+                if (reviewResult.conta_selecionada.trim() === item.conta_selecionada.trim()) {
+                    item.reviewState = 'same';
+                } else {
+                    item.reviewState = 'different';
+                    item.reviewSuggestion = reviewResult;
+                }
+            } catch (error) {
+                item.reviewState = 'none'; 
+                showToast('Falha ao revisar.', 'error');
+            }
+            renderBatchResults();
+        }
+
+        function acceptReview(id) {
+            const item = state.currentBatch.find(i => i.id === id);
+            if (!item || !item.reviewSuggestion) return;
+            item.conta_selecionada = item.reviewSuggestion.conta_selecionada;
+            item.justificativa = item.reviewSuggestion.justificativa;
+            item.reviewState = 'accepted';
+            item.reviewSuggestion = null;
+            renderBatchResults();
+            showToast('Sugestão aplicada com sucesso.', 'success');
+        }
+
+        function rejectReview(id) {
+            const item = state.currentBatch.find(i => i.id === id);
+            if (!item) return;
+            item.reviewState = 'none'; 
+            item.reviewSuggestion = null;
+            renderBatchResults();
+        }
+
+        async function reportFailure(id) {
+            const item = state.currentBatch.find(i => i.id === id);
+            if (!item) return;
+
+            item.reviewState = 'reported';
+            renderBatchResults();
+
+            const dateNow = new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            
+            // Salvando a falha na nuvem (Firebase Firestore)
+            if (state.db) {
+                try {
+                    const failuresRef = collection(state.db, 'artifacts', state.appId, 'public', 'data', 'failures');
+                    await addDoc(failuresRef, {
+                        item: item.item_original,
+                        conta_rejeitada: item.conta_selecionada,
+                        data: new Date().toLocaleDateString('pt-BR') + ' ' + dateNow,
+                        status: 'pendente',
+                        timestamp: Date.now()
+                    });
+                    showToast('Alerta enviado para a gestão na nuvem!', 'info');
+                } catch(e) {
+                    console.error("Erro ao reportar no Firebase", e);
+                    showToast('Erro ao salvar na nuvem.', 'error');
+                }
+            } else {
+                showToast('Firebase não conectado. Alerta não salvo.', 'warning');
+            }
+        }
+
+        function renderGestao() {
+            const listContainer = document.getElementById('gestaoList');
+            const vazioMsg = document.getElementById('gestaoVazio');
+            listContainer.innerHTML = '';
+
+            if (state.reportedFailures.length === 0) {
+                vazioMsg.classList.remove('hidden');
+                return;
+            }
+            vazioMsg.classList.add('hidden');
+
+            state.reportedFailures.forEach(falha => {
+                const card = document.createElement('div');
+                card.className = "p-3 border border-rose-200 rounded-lg bg-white relative flex flex-col gap-2 shadow-sm";
+                card.innerHTML = `
+                    <div class="flex items-start justify-between">
+                        <div>
+                            <span class="text-[10px] text-slate-400 font-semibold">${falha.data}</span>
+                            <h4 class="text-sm font-bold text-slate-800">${falha.item}</h4>
+                        </div>
+                        <span class="text-[10px] font-bold uppercase px-2 py-1 bg-amber-100 text-amber-700 rounded-full">Pendente</span>
+                    </div>
+                    <div class="mt-1">
+                        <span class="text-[10px] font-bold text-slate-500 uppercase">Classificação Rejeitada (AI Mantida):</span>
+                        <div class="text-xs font-semibold text-rose-800 mt-0.5 line-through decoration-rose-300">
+                            ${falha.conta_rejeitada}
+                        </div>
+                    </div>
+                    <div class="mt-2 pt-2 border-t border-slate-100 flex gap-2">
+                        <!-- Passamos o docId do banco de dados para conseguir excluir -->
+                        <button onclick="resolveFailure('${falha.docId}')" class="flex-1 bg-slate-100 text-slate-700 hover:bg-slate-200 text-xs font-bold py-1.5 rounded transition-colors border border-slate-200 shadow-sm cursor-pointer">Arquivar / Resolvido</button>
+                    </div>
+                `;
+                listContainer.appendChild(card);
+            });
+            lucide.createIcons();
+        }
+
+        function updateGestaoCountUI() {
+            let count = state.reportedFailures.length;
+            document.getElementById('gestaoCount').innerText = count > 99 ? '99+' : count;
+        }
+
+        async function resolveFailure(docId) {
+            if (state.db && docId) {
+                try {
+                    // Excluindo o documento diretamente do banco de dados na Nuvem
+                    const docRef = doc(state.db, 'artifacts', state.appId, 'public', 'data', 'failures', docId);
+                    await deleteDoc(docRef);
+                    showToast('Incidente arquivado pela Gestão e removido da nuvem.', 'success');
+                } catch(e) {
+                    console.error("Erro ao deletar no firebase", e);
+                    showToast('Erro ao remover documento da nuvem.', 'error');
+                }
+            }
+        }
+    </script>
+</body>
+</html>
