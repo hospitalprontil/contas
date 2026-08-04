@@ -108,7 +108,10 @@
 
                 <div id="containerHistorico" class="hidden flex-col flex-1 min-h-0 pt-4">
                     <div class="flex justify-between items-center mb-2 shrink-0">
-                        <span class="text-xs text-slate-500 italic">Selecione registros para remoção</span>
+                        <label class="flex items-center gap-2 cursor-pointer group">
+                            <input type="checkbox" id="checkSelecionarTudo" onchange="toggleSelecionarTudo()" class="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 cursor-pointer transition">
+                            <span class="text-xs text-slate-600 font-bold group-hover:text-blue-700 transition">Selecionar Todos</span>
+                        </label>
                         <button onclick="excluirHistoricoSelecionado()" class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-xl text-xs font-bold transition shadow-sm hidden ml-auto" id="btnExcluirHistorico">
                             🗑 Excluir Selecionados
                         </button>
@@ -495,7 +498,10 @@
         async function carregarHistorico() {
             const list = document.getElementById('listaHistorico');
             const btnExcluir = document.getElementById('btnExcluirHistorico');
+            const checkTodos = document.getElementById('checkSelecionarTudo');
+            
             if (btnExcluir) btnExcluir.classList.add('hidden'); 
+            if (checkTodos) checkTodos.checked = false;
             
             list.innerHTML = "<p class='text-slate-500 italic text-center mt-4 text-xs'>Buscando histórico...</p>";
             try {
@@ -528,13 +534,32 @@
 
         function toggleBtnExcluir() {
             const checkados = document.querySelectorAll('.hist-checkbox:checked');
+            const totalCheckboxes = document.querySelectorAll('.hist-checkbox');
             const btnExcluir = document.getElementById('btnExcluirHistorico');
+            const checkTodos = document.getElementById('checkSelecionarTudo');
+
             if (checkados.length > 0) {
                 btnExcluir.classList.remove('hidden');
                 btnExcluir.innerText = `🗑 Excluir Selecionados (${checkados.length})`;
             } else {
                 btnExcluir.classList.add('hidden');
             }
+            
+            // Sincroniza o estado do checkbox "Selecionar Todos"
+            if (checkTodos) {
+                checkTodos.checked = (checkados.length === totalCheckboxes.length && totalCheckboxes.length > 0);
+            }
+        }
+        
+        function toggleSelecionarTudo() {
+            const checkTodos = document.getElementById('checkSelecionarTudo');
+            const checkboxes = document.querySelectorAll('.hist-checkbox');
+            
+            checkboxes.forEach(cb => {
+                cb.checked = checkTodos.checked;
+            });
+            
+            toggleBtnExcluir();
         }
 
         async function excluirHistoricoSelecionado() {
@@ -654,7 +679,7 @@ ${pergunta}`;
 
             let formatoHistorico = ""; 
 
-            resp.split('\n').forEach(l => {
+            resp.split('\n').forEach((l, index) => {
                 if(!l.includes(';')) return;
                 let partes = l.split(';').map(s => s ? s.trim() : '');
                 let [it, m, c, cc, d, conf] = [partes[0]||'', partes[1]||'', partes[2]||'', partes[3]||'', partes[4]||'', partes[5]||''];
@@ -678,9 +703,10 @@ ${pergunta}`;
                 const tagColor = isPendente ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-blue-50 text-blue-800 border-blue-200';
                 const tagIndColor = isPendente ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-indigo-50 text-indigo-800 border-indigo-200';
                 const tagCCColor = isPendente ? 'bg-amber-100 text-amber-900 border-amber-300' : 'bg-purple-100 text-purple-900 border-purple-300';
+                const cardId = `lote-card-${index}`;
 
                 div.innerHTML += `
-                <div class="bg-white p-3.5 border border-slate-200 rounded-xl shadow-sm flex flex-col gap-1.5 transition hover:border-blue-300">
+                <div id="${cardId}" class="bg-white p-3.5 border border-slate-200 rounded-xl shadow-sm flex flex-col gap-1.5 transition hover:border-blue-300">
                     <div class="font-bold text-slate-900 text-xs md:text-sm flex justify-between items-start">
                         <span>${it}</span>
                         <span class="text-[10px] font-bold ${confColor} px-2 py-0.5 rounded border shrink-0">${conf || '95%'}</span>
@@ -694,11 +720,24 @@ ${pergunta}`;
 
                     ${d ? `<div class="text-[11px] text-slate-600 italic bg-slate-50 p-2 rounded-lg border border-slate-100 whitespace-pre-line leading-relaxed">${d}</div>` : ''}
                     
+                    ${isPendente ? `
+                    <div class="mt-2 pt-2 border-t border-amber-100 bg-amber-50/50 p-2.5 rounded-lg">
+                        <div id="inline-chat-box-${index}" class="space-y-2 mb-2 max-h-36 overflow-y-auto scrollbar-thin">
+                            <div class="text-[10px] text-amber-800 bg-amber-100/70 p-2 rounded border border-amber-200">
+                                🤖 <strong>Solicitação de esclarecimento:</strong> Responda abaixo para resolvimento imediato do enquadramento.
+                            </div>
+                        </div>
+                        <div class="flex gap-1.5">
+                            <input type="text" id="inline-input-${index}" placeholder="Digite a resposta ou detalhe o item..." class="flex-1 text-[11px] border border-amber-300 rounded-lg px-2.5 py-1.5 outline-none focus:ring-1 focus:ring-amber-500 bg-white" onkeypress="if(event.key === 'Enter') enviarChatInline(${index}, '${safeIt}')">
+                            <button onclick="enviarChatInline(${index}, '${safeIt}')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-3 py-1.5 rounded-lg text-[10px] transition shrink-0">Enviar</button>
+                        </div>
+                    </div>` : ''}
+
                     <div class="flex items-center justify-end gap-2 mt-2 pt-2 border-t border-slate-100">
                         <button onclick="levarParaDuvida('${safeIt}', '${safeM}', '${safeC}', '${safeCC}', '${safeD}')" 
                                 class="px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-md transition text-[10px] font-bold flex items-center gap-1" 
                                 title="Tirar dúvidas de alocação no Consultor IA">
-                            <span>❓</span> Dúvida
+                            <span>❓</span> Consultor IA
                         </button>
                         <button onclick="saveForReview(this, '${safeIt}', '${safeM}', '${safeC}', '${safeCC}', '${safeD}')" 
                                 class="px-2.5 py-1 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-md transition text-[10px] font-bold flex items-center gap-1" 
@@ -714,6 +753,49 @@ ${pergunta}`;
             } else {
                 salvarNoHistorico('lote', txt, formatoHistorico);
             }
+        }
+
+        async function enviarChatInline(index, itemNome) {
+            const input = document.getElementById(`inline-input-${index}`);
+            const chatBox = document.getElementById(`inline-chat-box-${index}`);
+            const txt = input.value.trim();
+            if (!txt) return;
+
+            // Append user response
+            chatBox.innerHTML += `<div class="bg-blue-600 text-white p-2 rounded-lg text-[11px] ml-auto max-w-[85%] whitespace-pre-line"><strong>Você:</strong> ${txt}</div>`;
+            input.value = "";
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const tempId = `inline-loading-${Date.now()}`;
+            chatBox.innerHTML += `<div id="${tempId}" class="bg-white border border-slate-200 p-2 rounded-lg text-[11px] text-slate-500 italic">Analisando resposta...</div>`;
+            chatBox.scrollTop = chatBox.scrollHeight;
+
+            const promptInline = `Contexto: Estávamos classificando o item hospitalar "${itemNome}" no Hospital Prontil e ele ficou pendente.
+O usuário respondeu à dúvida com: "${txt}"
+
+Com base nessa resposta e nas regras dos 16 Centros de Custos e Plano de Contas de 9 Módulos, forneça a classificação final e direta no seguinte formato estrito separados por ponto e vírgula:
+Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO ; Justificativa rápida da definição ; 100%`;
+
+            const respostaIA = await chamarAPI(promptInline, 'lote');
+            
+            const loadingEl = document.getElementById(tempId);
+            if (loadingEl) loadingEl.remove();
+
+            if (respostaIA.includes(';')) {
+                let partes = respostaIA.split(';').map(s => s ? s.trim() : '');
+                let [it, m, c, cc, d, conf] = [partes[0]||itemNome, partes[1]||'', partes[2]||'', partes[3]||'', partes[4]||'', partes[5]||'100%'];
+                
+                chatBox.innerHTML += `<div class="bg-emerald-50 text-emerald-900 border border-emerald-200 p-2.5 rounded-lg text-[11px] space-y-1">
+                    <div class="font-bold text-emerald-800">✓ Classificação Resolvida!</div>
+                    <div><strong>Módulo:</strong> ${m}</div>
+                    <div><strong>Conta:</strong> ${c}</div>
+                    <div><strong>CC:</strong> ${cc}</div>
+                    <div class="text-[10px] text-slate-600 italic mt-1">${d}</div>
+                </div>`;
+            } else {
+                chatBox.innerHTML += `<div class="bg-white text-slate-800 border border-slate-200 p-2 rounded-lg text-[11px]">${respostaIA}</div>`;
+            }
+            chatBox.scrollTop = chatBox.scrollHeight;
         }
 
         async function novoChat() {
