@@ -566,26 +566,39 @@
             let inst = "";
             if (tipo === 'lote') {
                 inst = `Você é o Controller Sênior do Hospital Prontil (Hospital Pediátrico).
-ESTRUTURA OFICIAL DE 16 CENTROS DE CUSTOS:
+
+ESTRUTURA OFICIAL DE 16 CENTROS DE CUSTOS (Alocação rigorosa):
 ${ccStr}
 
-PLANO DE CONTAS DE 9 MÓDULOS:
+PLANO DE CONTAS DE 9 MÓDULOS (Natureza da despesa):
 ${planoStr}
 
-Analise meticulosamente cada item fornecido pelo usuário e classifique-os com a maior precisão contábil e de alocação de custos possível, utilizando APENAS os Centros de Custos e Contas da estrutura fornecida.
-Sua classificação para Módulo, Conta e Centro de Custo deve refletir o encaixe perfeito e lógico da governança hospitalar, baseado em critérios bem definidos de gestao contabil e administração hospitalar, de acordo com as normas RDC e agencias de acreditacao / qualidade hospitalar.
+MISSÃO: Classifique os itens com precisão absoluta de auditoria, cruzando Módulo, Conta e Centro de Custo (CC).
+
+DIRETRIZES CRÍTICAS PARA CENTROS DE CUSTOS E PLANO DE CONTAS:
+1. Princípio do Consumidor Final: Aloque a despesa no CC que EFETIVAMENTE CONSOME o item, não no setor que apenas compra/gerencia estoques (ex: seringas vão para o PA/Internação/CCirúrgico, não para o Almoxarifado).
+2. Itens Assistenciais/Médicos: Destinam-se aos CCs Produtivos (100 a 140) ou Farmácia (200).
+3. Infraestrutura/Predial/TI: Destinam-se estritamente aos CCs de Infraestrutura (400, 410, 420).
+4. Alimentos/Dietas: Destinam-se exclusivamente ao SND / Lactário (220).
+5. Administrativo corporativo: Destina-se aos CCs de Apoio (300 a 350) dependendo do setor exato.
+6. SEJA EXPECÍFICO: Evite alocar no CC genérico "330 - Administração" se houver um CC produtivo ou de infraestrutura óbvio para a despesa.
+7. CAPEX vs BENS DE PEQUENO VALOR: Para bens duráveis (ar condicionado, ferramentas, equipamentos médicos, móveis), a classificação entre o MÓDULO 8 (Investimentos/CAPEX) e as contas de "Bens de Pequeno Valor" (2.7, 4.2 ou 5.8) depende do VALOR de aquisição. Exemplo: Furadeira de R$ 350 é Material de Manutenção/Bem de Pequeno Valor; Ar Condicionado de R$ 2.000 é Equipamento/CAPEX.
+8. DADOS INSUFICIENTES (PERGUNTE): Se o item for muito genérico (ex: "Papel", "Luvas") OU se for um bem durável sem preço informado na descrição (ex: "Mesa", "Ar condicionado", "Furadeira"), NÃO CHUTE. Retorne a palavra "PENDENTE" no Módulo, Conta ou CC. E OBRIGATORIAMENTE, na "Justificativa", escreva UMA PERGUNTA DIRETA (ex: "Para qual setor esse produto irá?", "Qual o valor unitário do item para definir se é CAPEX ou OPEX?"). Defina a precisão como "0%".
 
 FORMATO RIGOROSO DE RETORNO (Separe exatamente por ponto e vírgula):
-item ; MÓDULO ; CONTA ; CENTRO DE CUSTO (Ex: 200 — Farmácia) ; breve justificativa de alocação ; % precisão (ex: 99%)
+Item original ; MÓDULO (ou PENDENTE) ; CONTA (ou PENDENTE) ; CENTRO DE CUSTO (ou PENDENTE) ; Justificativa técnica ou Pergunta Direcionada ; % precisão
 
-Não adicione textos de introdução nem notas antes/depois. Retorne exatamente uma linha por item.
+Restrição OBRIGATÓRIA:
+- Retorne EXATAMENTE uma linha por item.
+- Não use quebras de linha dentro da justificativa.
+- Não adicione textos de introdução.
 Itens para classificar:
 ${pergunta}`;
             } else if (tipo === 'exemplo') {
                 inst = `Plano de Contas Hospital Prontil:\n${planoStr}\n\nListe 8 a 10 exemplos reais e práticos de itens hospitalares que se enquadram na conta: "${pergunta}". Retorne em tópicos diretos.`;
             } else if (tipo === 'exemplo-cc') {
                 inst = `Centros de Custos Hospital Prontil:\n${ccStr}\n\nListe 8 a 10 exemplos reais e práticos de despesas, serviços ou itens hospitalares que devem ser alocados no Centro de Custo: "${pergunta}". Retorne apenas em tópicos curtos e diretos.`;
-            } else {
+            } else if (tipo === 'duvida') {
                 inst = `Você é um Administrador Hospitalar e Controller Sênior do Hospital Prontil.
 Matriz de 16 Centros de Custos:
 ${ccStr}
@@ -593,7 +606,14 @@ ${ccStr}
 Plano de Contas (9 Módulos):
 ${planoStr}
 
-Sua missão é ajudar o usuário com o enquadramento de notas, rateio de custos e conciliação de faturamento TISS/TUSS.
+DIRETRIZES DE ALOCAÇÃO DE CC E CONTAS:
+Sempre oriente alocar o custo no setor que efetivamente consome o recurso (Princípio do Consumidor Final). 
+CAPEX vs OPEX: Para bens duráveis (computadores, móveis, ferramentas), a classificação entre Investimento (Módulo 8) e Bem de Pequeno Valor (Contas 2.7, 4.2, 5.8) depende estritamente do valor (ticket).
+
+POSTURA CONSULTIVA E REFINAMENTO (MUITO IMPORTANTE):
+Se o usuário solicitar a classificação de um item genérico (ex: "canetas", "conserto") OU de um bem durável sem informar o preço (ex: "ar condicionado", "furadeira"), e faltarem informações críticas (como o setor solicitante, finalidade ou valor monetário), NÃO DÊ A RESPOSTA FINAL IMEDIATAMENTE. Faça 1 ou 2 perguntas curtas e direcionadas (ex: "Para qual setor será destinado?", "Qual o valor estimado para avaliarmos se é CAPEX ou Pequeno Valor?") para coletar o contexto necessário antes de dar o parecer definitivo.
+
+Sua missão é ajudar o usuário com o enquadramento de notas, rateio de custos e conciliação.
 Forneça orientações técnicas, diretas e fundamentadas, garantindo a classificação mais perfeita possível, respeitando estritamente a matriz de CCs e o Plano de Contas fornecidos. 
 
 HISTÓRICO DA CONVERSA:
@@ -653,23 +673,29 @@ ${pergunta}`;
 
                 formatoHistorico += `Item: ${it} | Módulo: ${m} | Conta: ${c} | CC: ${cc} | Precisão: ${conf}\n`;
 
+                const isPendente = m.includes('PENDENTE') || c.includes('PENDENTE') || cc.includes('PENDENTE') || conf === '0%';
+                const confColor = isPendente ? 'text-amber-700 bg-amber-50 border-amber-200' : 'text-emerald-700 bg-emerald-50 border-emerald-200';
+                const tagColor = isPendente ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-blue-50 text-blue-800 border-blue-200';
+                const tagIndColor = isPendente ? 'bg-amber-50 text-amber-800 border-amber-200' : 'bg-indigo-50 text-indigo-800 border-indigo-200';
+                const tagCCColor = isPendente ? 'bg-amber-100 text-amber-900 border-amber-300' : 'bg-purple-100 text-purple-900 border-purple-300';
+
                 div.innerHTML += `
                 <div class="bg-white p-3.5 border border-slate-200 rounded-xl shadow-sm flex flex-col gap-1.5 transition hover:border-blue-300">
                     <div class="font-bold text-slate-900 text-xs md:text-sm flex justify-between items-start">
                         <span>${it}</span>
-                        <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 shrink-0">${conf || '95%'}</span>
+                        <span class="text-[10px] font-bold ${confColor} px-2 py-0.5 rounded border shrink-0">${conf || '95%'}</span>
                     </div>
                     
                     <div class="flex flex-wrap gap-1.5 my-1">
-                        <span class="bg-blue-50 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-200">${m}</span>
-                        <span class="bg-indigo-50 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-200">${c}</span>
-                        <span class="bg-purple-100 text-purple-900 text-[10px] font-black px-2 py-0.5 rounded border border-purple-300">🏢 CC: ${cc}</span>
+                        <span class="${tagColor} text-[10px] font-bold px-2 py-0.5 rounded border">${m}</span>
+                        <span class="${tagIndColor} text-[10px] font-bold px-2 py-0.5 rounded border">${c}</span>
+                        <span class="${tagCCColor} text-[10px] font-black px-2 py-0.5 rounded border">🏢 CC: ${cc}</span>
                     </div>
 
                     ${d ? `<div class="text-[11px] text-slate-600 italic bg-slate-50 p-2 rounded-lg border border-slate-100 whitespace-pre-line leading-relaxed">${d}</div>` : ''}
                     
                     <div class="flex items-center justify-end gap-2 mt-2 pt-2 border-t border-slate-100">
-                        <button onclick="levarParaDuvida('${safeIt}', '${safeM}', '${safeC}', '${safeCC}')" 
+                        <button onclick="levarParaDuvida('${safeIt}', '${safeM}', '${safeC}', '${safeCC}', '${safeD}')" 
                                 class="px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-md transition text-[10px] font-bold flex items-center gap-1" 
                                 title="Tirar dúvidas de alocação no Consultor IA">
                             <span>❓</span> Dúvida
@@ -717,25 +743,41 @@ ${pergunta}`;
             </div>`;
         }
 
-        function levarParaDuvida(item, modulo, conta, cc) {
+        function levarParaDuvida(item, modulo, conta, cc, justificativa = "") {
             if (contextoChatTexto.length > 0) novoChat();
 
             switchMode('duvida');
             const h = document.getElementById('chatHistory');
             
-            const instrucaoSistema = `[INSTRUÇÃO DE SISTEMA]\nO usuário deseja revisar a alocação do item "${item}". A sugestão preliminar foi "${modulo} | ${conta} | Centro de Custo: ${cc}".\nPara dar um parecer definitivo, faça até 3 perguntas curtas (uma por vez) sobre a utilidade, setor solicitante e natureza antes de emitir a posição final.`;
-            contextoChatTexto.push({role: 'user', text: instrucaoSistema});
-            
-            const primeiraPerguntaText = `📋 **Análise do Item:** ${item}\nSugestão inicial: **${cc}** | **${conta}**.\n\nPara confirmarmos com 100% de precisão de auditoria: qual o setor/área final consumidora deste item e a utilidade direta?`;
-            contextoChatTexto.push({role: 'ai', text: primeiraPerguntaText});
+            const isPendente = cc.includes('PENDENTE') || conta.includes('PENDENTE') || modulo.includes('PENDENTE');
+            let instrucaoSistema = "";
+            let primeiraPerguntaText = "";
+            let mensagemSistemaHTML = "";
 
-            const mensagemSistemaHTML = `
-                <div class="font-bold mb-1">📋 Análise de Refinamento: <span class="text-blue-700">${item}</span></div>
-                <div class="text-[11px] text-slate-600 mb-2">Sugestão Atual: <strong>${cc}</strong> | <strong>${conta}</strong></div>
-                Para confirmarmos com total precisão de auditoria: <strong>qual o setor/área final consumidora deste item e qual a utilidade direta?</strong>
-            `;
+            if (isPendente) {
+                instrucaoSistema = `[INSTRUÇÃO DE SISTEMA]\nO usuário quer classificar o item "${item}", mas faltaram dados. A IA apontou na análise a seguinte necessidade: "${justificativa}". Inicie aguardando a resposta do usuário para, em seguida, determinar o Centro de Custo e a Conta correta.`;
+                primeiraPerguntaText = `📋 **Item Pendente:** ${item}\n\nPara eu conseguir cravar o Centro de Custo e a Conta Contábil, preciso de um detalhe: **${justificativa}**`;
+                mensagemSistemaHTML = `
+                    <div class="font-bold mb-1 text-amber-700">⚠️ Refinamento Necessário: <span class="text-slate-800">${item}</span></div>
+                    <div class="text-[11px] text-slate-600 mb-2">Para eu classificar com 100% de certeza, me tire a seguinte dúvida:</div>
+                    <strong>${justificativa}</strong>
+                `;
+            } else {
+                instrucaoSistema = `[INSTRUÇÃO DE SISTEMA]\nO usuário deseja revisar a alocação do item "${item}". A sugestão preliminar foi "${modulo} | ${conta} | Centro de Custo: ${cc}".\nPara dar um parecer definitivo, faça até 3 perguntas curtas (uma por vez) sobre a utilidade, setor solicitante e natureza antes de emitir a posição final.`;
+                primeiraPerguntaText = `📋 **Análise do Item:** ${item}\nSugestão inicial: **${cc}** | **${conta}**.\n\nPara confirmarmos com 100% de precisão de auditoria: qual o setor/área final consumidora deste item e a utilidade direta?`;
+                mensagemSistemaHTML = `
+                    <div class="font-bold mb-1">📋 Análise de Refinamento: <span class="text-blue-700">${item}</span></div>
+                    <div class="text-[11px] text-slate-600 mb-2">Sugestão Atual: <strong>${cc}</strong> | <strong>${conta}</strong></div>
+                    Para confirmarmos com total precisão de auditoria: <strong>qual o setor/área final consumidora deste item e qual a utilidade direta?</strong>
+                `;
+            }
             
-            h.innerHTML += `<div class="bg-blue-50 text-blue-950 border border-blue-200 p-3.5 rounded-xl self-start max-w-[90%] text-xs leading-relaxed shadow-sm">${mensagemSistemaHTML}</div>`;
+            contextoChatTexto.push({role: 'user', text: instrucaoSistema});
+            contextoChatTexto.push({role: 'ai', text: primeiraPerguntaText});
+            
+            const bgClass = isPendente ? 'bg-amber-50 text-amber-950 border-amber-200' : 'bg-blue-50 text-blue-950 border-blue-200';
+
+            h.innerHTML += `<div class="${bgClass} border p-3.5 rounded-xl self-start max-w-[90%] text-xs leading-relaxed shadow-sm">${mensagemSistemaHTML}</div>`;
             h.scrollTop = h.scrollHeight;
             
             const input = document.getElementById('inputChat');
