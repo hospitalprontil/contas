@@ -3,79 +3,324 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PRONTIL - Plano de Contas</title>
+    <title>PRONTIL - Plano de Contas & Centros de Custos</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
     <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore-compat.js"></script>
+    <style>
+        .scrollbar-thin::-webkit-scrollbar {
+            width: 6px;
+            height: 6px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-track {
+            background: #f1f5f9;
+            border-radius: 4px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+        .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+    </style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen">
+<body class="bg-slate-50 text-slate-800 font-sans min-h-screen antialiased">
 
-    <div class="max-w-5xl mx-auto p-4 md:p-8">
-        <header class="mb-6 md:mb-8 text-center md:text-left">
-            <h1 class="text-2xl md:text-3xl font-bold text-blue-900">Plano de Contas - Hospital PRONTIL</h1>
-            <p class="text-sm md:text-base text-slate-600 mt-1 md:mt-0">Classifique notas, tire dúvidas e revise itens sinalizados.</p>
+    <div class="max-w-7xl mx-auto p-4 md:p-8">
+        <header class="mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+            <div>
+                <div class="flex items-center gap-2">
+                    <span class="bg-blue-600 text-white font-black text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">Hospital Prontil</span>
+                    <span class="text-xs text-slate-400 font-semibold">Versão 2.0 • Matrix CC & Plano de Contas</span>
+                </div>
+                <h1 class="text-2xl md:text-3xl font-extrabold text-blue-950 mt-2">Classificação de Centros de Custos & ERP</h1>
+                <p class="text-xs md:text-sm text-slate-600 mt-1">Classifique notas, automatize auditorias de lançamentos e consulte a matriz corporativa de custos.</p>
+            </div>
+            <div class="flex items-center gap-3 bg-blue-50/80 border border-blue-100 p-3.5 rounded-xl shrink-0">
+                <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+                <div class="text-xs">
+                    <p class="font-bold text-blue-900">16 CCs Ativos & 9 Módulos</p>
+                    <p class="text-slate-500">API Gemini & Firestore Conectados</p>
+                </div>
+            </div>
         </header>
 
-        <div class="grid md:grid-cols-2 gap-4 md:gap-8">
-            <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 h-[600px] md:h-[700px] flex flex-col">
+        <div class="grid lg:grid-cols-12 gap-6">
+            
+            <!-- LEFT PANEL: Operations & Interaction Tools (7 cols) -->
+            <div class="lg:col-span-7 bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 h-[650px] md:h-[750px] flex flex-col">
                 
-                <div class="flex gap-2 md:gap-4 mb-4 md:mb-6 border-b border-slate-200 overflow-x-auto shrink-0 pb-1">
-                    <button id="btnTabLote" onclick="switchMode('lote')" class="pb-2 px-2 text-sm md:text-base font-medium text-blue-600 border-b-2 border-blue-600 whitespace-nowrap transition-colors">Classificar Lote</button>
-                    <button id="btnTabDuvida" onclick="switchMode('duvida')" class="pb-2 px-2 text-sm md:text-base font-medium text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors">Dúvida / IA</button>
-                    <button id="btnTabSinal" onclick="switchMode('sinal')" class="pb-2 px-2 text-sm md:text-base font-medium text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors">Sinalizados</button>
-                    <button id="btnTabHistorico" onclick="switchMode('historico')" class="pb-2 px-2 text-sm md:text-base font-medium text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors">Histórico</button>
+                <!-- Main Tabs Navigation -->
+                <div class="flex gap-2 border-b border-slate-200 overflow-x-auto shrink-0 pb-1 scrollbar-thin">
+                    <button id="btnTabLote" onclick="switchMode('lote')" class="pb-2 px-3 text-xs md:text-sm font-bold text-blue-600 border-b-2 border-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5">
+                        <span>⚡</span> Classificar Lote
+                    </button>
+                    <button id="btnTabDuvida" onclick="switchMode('duvida')" class="pb-2 px-3 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5">
+                        <span>💬</span> Consultor IA
+                    </button>
+                    <button id="btnTabSinal" onclick="switchMode('sinal')" class="pb-2 px-3 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5">
+                        <span>🚩</span> Sinalizados
+                    </button>
+                    <button id="btnTabHistorico" onclick="switchMode('historico')" class="pb-2 px-3 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5">
+                        <span>📜</span> Histórico
+                    </button>
                 </div>
 
-                <div id="containerLote" class="flex flex-col flex-1 min-h-0 pr-1 md:pr-2">
-                    <textarea id="inputDescricao" class="w-full h-24 md:h-32 p-3 md:p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 outline-none mb-3 md:mb-4 shrink-0 resize-none text-sm md:text-base" placeholder="Cole os itens aqui (um por linha), com uma breve descrição ou um complemento / valor (ex.: tesoura pequena para escritorio, ou computador de 1500 reais. )"></textarea>
-                    <button onclick="processarLote()" class="w-full bg-blue-600 text-white font-bold py-3 md:py-3 rounded-xl hover:bg-blue-700 transition shadow-sm shrink-0 text-sm md:text-base">Classificar Itens</button>
-                    <div id="resultadoContainerLote" class="hidden mt-3 md:mt-4 p-3 md:p-4 bg-slate-50 rounded-xl border border-slate-200 flex-1 min-h-0 overflow-y-auto">
-                        <div id="resultadoIA" class="text-slate-700 text-sm space-y-3"></div>
+                <div id="containerLote" class="flex flex-col flex-1 min-h-0 pt-4">
+                    <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Itens ou Notas Fiscais para Processamento</label>
+                    <textarea id="inputDescricao" class="w-full h-28 md:h-36 p-3 md:p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none mb-3 shrink-0 resize-none text-xs md:text-sm leading-relaxed" placeholder="Cole os itens aqui (um por linha) com detalhes ou valores.&#10;Exemplos:&#10;- Recarga/Consumo de O2 Liquido para tanques da farmacia&#10;- Aluguel do tanque de gas medicinal do hospital&#10;- Brinquedos para recreacao do Pronto Atendimento&#10;- Aluguel do terreno do estacionamento com IPTU"></textarea>
+                    
+                    <button onclick="processarLote()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 active:scale-[0.99] transition shadow-sm shrink-0 text-xs md:text-sm flex items-center justify-center gap-2">
+                        <span>🔍</span> Analisar & Alocar (Conta + Centro de Custo)
+                    </button>
+
+                    <div id="resultadoContainerLote" class="hidden mt-4 p-3 md:p-4 bg-slate-50 rounded-xl border border-slate-200 flex-1 min-h-0 overflow-y-auto scrollbar-thin">
+                        <div id="resultadoIA" class="text-slate-700 text-xs md:text-sm space-y-3"></div>
                     </div>
                 </div>
 
-                <div id="containerChat" class="hidden flex-col flex-1 min-h-0 pr-1 md:pr-2">
-                    <div class="flex justify-end mb-2 shrink-0">
-                        <button onclick="novoChat()" class="px-3 py-1.5 bg-slate-100 text-slate-700 hover:bg-slate-200 border border-slate-300 rounded-lg text-xs md:text-sm font-bold transition-colors shadow-sm flex items-center gap-1">
+                <div id="containerChat" class="hidden flex-col flex-1 min-h-0 pt-4">
+                    <div class="flex justify-between items-center mb-2 shrink-0">
+                        <span class="text-xs text-slate-500 font-medium">Consultor Sênior em Controladoria Hospitalar</span>
+                        <button onclick="novoChat()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg text-xs font-bold transition flex items-center gap-1">
                             <span>💬</span> Novo Chat
                         </button>
                     </div>
-                    <div id="chatHistory" class="flex-1 overflow-y-auto mb-3 md:mb-4 border p-3 md:p-4 bg-slate-50 rounded-xl text-sm space-y-4 shadow-inner min-h-0">
-                        <div class="text-slate-500 italic text-center text-xs mt-2">Inicie uma conversa ou detalhe um item do lote...</div>
+                    <div id="chatHistory" class="flex-1 overflow-y-auto mb-3 border p-3 md:p-4 bg-slate-50 rounded-xl text-xs md:text-sm space-y-4 shadow-inner min-h-0 scrollbar-thin">
+                        <div class="text-slate-500 italic text-center text-xs my-4 bg-white p-4 rounded-xl border border-slate-200">
+                            👋 Olá! Sou o consultor especialista do **Hospital Prontil**.<br>Tire suas dúvidas sobre enquadramento em **Centros de Custos (16 CCs)**, **Plano de Contas**, faturamento TISS/TUSS ou regras de rateio.
+                        </div>
                     </div>
                     <div class="flex gap-2 shrink-0">
-                        <textarea id="inputChat" rows="2" class="flex-1 border border-slate-300 rounded-xl p-2 md:p-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none text-sm md:text-base" placeholder="Responda ou faça sua pergunta... (Enter para enviar)"></textarea>
-                        <button onclick="enviarChat()" class="bg-blue-600 text-white px-4 md:px-6 rounded-xl font-bold hover:bg-blue-700 transition shadow-sm text-sm md:text-base">Enviar</button>
+                        <textarea id="inputChat" rows="2" class="flex-1 border border-slate-300 rounded-xl p-2.5 md:p-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none text-xs md:text-sm" placeholder="Pergunte sobre um lançamento, CC ou conta... (Enter para enviar)"></textarea>
+                        <button onclick="enviarChat()" class="bg-blue-600 text-white px-4 md:px-6 rounded-xl font-bold hover:bg-blue-700 transition shadow-sm text-xs md:text-sm flex items-center justify-center">
+                            Enviar
+                        </button>
                     </div>
                 </div>
 
-                <div id="containerSinal" class="hidden flex-col flex-1 min-h-0 pr-1 md:pr-2">
-                    <div id="listaSinalizados" class="flex-1 overflow-y-auto space-y-3 pr-1 md:pr-2 min-h-0">
-                        <p class="text-slate-500 italic text-center mt-4">Carregando sinalizados...</p>
+                <div id="containerSinal" class="hidden flex-col flex-1 min-h-0 pt-4">
+                    <div id="listaSinalizados" class="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0 scrollbar-thin">
+                        <p class="text-slate-500 italic text-center mt-4 text-xs">Carregando sinalizados...</p>
                     </div>
                 </div>
 
-                <div id="containerHistorico" class="hidden flex-col flex-1 min-h-0 pr-1 md:pr-2">
+                <div id="containerHistorico" class="hidden flex-col flex-1 min-h-0 pt-4">
                     <div class="flex justify-between items-center mb-2 shrink-0">
-                        <span class="text-xs text-slate-500 italic hidden sm:inline-block">Selecione para excluir</span>
-                        <button onclick="excluirHistoricoSelecionado()" class="px-3 py-1.5 md:px-4 md:py-2 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-xl text-xs md:text-sm font-bold transition-colors shadow-sm hidden ml-auto" id="btnExcluirHistorico">
+                        <span class="text-xs text-slate-500 italic">Selecione registros para remoção</span>
+                        <button onclick="excluirHistoricoSelecionado()" class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-xl text-xs font-bold transition shadow-sm hidden ml-auto" id="btnExcluirHistorico">
                             🗑 Excluir Selecionados
                         </button>
                     </div>
-                    <div id="listaHistorico" class="flex-1 overflow-y-auto space-y-3 md:space-y-4 pr-1 md:pr-2 min-h-0">
-                        <p class="text-slate-500 italic text-center mt-4">Carregando histórico...</p>
+                    <div id="listaHistorico" class="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0 scrollbar-thin">
+                        <p class="text-slate-500 italic text-center mt-4 text-xs">Carregando histórico...</p>
                     </div>
                 </div>
             </div>
 
-            <div class="bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 h-[500px] md:h-[700px] flex flex-col mt-4 md:mt-0">
-                <h2 class="font-bold text-lg mb-3 md:mb-4 text-blue-900 shrink-0">Plano de Contas Estruturado</h2>
-                <div id="planoContas" class="space-y-2 flex-1 overflow-y-auto pr-1 md:pr-2"></div>
+            <!-- RIGHT PANEL: Reference Manuals (Centros de Custos & Plano de Contas) (5 cols) -->
+            <div class="lg:col-span-5 bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 h-[650px] md:h-[750px] flex flex-col">
+                
+                <!-- Side Panel Tabs -->
+                <div class="flex gap-2 border-b border-slate-200 mb-4 pb-2 shrink-0 overflow-x-auto scrollbar-thin">
+                    <button id="btnRefPlano" onclick="switchRefTab('plano')" class="px-3 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 border border-blue-200 rounded-lg whitespace-nowrap transition">
+                        📑 Plano de Contas (9 Mód)
+                    </button>
+                    <button id="btnRefCC" onclick="switchRefTab('cc')" class="px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-100 border border-slate-200 rounded-lg whitespace-nowrap transition">
+                        🏢 16 Centros de Custos
+                    </button>
+                </div>
+
+                <!-- VIEW 1: Structured Chart of Accounts (Plano de Contas) -->
+                <div id="refPlanoContas" class="flex-1 overflow-y-auto space-y-2 pr-1 min-h-0 scrollbar-thin">
+                    <div id="planoContasAccordion" class="space-y-2"></div>
+                </div>
+
+                <!-- VIEW 2: Matrix of 16 Cost Centers -->
+                <div id="refCentrosCustos" class="hidden flex-1 overflow-y-auto space-y-4 pr-1 min-h-0 scrollbar-thin">
+                    
+                    <div class="bg-amber-50 border border-amber-200 p-3 rounded-xl text-xs text-amber-900 leading-relaxed">
+                        <span class="font-bold uppercase tracking-wider block mb-1 text-[10px] text-amber-700">⚠️ Alerta de Governança:</span>
+                        Estrutura estrita de <strong>16 CCs Ativos</strong>. Não criar novos CCs sem aprovação da Controller. Setores como Laboratório, Brinquedoteca e Estacionamento são <strong>unificados/inativados</strong>.
+                    </div>
+
+                    <!-- Macro A -->
+                    <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-blue-900 text-white p-2.5 font-bold text-xs uppercase tracking-wider flex justify-between items-center">
+                            <span>A. PRODUTIVOS ASSISTENCIAIS</span>
+                            <span class="bg-blue-800 text-[10px] px-2 py-0.5 rounded">5 CCs</span>
+                        </div>
+                        <div class="p-3 bg-slate-50 text-xs space-y-2">
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('100 - Pronto Atendimento', '100')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-blue-700 font-bold">100</span> — Pronto Atendimento</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-100" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('110 - Ambulatório', '110')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-blue-700 font-bold">110</span> — Ambulatório</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-110" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('120 - Internação', '120')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-blue-700 font-bold">120</span> — Internação</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-120" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('130 - Centro Cirúrgico', '130')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-blue-700 font-bold">130</span> — Centro Cirúrgico</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-130" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('140 - Radiologia', '140')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-blue-700 font-bold">140</span> — Radiologia</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-140" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Macro B -->
+                    <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-emerald-800 text-white p-2.5 font-bold text-xs uppercase tracking-wider flex justify-between items-center">
+                            <span>B. AUXILIARES ASSISTENCIAIS</span>
+                            <span class="bg-emerald-700 text-[10px] px-2 py-0.5 rounded">2 CCs</span>
+                        </div>
+                        <div class="p-3 bg-slate-50 text-xs space-y-2">
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('200 - Farmácia', '200')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-emerald-700 font-bold">200</span> — Farmácia</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-emerald-600 transition">▼</span>
+                                </button>
+                                <p class="text-[10px] text-slate-500 font-normal mt-0.5">Central, Dispensação e Responsabilidade Técnica do O2 Líquido.</p>
+                                <div id="exemplos-cc-200" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-emerald-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('220 - SND / Lactário', '220')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-emerald-700 font-bold">220</span> — SND / Lactário</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-emerald-600 transition">▼</span>
+                                </button>
+                                <p class="text-[10px] text-slate-500 font-normal mt-0.5">Nutrição de Pacientes e Serviços de Copa Geral do Hospital.</p>
+                                <div id="exemplos-cc-220" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-emerald-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Macro C -->
+                    <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-purple-900 text-white p-2.5 font-bold text-xs uppercase tracking-wider flex justify-between items-center">
+                            <span>C. ADMINISTRATIVOS E GESTÃO</span>
+                            <span class="bg-purple-800 text-[10px] px-2 py-0.5 rounded">6 CCs</span>
+                        </div>
+                        <div class="p-3 bg-slate-50 text-xs space-y-2">
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('300 - Recepção / Autorizações', '300')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-purple-700 font-bold">300</span> — Recepção / Autorizações</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-300" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('310 - Almoxarifado / Compras', '310')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-purple-700 font-bold">310</span> — Almoxarifado / Compras</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-310" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('320 - Faturamento', '320')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-purple-700 font-bold">320</span> — Faturamento</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-320" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('330 - Administração / RH / Financeiro', '330')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-purple-700 font-bold">330</span> — Administração / RH / Financeiro</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-330" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('340 - Gerência de Enfermagem / Qualidade', '340')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-purple-700 font-bold">340</span> — Gerência de Enfermagem / Qualidade</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-340" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('350 - Diretoria', '350')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-purple-700 font-bold">350</span> — Diretoria</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
+                                </button>
+                                <p class="text-[10px] text-slate-500 font-normal mt-0.5">Governança, CAPEX, Negócios Corporativos e Imobiliários (ex: Estacionamento).</p>
+                                <div id="exemplos-cc-350" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Macro D -->
+                    <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                        <div class="bg-slate-800 text-white p-2.5 font-bold text-xs uppercase tracking-wider flex justify-between items-center">
+                            <span>D. INFRAESTRUTURA E APOIO</span>
+                            <span class="bg-slate-700 text-[10px] px-2 py-0.5 rounded">3 CCs</span>
+                        </div>
+                        <div class="p-3 bg-slate-50 text-xs space-y-2">
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('400 - Limpeza / Lavanderia / Enxoval', '400')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-slate-700 font-bold">400</span> — Limpeza / Lavanderia / Enxoval</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-slate-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-400" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('410 - Manutenção', '410')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-slate-700 font-bold">410</span> — Manutenção</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-slate-600 transition">▼</span>
+                                </button>
+                                <p class="text-[10px] text-slate-500 font-normal mt-0.5">Preservação Predial, Engenharia Clínica, Utilidades e Aluguel de Tanque de O2.</p>
+                                <div id="exemplos-cc-410" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                            <div class="bg-white p-2 rounded border border-slate-200">
+                                <button onclick="toggleExemplosCC('420 - Telefonia / TI / Processos', '420')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold"><span class="text-slate-700 font-bold">420</span> — Telefonia / TI / Processos</span>
+                                    <span class="text-[10px] text-slate-400 group-hover:text-slate-600 transition">▼</span>
+                                </button>
+                                <div id="exemplos-cc-420" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Inactivated Sectors Guide -->
+                    <div class="bg-red-50 border border-red-200 p-3 rounded-xl text-xs space-y-2 text-red-900">
+                        <span class="font-bold block uppercase text-[10px] text-red-700">🚫 Setores Unificados / Inativados (Sem CC próprio):</span>
+                        <ul class="list-disc pl-4 space-y-1 text-[11px] text-slate-700">
+                            <li><strong>Laboratório:</strong> Sem CC. Apurado via DRE (Receita 4.1.05 vs Custo 7.11).</li>
+                            <li><strong>Estacionamento:</strong> Alocar despesas e receitas no CC 350 (Diretoria).</li>
+                            <li><strong>Brinquedoteca:</strong> Alocar custos diretos no CC Consumidor (100 PA ou 120 Internação).</li>
+                            <li><strong>CME / Esterilização:</strong> Integrado ao CC 130 ou CC 200.</li>
+                            <li><strong>Segurança do Trabalho:</strong> Unificado no CC 330 (ADM/RH).</li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
+
         </div>
     </div>
 
     <script>
+        // Firebase Configuration & Initialization
         const firebaseConfig = {
             apiKey: "AIzaSyCDzbDhQ3Fgi_JzpCoUOcDokaSyohX1Qgs",
             authDomain: "plano-de-contas-8c8cd.firebaseapp.com",
@@ -89,21 +334,43 @@
 
         const BACKEND_URL = 'https://prontil-api.onrender.com/api/gemini';
         const cacheExemplos = {}; 
-        let contextoChatTexto = []; // Armazena a memória contínua do chat atual
-        
+        let contextoChatTexto = [];
+
+        // Official Structure - 16 Centros de Custos
+        const centrosDeCustosMatriz = [
+            { codigo: "100", nome: "Pronto Atendimento", macro: "Produtivos Assistenciais" },
+            { codigo: "110", nome: "Ambulatório", macro: "Produtivos Assistenciais" },
+            { codigo: "120", nome: "Internação", macro: "Produtivos Assistenciais" },
+            { codigo: "130", nome: "Centro Cirúrgico", macro: "Produtivos Assistenciais" },
+            { codigo: "140", nome: "Radiologia", macro: "Produtivos Assistenciais" },
+            { codigo: "200", nome: "Farmácia", macro: "Auxiliares Assistenciais" },
+            { codigo: "220", nome: "SND / Lactário", macro: "Auxiliares Assistenciais" },
+            { codigo: "300", nome: "Recepção / Autorizações", macro: "Administrativos e Gestão" },
+            { codigo: "310", nome: "Almoxarifado / Compras", macro: "Administrativos e Gestão" },
+            { codigo: "320", nome: "Faturamento", macro: "Administrativos e Gestão" },
+            { codigo: "330", nome: "Administração / RH / Financeiro", macro: "Administrativos e Gestão" },
+            { codigo: "340", nome: "Gerência de Enfermagem / Qualidade", macro: "Administrativos e Gestão" },
+            { codigo: "350", nome: "Diretoria", macro: "Administrativos e Gestão" },
+            { codigo: "400", nome: "Limpeza / Lavanderia / Enxoval", macro: "Infraestrutura e Apoio" },
+            { codigo: "410", nome: "Manutenção", macro: "Infraestrutura e Apoio" },
+            { codigo: "420", nome: "Telefonia / TI / Processos", macro: "Infraestrutura e Apoio" }
+        ];
+
+        // Official Structure - 9 Modules Chart of Accounts
         const planoDeContas = [
             { modulo: "MÓDULO 1 – MEDICAMENTOS", contas: ["1.1 Antibióticos e Antimicrobianos", "1.2 Anestésicos, Sedativos e Controlados", "1.3 Psicotrópicos / Controlados", "1.4 Soluções Parenterais, Diluentes e Eletrólitos", "1.5 Gases Medicinais", "1.6 Cardiovasculares e Respiratórios", "1.7 Medicamentos Especiais, Alto Custo e Imunobiológicos", "1.8 Endócrino / Hematologia", "1.9 Gastrointestinais", "1.10 Medicamentos de Uso Geral e Sintomáticos", "1.11 Medicamentos Tópicos e Cuidados de Pele", "1.12 Não Padronizados"] },
             { modulo: "MÓDULO 2 – MATERIAL HOSPITALAR", contas: ["2.1 Descartáveis / Alto Giro Assistencial", "2.2 Acessórios de Equipamentos Médicos", "2.3 Materiais Respiratórios, Aspiração e Cateteres", "2.4 OPME", "2.5 Insumos de Esterilização e Consumíveis de CME", "2.6 Testes Rápidos / Reagentes / Kits de Laboratório", "2.7 Bens Duráveis de Pequeno Valor", "2.8 Curativos, Coberturas e Hemostáticos", "2.9 Fios Cirúrgicos", "2.10 Materiais Cirúrgicos", "2.11 Materiais de Infusão e Acesso Vascular", "2.12 Sondas Diversas", "2.13 Material Não Padrão", "2.14 EPI´s Assistenciais"] },
             { modulo: "MÓDULO 3 – NUTRIÇÃO / SND", contas: ["3.1 Dietas e Suplementos Industrializados", "3.2 Gêneros Alimentícios (Perecíveis e Secos / Cozinha e Refeitório)", "3.3 Utensílios de Cozinha e Refeitório", "3.4 Descartáveis e Embalagens de Cozinha", "3.5 Gás de Cozinha", "3.6 Saneantes / Higienização - SND"] },
-            { modulo: "MÓDULO 4 – INFRAESTRUTURA E MANUTENÇÃO", contas: ["4.1 Materiais de Manutenção", "4.2 Bens, Ferramentas e Utensílios de Pequeno Valor", "4.3 Combustíveis, Aditivos, Óleos e Lubrificantes", "4.4 Peças  e Componentes de Reposição para Equipamentos Médicos"] },
-            { modulo: "MÓDULO 5 – HIGIENE, HOTELARIA E ADM", contas: ["5.1 Materiais de Limpeza, Higienização e Saneantes Hospitalares", "5.2 Enxoval, Encapamentos e Hotelaria de Leito", "5.3 Brinquedoteca, Humanização e Recreação", "5.4 Material de Escritório e Apoio Operacional (podem ser solicitados e/ou utilizados por outros setores)", "5.5 Impressos Padronizados e Formulários", "5.6 Descartáveis, Consumo de Apoio e Copa Geral", "5.7 Material de Informática", "5.8 Bens, Mobiliário ou Equipamentos de Pequeno Valor"] },
+            { modulo: "MÓDULO 4 – INFRAESTRUTURA E MANUTENÇÃO", contas: ["4.1 Materiais de Manutenção", "4.2 Bens, Ferramentas e Utensílios de Pequeno Valor", "4.3 Combustíveis, Aditivos, Óleos e Lubrificantes", "4.4 Peças e Componentes de Reposição para Equipamentos Médicos"] },
+            { modulo: "MÓDULO 5 – HIGIENE, HOTELARIA E ADM", contas: ["5.1 Materiais de Limpeza, Higienização e Saneantes Hospitalares", "5.2 Enxoval, Encapamentos e Hotelaria de Leito", "5.3 Brinquedoteca, Humanização e Recreação", "5.4 Material de Escritório e Apoio Operacional", "5.5 Impressos Padronizados e Formulários", "5.6 Descartáveis, Consumo de Apoio e Copa Geral", "5.7 Material de Informática", "5.8 Bens, Mobiliário ou Equipamentos de Pequeno Valor"] },
             { modulo: "MÓDULO 6 – PESSOAL, ENCARGOS E RH", contas: ["6.1 Uniformes, Enxoval Profissional e Vestuários", "6.2 EPIs de Segurança/Medicina do Trabalho", "6.3 Benefícios de Pessoal", "6.4 Eventos e Programas Institucionais", "6.5 Folha de Pagamento, Encargos Sociais e Obrigações Trabalhistas", "6.6 Treinamento, Educação Continuada e Desenvolvimento", "6.7 Medicina e Segurança do Trabalho"] },
-            { modulo: "MÓDULO 7 – SERVIÇOS DE TERCEIROS", contas: ["7.1 Corpo Clínico e Honorários Médicos", "7.2 Serviços Assistenciais Terceirizados", "7.3 Serviços de Apoio Logístico / Hoteleiro", "7.4 Contratos de Equipamentos, Manutenção e Calibração", "7.5 Serviços de Pequenos Reparos, Consertos e Manutenção Predial", "7.6 Sistemas de Gestão, Licenças de Software", "7.7 Utilidades Básicas e Telecomunicações", "7.8 Marketing, Publicidade e Comunicação", "7.9 Recrutamento, Seleção e Mão de Obra Temporária", "7.10 Serviços Administrativos e Profissionais Especializados", "7.11 Serviços Diagnósticos Externos", "7.12 Locação de Equipamentos Médicos e Mobiliário Assistencial", "7.13 locação de Equipamentos de Tecnologia da Informação", "7.14 Locação de Mobiliário e Utensílios Administrativos/Gerais"] },
+            { modulo: "MÓDULO 7 – SERVIÇOS DE TERCEIROS", contas: ["7.1 Corpo Clínico e Honorários Médicos", "7.2 Serviços Assistenciais Terceirizados", "7.3 Serviços de Apoio Logístico / Hoteleiro", "7.4 Contratos de Equipamentos, Manutenção e Calibração", "7.5 Serviços de Pequenos Reparos, Consertos e Manutenção Predial", "7.6 Sistemas de Gestão, Licenças de Software", "7.7 Utilidades Básicas e Telecomunicações", "7.8 Marketing, Publicidade e Comunicação", "7.9 Recrutamento, Seleção e Mão de Obra Temporária", "7.10 Serviços Administrativos e Profissionais Especializados", "7.11 Serviços Diagnósticos Externos", "7.12 Locação de Equipamentos Médicos e Mobiliário Assistencial", "7.13 Locação de Equipamentos de TI", "7.14 Locação de Mobiliário e Utensílios Administrativos/Gerais"] },
             { modulo: "MÓDULO 8 – INVESTIMENTOS / CAPEX", contas: ["8.1 Equipamentos Médicos e Hospitalares", "8.2 Instrumental Cirúrgico Reutilizável e Caixas Cirúrgicas", "8.3 Mobiliário, Utensílios e Infraestrutura Não Assistencial", "8.4 T.I. e Hardware", "8.5 Infraestrutura Predial e Obras", "8.6 Equipamentos de Manutenção"] },
-            { modulo: "MÓDULO 9 – FINANCEIRO, TRIBUTÁRIO E SOCIETÁRIO", contas: ["9.1 Despesas Financeiras", "9.2 Empréstimos e Financiamentos", "9.3 Tributos e Obrigações Governamentais", "9.4 Retenções Tributárias", "9.5 Seguros Corporativos", "9.6 Eventos Societários e Distribuição de Resultados", "9.7 Contingências, Processos e Acordos Judiciais", "9.8 Ajustes Contábeis e Exceções", "9.9 Taxas, Licenças e Anuidades"] },
-            ];
+            { modulo: "MÓDULO 9 – FINANCEIRO, TRIBUTÁRIO E SOCIETÁRIO", contas: ["9.1 Despesas Financeiras", "9.2 Empréstimos e Financiamentos", "9.3 Tributos e Obrigações Governamentais", "9.4 Retenções Tributárias", "9.5 Seguros Corporativos", "9.6 Eventos Societários e Distribuição de Resultados", "9.7 Contingências, Processos e Acordos Judiciais", "9.8 Ajustes Contábeis e Exceções", "9.9 Taxas, Licenças e Anuidades"] }
+        ];
 
         const planoStr = planoDeContas.map(m => `${m.modulo}: ${m.contas.join(', ')}`).join('\n');
+        const ccStr = centrosDeCustosMatriz.map(c => `${c.codigo} - ${c.nome} (${c.macro})`).join('\n');
 
         document.getElementById('inputChat').addEventListener('keypress', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -127,8 +394,8 @@
                 }
             });
             
-            const activeClass = "pb-2 px-2 text-sm md:text-base font-medium text-blue-600 border-b-2 border-blue-600 whitespace-nowrap transition-colors";
-            const inactiveClass = "pb-2 px-2 text-sm md:text-base font-medium text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors";
+            const activeClass = "pb-2 px-3 text-xs md:text-sm font-bold text-blue-600 border-b-2 border-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5";
+            const inactiveClass = "pb-2 px-3 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5";
             
             document.getElementById('btnTabLote').className = modo === 'lote' ? activeClass : inactiveClass;
             document.getElementById('btnTabDuvida').className = modo === 'duvida' ? activeClass : inactiveClass;
@@ -139,16 +406,41 @@
             if(modo === 'historico') carregarHistorico();
         }
 
-        async function saveForReview(btn, item, mod, con, desc) {
+        function switchRefTab(tab) {
+            const refCC = document.getElementById('refCentrosCustos');
+            const refPlano = document.getElementById('refPlanoContas');
+
+            const btnCC = document.getElementById('btnRefCC');
+            const btnPlano = document.getElementById('btnRefPlano');
+
+            const activeBtn = "px-3 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 border border-blue-200 rounded-lg whitespace-nowrap transition";
+            const inactiveBtn = "px-3 py-1.5 text-xs font-bold text-slate-600 hover:bg-slate-100 border border-slate-200 rounded-lg whitespace-nowrap transition";
+
+            refCC.classList.add('hidden');
+            refPlano.classList.add('hidden');
+
+            btnCC.className = inactiveBtn;
+            btnPlano.className = inactiveBtn;
+
+            if (tab === 'cc') {
+                refCC.classList.remove('hidden');
+                btnCC.className = activeBtn;
+            } else if (tab === 'plano') {
+                refPlano.classList.remove('hidden');
+                btnPlano.className = activeBtn;
+            }
+        }
+
+        async function saveForReview(btn, item, mod, con, cc, desc) {
             try {
                 btn.disabled = true; 
                 btn.innerHTML = "✓ Reportado";
-                btn.className = "flex items-center gap-1 px-2 py-1 bg-green-50 text-green-700 border border-green-200 rounded-md text-xs font-bold opacity-75 cursor-not-allowed";
+                btn.className = "flex items-center gap-1 px-2.5 py-1 bg-green-50 text-green-700 border border-green-200 rounded-md text-[10px] md:text-xs font-bold opacity-75 cursor-not-allowed";
                 await db.collection("revisoes").add({ 
-                    item, modulo: mod, conta: con, descricao: desc, data: new Date() 
+                    item, modulo: mod, conta: con, centroCusto: cc, descricao: desc, data: new Date() 
                 });
             } catch (error) {
-                console.error("Erro ao salvar:", error);
+                console.error("Erro ao salvar revisão:", error);
                 btn.disabled = false;
                 btn.innerHTML = "<span>🚩</span> Reportar";
             }
@@ -160,32 +452,35 @@
                 await db.collection("revisoes").doc(id).delete();
                 carregarSinalizados();
             } catch (error) {
-                console.error("Erro ao remover:", error);
+                console.error("Erro ao remover sinalizado:", error);
             }
         }
 
         async function carregarSinalizados() {
             const list = document.getElementById('listaSinalizados');
-            list.innerHTML = "<p class='text-slate-500 italic text-center mt-4'>Carregando sinalizados...</p>";
+            list.innerHTML = "<p class='text-slate-500 italic text-center mt-4 text-xs'>Carregando sinalizados...</p>";
             try {
                 const snapshot = await db.collection("revisoes").orderBy("data", "desc").get();
-                list.innerHTML = snapshot.empty ? "<p class='text-center text-slate-600 mt-4'>Nenhum item sinalizado.</p>" : "";
+                list.innerHTML = snapshot.empty ? "<p class='text-center text-slate-500 mt-4 text-xs'>Nenhum item sinalizado para revisão.</p>" : "";
                 snapshot.forEach(doc => {
                     const d = doc.data();
                     const id = doc.id;
                     list.innerHTML += `
-                    <div id="sinal-${id}" class="p-3 md:p-4 bg-white border border-slate-200 rounded-xl shadow-sm text-sm flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 transition-opacity">
-                        <div class="flex-1 pr-0 sm:pr-4">
-                            <p class="font-bold text-blue-900 text-sm md:text-base">${d.item}</p>
-                            <p class="text-[10px] md:text-xs text-blue-700 font-semibold mt-1">${d.modulo}</p>
-                            <p class="text-[10px] md:text-xs text-slate-500 mt-1">${d.conta}</p>
-                            ${d.descricao ? `<p class="text-[10px] md:text-xs text-slate-400 mt-2 italic border-l-2 border-slate-200 pl-2 line-clamp-2">${d.descricao}</p>` : ''}
+                    <div id="sinal-${id}" class="p-3 bg-white border border-slate-200 rounded-xl shadow-sm text-xs flex flex-col sm:flex-row sm:justify-between sm:items-center gap-3 transition">
+                        <div class="flex-1 pr-0 sm:pr-2">
+                            <p class="font-bold text-blue-950 text-sm">${d.item}</p>
+                            <div class="flex flex-wrap gap-1.5 mt-1">
+                                <span class="bg-blue-100 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-200">${d.modulo || 'N/A'}</span>
+                                <span class="bg-indigo-100 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-200">${d.conta || 'N/A'}</span>
+                                <span class="bg-purple-100 text-purple-800 text-[10px] font-bold px-2 py-0.5 rounded border border-purple-200">CC: ${d.centroCusto || 'N/A'}</span>
+                            </div>
+                            ${d.descricao ? `<p class="text-[11px] text-slate-500 mt-2 italic border-l-2 border-slate-200 pl-2 line-clamp-2">${d.descricao}</p>` : ''}
                         </div>
-                        <button onclick="removerSinalizado('${id}')" class="self-end sm:self-auto shrink-0 px-3 py-2 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition-colors text-xs font-bold shadow-sm">✓ Concluir</button>
+                        <button onclick="removerSinalizado('${id}')" class="self-end sm:self-auto shrink-0 px-3 py-1.5 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-lg hover:bg-emerald-100 transition text-xs font-bold shadow-sm">✓ Concluir</button>
                     </div>`;
                 });
             } catch (error) {
-                list.innerHTML = "<p class='text-red-500 text-center mt-4'>Erro ao carregar os dados.</p>";
+                list.innerHTML = "<p class='text-red-500 text-center mt-4 text-xs'>Erro ao carregar dados dos sinalizados.</p>";
             }
         }
 
@@ -193,7 +488,7 @@
             try {
                 await db.collection("historico").add({ tipo, pergunta, resposta, data: new Date() });
             } catch (error) {
-                console.error("Erro ao salvar no histórico:", error);
+                console.error("Erro ao salvar histórico:", error);
             }
         }
 
@@ -202,32 +497,32 @@
             const btnExcluir = document.getElementById('btnExcluirHistorico');
             if (btnExcluir) btnExcluir.classList.add('hidden'); 
             
-            list.innerHTML = "<p class='text-slate-500 italic text-center mt-4'>Buscando histórico...</p>";
+            list.innerHTML = "<p class='text-slate-500 italic text-center mt-4 text-xs'>Buscando histórico...</p>";
             try {
                 const snapshot = await db.collection("historico").orderBy("data", "desc").limit(50).get();
-                list.innerHTML = snapshot.empty ? "<p class='text-center text-slate-600 mt-4'>Seu histórico está vazio.</p>" : "";
+                list.innerHTML = snapshot.empty ? "<p class='text-center text-slate-500 mt-4 text-xs'>Seu histórico está vazio.</p>" : "";
                 
                 snapshot.forEach(doc => {
                     const d = doc.data();
                     const id = doc.id;
-                    const dataFormatada = d.data.toDate().toLocaleString('pt-BR');
-                    const tipoLabel = d.tipo === 'lote' ? '<span class="bg-blue-100 text-blue-800 text-[10px] md:text-xs px-2 py-1 rounded font-semibold border border-blue-200">Lote</span>' : '<span class="bg-purple-100 text-purple-800 text-[10px] md:text-xs px-2 py-1 rounded font-semibold border border-purple-200">Chat</span>';
+                    const dataFormatada = d.data ? d.data.toDate().toLocaleString('pt-BR') : '';
+                    const tipoLabel = d.tipo === 'lote' ? '<span class="bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded font-bold border border-blue-200">Lote</span>' : '<span class="bg-purple-100 text-purple-800 text-[10px] px-2 py-0.5 rounded font-bold border border-purple-200">Consultor IA</span>';
                     
                     list.innerHTML += `
-                    <div class="p-3 md:p-4 bg-white border border-slate-200 rounded-xl shadow-sm relative transition-colors hover:border-blue-200">
-                        <div class="absolute top-3 md:top-4 right-3 md:right-4">
-                            <input type="checkbox" class="hist-checkbox w-4 h-4 md:w-5 md:h-5 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 cursor-pointer" value="${id}" onchange="toggleBtnExcluir()">
+                    <div class="p-3 bg-white border border-slate-200 rounded-xl shadow-sm relative transition hover:border-blue-300 text-xs">
+                        <div class="absolute top-3 right-3">
+                            <input type="checkbox" class="hist-checkbox w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 cursor-pointer" value="${id}" onchange="toggleBtnExcluir()">
                         </div>
-                        <div class="flex justify-between items-center mb-3 pr-8">
+                        <div class="flex justify-between items-center mb-2 pr-8">
                             ${tipoLabel}
-                            <span class="text-[10px] md:text-xs text-slate-400 font-medium">${dataFormatada}</span>
+                            <span class="text-[10px] text-slate-400 font-medium">${dataFormatada}</span>
                         </div>
-                        <p class="font-semibold text-sm md:text-base text-slate-800 mb-2 md:mb-3 border-l-2 border-blue-300 pl-2 line-clamp-2 bg-slate-50 py-1" title="${d.pergunta}">${d.pergunta}</p>
-                        <div class="text-slate-600 text-xs md:text-sm leading-relaxed max-h-32 overflow-y-auto whitespace-pre-line">${d.resposta}</div>
+                        <p class="font-semibold text-xs text-slate-800 mb-2 border-l-2 border-blue-400 pl-2 bg-slate-50 py-1" title="${d.pergunta}">${d.pergunta}</p>
+                        <div class="text-slate-600 text-[11px] leading-relaxed max-h-32 overflow-y-auto whitespace-pre-line bg-slate-50 p-2 rounded-lg scrollbar-thin">${d.resposta}</div>
                     </div>`;
                 });
             } catch (error) {
-                list.innerHTML = "<p class='text-red-500 text-center mt-4'>Erro ao carregar o histórico.</p>";
+                list.innerHTML = "<p class='text-red-500 text-center mt-4 text-xs'>Erro ao carregar histórico.</p>";
             }
         }
 
@@ -270,11 +565,39 @@
         async function chamarAPI(pergunta, tipo) {
             let inst = "";
             if (tipo === 'lote') {
-                inst = `Plano de Contas ESTRITO:\n${planoStr}\n\nClassifique cada linha fornecida pelo usuário usando APENAS as contas acima. \nRegra absoluta de retorno: RETORNE EXATAMENTE NESTE FORMATO com itens separados por ponto e vírgula:\nitem ; NOME COMPLETO DO MÓDULO ; conta ; breve descrição da utilidade (máximo 3 linhas) ; % de acerto (ex: 95%).\n\nNÃO adicione texto antes ou depois. Se for mais de um item, coloque um item por linha. \nItens para classificar:\n${pergunta}`;
+                inst = `Você é o Controller Sênior do Hospital Prontil (Hospital Pediátrico).
+ESTRUTURA OFICIAL DE 16 CENTROS DE CUSTOS:
+${ccStr}
+
+PLANO DE CONTAS DE 9 MÓDULOS:
+${planoStr}
+
+Analise meticulosamente cada item fornecido pelo usuário e classifique-os com a maior precisão contábil e de alocação de custos possível, utilizando APENAS os Centros de Custos e Contas da estrutura fornecida.
+Sua classificação para Módulo, Conta e Centro de Custo deve refletir o encaixe perfeito e lógico da governança hospitalar, baseado em critérios bem definidos de gestao contabil e administração hospitalar, de acordo com as normas RDC e agencias de acreditacao / qualidade hospitalar.
+
+FORMATO RIGOROSO DE RETORNO (Separe exatamente por ponto e vírgula):
+item ; MÓDULO ; CONTA ; CENTRO DE CUSTO (Ex: 200 — Farmácia) ; breve justificativa de alocação ; % precisão (ex: 99%)
+
+Não adicione textos de introdução nem notas antes/depois. Retorne exatamente uma linha por item.
+Itens para classificar:
+${pergunta}`;
             } else if (tipo === 'exemplo') {
-                inst = `Plano de Contas:\n${planoStr}\n\nListe 10 exemplos práticos e reais de itens que se enquadram ESTRITAMENTE na conta: "${pergunta}". Retorne apenas a lista numerada.`;
+                inst = `Plano de Contas Hospital Prontil:\n${planoStr}\n\nListe 8 a 10 exemplos reais e práticos de itens hospitalares que se enquadram na conta: "${pergunta}". Retorne em tópicos diretos.`;
+            } else if (tipo === 'exemplo-cc') {
+                inst = `Centros de Custos Hospital Prontil:\n${ccStr}\n\nListe 8 a 10 exemplos reais e práticos de despesas, serviços ou itens hospitalares que devem ser alocados no Centro de Custo: "${pergunta}". Retorne apenas em tópicos curtos e diretos.`;
             } else {
-                inst = `Você é um consultor analítico do Hospital PRONTIL. Plano de Contas:\n${planoStr}\n\nVocê está conversando com o usuário para ajudá-lo a classificar itens. Analise todo o histórico e contexto da conversa abaixo. Responda à última interação do usuário baseando-se estritamente no nosso plano de contas. Seja claro, técnico e objetivo.\n\nHISTÓRICO DA CONVERSA:\n${pergunta}`;
+                inst = `Você é um Administrador Hospitalar e Controller Sênior do Hospital Prontil.
+Matriz de 16 Centros de Custos:
+${ccStr}
+
+Plano de Contas (9 Módulos):
+${planoStr}
+
+Sua missão é ajudar o usuário com o enquadramento de notas, rateio de custos e conciliação de faturamento TISS/TUSS.
+Forneça orientações técnicas, diretas e fundamentadas, garantindo a classificação mais perfeita possível, respeitando estritamente a matriz de CCs e o Plano de Contas fornecidos. 
+
+HISTÓRICO DA CONVERSA:
+${pergunta}`;
             }
 
             try {
@@ -299,13 +622,13 @@
 
             document.getElementById('resultadoContainerLote').classList.remove('hidden');
             const div = document.getElementById('resultadoIA');
-            div.innerHTML = "<div class='flex items-center justify-center py-8 text-blue-600 font-medium'><span class='animate-pulse'>Analisando itens e cruzando com o plano de contas...</span></div>";
+            div.innerHTML = "<div class='flex flex-col items-center justify-center py-8 text-blue-600 gap-2'><span class='animate-spin text-xl'>⚙️</span><span class='font-bold text-xs animate-pulse'>Cruzando itens com os 16 Centros de Custos e Plano de Contas...</span></div>";
             
             const resp = await chamarAPI(txt, 'lote');
             div.innerHTML = "";
             
             if (resp.startsWith("Falha") || resp.startsWith("Erro")) {
-                div.innerHTML = `<p class="text-red-500 font-medium">${resp}</p>`;
+                div.innerHTML = `<p class="text-red-500 font-bold text-xs">${resp}</p>`;
                 return;
             }
 
@@ -314,57 +637,68 @@
             resp.split('\n').forEach(l => {
                 if(!l.includes(';')) return;
                 let partes = l.split(';').map(s => s ? s.trim() : '');
-                let [it, m, c, d, conf] = [partes[0]||'', partes[1]||'', partes[2]||'', partes[3]||'', partes[4]||''];
+                let [it, m, c, cc, d, conf] = [partes[0]||'', partes[1]||'', partes[2]||'', partes[3]||'', partes[4]||'', partes[5]||''];
                 
+                // Fallback for indexing alignment
+                if(!conf && d.includes('%')) {
+                    conf = d;
+                    d = '';
+                }
+
                 const safeIt = it.replace(/'/g, "\\'");
                 const safeM = m.replace(/'/g, "\\'");
                 const safeC = c.replace(/'/g, "\\'");
+                const safeCC = cc.replace(/'/g, "\\'");
                 const safeD = d.replace(/'/g, "\\'");
 
-                formatoHistorico += `Item: ${it} | Módulo: ${m} | Conta: ${c} | Confiança: ${conf}\n`;
+                formatoHistorico += `Item: ${it} | Módulo: ${m} | Conta: ${c} | CC: ${cc} | Precisão: ${conf}\n`;
 
                 div.innerHTML += `
-                <div class="bg-white p-3 md:p-4 border border-slate-200 rounded-xl shadow-sm flex flex-col gap-1 mb-3 transition-all hover:border-blue-300">
-                    <div class="font-bold text-slate-800 text-sm md:text-base">${it}</div>
-                    <div class="text-[10px] md:text-xs text-blue-800 font-bold uppercase tracking-wide mt-1">${m}</div>
-                    <div class="text-xs md:text-sm text-blue-600 font-medium">${c}</div>
-                    ${d ? `<div class="text-xs md:text-sm text-slate-600 mt-1 md:mt-2 italic max-h-24 overflow-y-auto whitespace-pre-line bg-slate-50 p-2 rounded-lg scrollbar-thin">${d}</div>` : ''}
+                <div class="bg-white p-3.5 border border-slate-200 rounded-xl shadow-sm flex flex-col gap-1.5 transition hover:border-blue-300">
+                    <div class="font-bold text-slate-900 text-xs md:text-sm flex justify-between items-start">
+                        <span>${it}</span>
+                        <span class="text-[10px] font-bold text-emerald-700 bg-emerald-50 px-2 py-0.5 rounded border border-emerald-200 shrink-0">${conf || '95%'}</span>
+                    </div>
                     
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 mt-3 pt-3 border-t border-slate-100">
-                        <div class="text-[10px] md:text-xs font-bold text-emerald-600 bg-emerald-50 px-2 py-1 rounded border border-emerald-100 self-start sm:self-auto">Precisão: ${conf || 'N/A'}</div>
-                        <div class="flex gap-2 self-end sm:self-auto flex-wrap justify-end">
-                            <button onclick="levarParaDuvida('${safeIt}', '${safeM}', '${safeC}')" 
-                                    class="flex items-center gap-1 px-2 py-1 md:px-3 md:py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-md transition-colors text-[10px] md:text-xs font-bold" 
-                                    title="Duvida desta classificação? Acione o assistente avançado">
-                                <span>❓</span> Tirar Dúvida
-                            </button>
-                            <button onclick="saveForReview(this, '${safeIt}','${safeM}','${safeC}','${safeD}')" 
-                                    class="flex items-center gap-1 px-2 py-1 md:px-3 md:py-1 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-md transition-colors text-[10px] md:text-xs font-bold" 
-                                    title="Arquivar para análise posterior do setor">
-                                <span>🚩</span> Reportar
-                            </button>
-                        </div>
+                    <div class="flex flex-wrap gap-1.5 my-1">
+                        <span class="bg-blue-50 text-blue-800 text-[10px] font-bold px-2 py-0.5 rounded border border-blue-200">${m}</span>
+                        <span class="bg-indigo-50 text-indigo-800 text-[10px] font-bold px-2 py-0.5 rounded border border-indigo-200">${c}</span>
+                        <span class="bg-purple-100 text-purple-900 text-[10px] font-black px-2 py-0.5 rounded border border-purple-300">🏢 CC: ${cc}</span>
+                    </div>
+
+                    ${d ? `<div class="text-[11px] text-slate-600 italic bg-slate-50 p-2 rounded-lg border border-slate-100 whitespace-pre-line leading-relaxed">${d}</div>` : ''}
+                    
+                    <div class="flex items-center justify-end gap-2 mt-2 pt-2 border-t border-slate-100">
+                        <button onclick="levarParaDuvida('${safeIt}', '${safeM}', '${safeC}', '${safeCC}')" 
+                                class="px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-md transition text-[10px] font-bold flex items-center gap-1" 
+                                title="Tirar dúvidas de alocação no Consultor IA">
+                            <span>❓</span> Dúvida
+                        </button>
+                        <button onclick="saveForReview(this, '${safeIt}', '${safeM}', '${safeC}', '${safeCC}', '${safeD}')" 
+                                class="px-2.5 py-1 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-md transition text-[10px] font-bold flex items-center gap-1" 
+                                title="Sinalizar para auditoria da Controller">
+                            <span>🚩</span> Reportar
+                        </button>
                     </div>
                 </div>`;
             });
             
             if(div.innerHTML === "") {
-                div.innerHTML = "<p class='text-slate-500'>A IA não conseguiu formatar a resposta corretamente. Tente reformular a lista.</p>";
+                div.innerHTML = "<p class='text-slate-500 text-xs'>A IA não conseguiu formatar a resposta. Tente simplificar a lista de itens.</p>";
             } else {
                 salvarNoHistorico('lote', txt, formatoHistorico);
             }
         }
 
         async function novoChat() {
-            // Backup the chat array before clearing it to prevent race conditions
             const chatTemp = [...contextoChatTexto]; 
             contextoChatTexto = [];
             
             if (chatTemp.length > 0) {
-                let primeiraPergunta = chatTemp.find(m => m.role === 'user')?.text || "Dúvida Geral sobre Plano de Contas";
+                let primeiraPergunta = chatTemp.find(m => m.role === 'user')?.text || "Dúvida Geral sobre CCs e Plano de Contas";
                 
                 if (primeiraPergunta.includes("INSTRUÇÃO DE SISTEMA")) {
-                     primeiraPergunta = "Revisão Detalhada de Item";
+                     primeiraPergunta = "Análise de Refinamento de Item";
                 } else if (primeiraPergunta.length > 60) {
                      primeiraPergunta = primeiraPergunta.substring(0, 60) + "...";
                 }
@@ -372,35 +706,36 @@
                 let logCompleto = chatTemp.map(msg => `**${msg.role === 'user' ? 'Usuário' : 'Consultor IA'}**:\n${msg.text}`).join('\n\n');
                 
                 await salvarNoHistorico('duvida', primeiraPergunta, logCompleto);
-                
                 if (!document.getElementById('containerHistorico').classList.contains('hidden')) {
                     carregarHistorico();
                 }
             }
             
             const h = document.getElementById('chatHistory');
-            h.innerHTML = `<div class="text-slate-500 italic text-center text-xs mt-2">Inicie uma conversa ou detalhe um item do lote...</div>`;
+            h.innerHTML = `<div class="text-slate-500 italic text-center text-xs my-4 bg-white p-4 rounded-xl border border-slate-200">
+                👋 Olá! Sou o consultor especialista do **Hospital Prontil**.<br>Tire suas dúvidas sobre enquadramento em **Centros de Custos (16 CCs)**, **Plano de Contas**, faturamento TISS/TUSS ou regras de rateio.
+            </div>`;
         }
 
-        function levarParaDuvida(item, modulo, conta) {
+        function levarParaDuvida(item, modulo, conta, cc) {
             if (contextoChatTexto.length > 0) novoChat();
 
             switchMode('duvida');
             const h = document.getElementById('chatHistory');
             
-            const instrucaoSistema = `[INSTRUÇÃO DE SISTEMA]\nO usuário deseja revisar a classificação do item "${item}". A sugestão inicial foi "${modulo} - ${conta}". \nPara ajudar, você deve descobrir:\n1. É serviço ou produto?\n2. Qual setor solicitou?\n3. Qual a utilidade prática?\n4. Qual o valor aproximado?\n\nREGRA ESTRITA: Faça APENAS UMA pergunta por vez. Espere a resposta do usuário antes de fazer a próxima. Se ainda tiver dúvidas após as 4 perguntas, faça perguntas extras. Quando tiver certeza, dê a classificação final baseada no plano de contas.`;
+            const instrucaoSistema = `[INSTRUÇÃO DE SISTEMA]\nO usuário deseja revisar a alocação do item "${item}". A sugestão preliminar foi "${modulo} | ${conta} | Centro de Custo: ${cc}".\nPara dar um parecer definitivo, faça até 3 perguntas curtas (uma por vez) sobre a utilidade, setor solicitante e natureza antes de emitir a posição final.`;
             contextoChatTexto.push({role: 'user', text: instrucaoSistema});
             
-            const primeiraPerguntaText = `📋 Análise de Refinamento: ${item}\nPara chegarmos à classificação perfeita, vamos por partes.\nPrimeiro: este item é um serviço ou um produto material?`;
+            const primeiraPerguntaText = `📋 **Análise do Item:** ${item}\nSugestão inicial: **${cc}** | **${conta}**.\n\nPara confirmarmos com 100% de precisão de auditoria: qual o setor/área final consumidora deste item e a utilidade direta?`;
             contextoChatTexto.push({role: 'ai', text: primeiraPerguntaText});
 
             const mensagemSistemaHTML = `
-                <div class="font-bold mb-2">📋 Análise de Refinamento: <span class="text-blue-700">${item}</span></div>
-                Para chegarmos à classificação perfeita, vamos por partes.<br><br>
-                <strong>1. Primeiro: este item é um serviço ou um produto material?</strong>
+                <div class="font-bold mb-1">📋 Análise de Refinamento: <span class="text-blue-700">${item}</span></div>
+                <div class="text-[11px] text-slate-600 mb-2">Sugestão Atual: <strong>${cc}</strong> | <strong>${conta}</strong></div>
+                Para confirmarmos com total precisão de auditoria: <strong>qual o setor/área final consumidora deste item e qual a utilidade direta?</strong>
             `;
             
-            h.innerHTML += `<div class="bg-blue-50 text-blue-900 border border-blue-200 p-4 rounded-xl self-start max-w-[90%] text-sm leading-relaxed shadow-sm">${mensagemSistemaHTML}</div>`;
+            h.innerHTML += `<div class="bg-blue-50 text-blue-950 border border-blue-200 p-3.5 rounded-xl self-start max-w-[90%] text-xs leading-relaxed shadow-sm">${mensagemSistemaHTML}</div>`;
             h.scrollTop = h.scrollHeight;
             
             const input = document.getElementById('inputChat');
@@ -413,12 +748,12 @@
             if (!txt) return;
 
             const h = document.getElementById('chatHistory');
-            h.innerHTML += `<div class="bg-blue-600 text-white p-3 rounded-xl self-end ml-auto max-w-[85%] shadow-sm leading-relaxed whitespace-pre-line">${txt}</div>`;
+            h.innerHTML += `<div class="bg-blue-600 text-white p-3 rounded-xl self-end ml-auto max-w-[85%] shadow-sm leading-relaxed whitespace-pre-line text-xs font-medium">${txt}</div>`;
             input.value = "";
             h.scrollTop = h.scrollHeight;
 
             const tempId = "msg-" + Date.now();
-            h.innerHTML += `<div id="${tempId}" class="bg-slate-200 p-3 rounded-xl self-start max-w-[85%] text-slate-500 italic flex items-center gap-2"><span class="animate-bounce">●</span> Analisando diretrizes contábeis...</div>`;
+            h.innerHTML += `<div id="${tempId}" class="bg-slate-200 p-3 rounded-xl self-start max-w-[85%] text-slate-600 italic flex items-center gap-2 text-xs"><span class="animate-bounce">●</span> Consultando diretrizes de controladoria...</div>`;
             h.scrollTop = h.scrollHeight;
 
             contextoChatTexto.push({ role: 'user', text: txt });
@@ -427,7 +762,7 @@
 
             const res = await chamarAPI(logConversaIA, 'duvida');
             
-            document.getElementById(tempId).outerHTML = `<div class="bg-slate-100 text-slate-800 border border-slate-200 p-4 rounded-xl self-start max-w-[90%] leading-relaxed shadow-sm whitespace-pre-line">${res}</div>`;
+            document.getElementById(tempId).outerHTML = `<div class="bg-white text-slate-800 border border-slate-200 p-3.5 rounded-xl self-start max-w-[90%] leading-relaxed shadow-sm whitespace-pre-line text-xs">${res}</div>`;
             h.scrollTop = h.scrollHeight;
 
             if (!res.startsWith("Falha de comunicação")) {
@@ -440,35 +775,55 @@
         async function toggleExemplos(conta) {
             const id = `exemplos-${conta.replace(/[^a-zA-Z0-9]/g, '_')}`;
             const div = document.getElementById(id);
+            if (!div) return;
             
             div.classList.toggle('hidden');
             
             if (!div.classList.contains('hidden') && !cacheExemplos[conta]) {
-                div.innerHTML = "<span class='text-blue-500 animate-pulse'>Buscando exemplos na base de dados da IA...</span>";
+                div.innerHTML = "<span class='text-blue-600 animate-pulse text-[11px] font-medium'>Buscando exemplos na base hospitalar...</span>";
                 const exemplos = await chamarAPI(conta, 'exemplo');
                 cacheExemplos[conta] = exemplos;
                 div.innerHTML = exemplos.replace(/\n/g, '<br>');
             }
         }
 
-        function renderPlano() {
-            const container = document.getElementById('planoContas');
+        async function toggleExemplosCC(nomeCC, idCC) {
+            const id = `exemplos-cc-${idCC}`;
+            const div = document.getElementById(id);
+            if (!div) return;
+            
+            div.classList.toggle('hidden');
+            
+            if (!div.classList.contains('hidden') && !cacheExemplos[nomeCC]) {
+                div.innerHTML = "<span class='text-blue-600 animate-pulse text-[11px] font-medium'>Buscando exemplos de alocação...</span>";
+                const exemplos = await chamarAPI(nomeCC, 'exemplo-cc');
+                cacheExemplos[nomeCC] = exemplos;
+                div.innerHTML = exemplos.replace(/\n/g, '<br>');
+            }
+        }
+
+        function renderPlanoAccordeon() {
+            const container = document.getElementById('planoContasAccordion');
+            container.innerHTML = "";
+            
             planoDeContas.forEach((m, index) => {
                 const div = document.createElement('div');
-                div.className = "border border-slate-200 rounded-xl mb-3 overflow-hidden shadow-sm transition-colors hover:border-blue-200";
+                div.className = "border border-slate-200 rounded-xl overflow-hidden shadow-sm transition hover:border-blue-300";
                 
                 div.innerHTML = `
-                    <button onclick="document.getElementById('modulo-${index}').classList.toggle('hidden')" class="w-full text-left p-4 bg-slate-50 font-bold text-sm text-blue-900 hover:bg-blue-50 flex justify-between items-center transition-colors">
-                        ${m.modulo} <span class="text-xs opacity-60">▼</span>
+                    <button onclick="document.getElementById('modulo-acc-${index}').classList.toggle('hidden')" class="w-full text-left p-3 bg-slate-50 font-bold text-xs text-blue-950 hover:bg-blue-50 flex justify-between items-center transition">
+                        <span>${m.modulo}</span>
+                        <span class="text-[10px] text-slate-400">▼</span>
                     </button>
-                    <div id="modulo-${index}" class="hidden p-4 bg-white border-t border-slate-100 text-sm">
-                        <ul class="space-y-3">
+                    <div id="modulo-acc-${index}" class="hidden p-3 bg-white border-t border-slate-100 text-xs">
+                        <ul class="space-y-2">
                             ${m.contas.map(c => `
                                 <li>
-                                    <button onclick="toggleExemplos('${c.replace(/'/g, "\\'")}')" class="text-slate-700 hover:text-blue-600 w-full text-left font-medium transition-colors flex items-start gap-2">
-                                        <span class="text-blue-300 mt-0.5">•</span> <span>${c}</span>
+                                    <button onclick="toggleExemplos('${c.replace(/'/g, "\\'")}')" class="text-slate-700 hover:text-blue-600 w-full text-left font-medium transition flex items-start gap-1.5 text-[11px]">
+                                        <span class="text-blue-400 font-bold">•</span>
+                                        <span>${c}</span>
                                     </button>
-                                    <div id="exemplos-${c.replace(/[^a-zA-Z0-9]/g, '_')}" class="hidden pl-5 mt-2 text-slate-600 text-xs border-l-2 border-blue-100 ml-1 py-1 leading-relaxed"></div>
+                                    <div id="exemplos-${c.replace(/[^a-zA-Z0-9]/g, '_')}" class="hidden pl-4 mt-1 text-slate-600 text-[10px] border-l-2 border-blue-200 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                                 </li>
                             `).join('')}
                         </ul>
@@ -478,7 +833,7 @@
             });
         }
         
-        renderPlano();
+        renderPlanoAccordeon();
     </script>
 </body>
 </html>
