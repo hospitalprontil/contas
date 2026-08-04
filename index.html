@@ -27,18 +27,18 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen antialiased">
 
-    <div class="max-w-7xl mx-auto p-4 md:p-8">
-        <header class="mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-6 rounded-2xl border border-slate-200 shadow-sm">
+    <div class="max-w-7xl mx-auto p-3 sm:p-6 md:p-8">
+        <header class="mb-4 sm:mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div>
-                <div class="flex items-center gap-2">
-                    <span class="bg-blue-600 text-white font-black text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">Hospital Prontil</span>
-                    <span class="text-xs text-slate-400 font-semibold">Versão 2.0 • Matrix CC & Plano de Contas</span>
+                <div class="flex items-center gap-2 flex-wrap">
+                    <span class="bg-blue-600 text-white font-black text-[10px] sm:text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">Hospital Prontil</span>
+                    <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 2.0 • Matrix CC & Plano de Contas</span>
                 </div>
-                <h1 class="text-2xl md:text-3xl font-extrabold text-blue-950 mt-2">Classificação de Centros de Custos & ERP</h1>
+                <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-blue-950 mt-2">Classificação de Centros de Custos & ERP</h1>
                 <p class="text-xs md:text-sm text-slate-600 mt-1">Classifique notas, automatize auditorias de lançamentos e consulte a matriz corporativa de custos.</p>
             </div>
-            <div class="flex items-center gap-3 bg-blue-50/80 border border-blue-100 p-3.5 rounded-xl shrink-0">
-                <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse"></div>
+            <div class="flex items-center gap-3 bg-blue-50/80 border border-blue-100 p-3 sm:p-3.5 rounded-xl shrink-0">
+                <div class="w-3 h-3 rounded-full bg-emerald-500 animate-pulse shrink-0"></div>
                 <div class="text-xs">
                     <p class="font-bold text-blue-900">16 CCs Ativos & 9 Módulos</p>
                     <p class="text-slate-500">API Gemini & Firestore Conectados</p>
@@ -46,41 +46,41 @@
             </div>
         </header>
 
-        <div class="grid lg:grid-cols-12 gap-6">
+        <div class="grid lg:grid-cols-12 gap-4 sm:gap-6">
             
             <!-- LEFT PANEL: Operations & Interaction Tools (7 cols) -->
-            <div class="lg:col-span-7 bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 h-[650px] md:h-[750px] flex flex-col">
+            <div class="lg:col-span-7 bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-200 h-[580px] sm:h-[680px] lg:h-[750px] flex flex-col">
                 
                 <!-- Main Tabs Navigation -->
-                <div class="flex gap-2 border-b border-slate-200 overflow-x-auto shrink-0 pb-1 scrollbar-thin">
-                    <button id="btnTabLote" onclick="switchMode('lote')" class="pb-2 px-3 text-xs md:text-sm font-bold text-blue-600 border-b-2 border-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5">
+                <div class="flex gap-1.5 sm:gap-2 border-b border-slate-200 overflow-x-auto shrink-0 pb-1 scrollbar-thin">
+                    <button id="btnTabLote" onclick="switchMode('lote')" class="pb-2 px-2.5 sm:px-3 text-xs md:text-sm font-bold text-blue-600 border-b-2 border-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5 shrink-0">
                         <span>⚡</span> Classificar Lote
                     </button>
-                    <button id="btnTabDuvida" onclick="switchMode('duvida')" class="pb-2 px-3 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5">
+                    <button id="btnTabDuvida" onclick="switchMode('duvida')" class="pb-2 px-2.5 sm:px-3 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5 shrink-0">
                         <span>💬</span> Consultor IA
                     </button>
-                    <button id="btnTabSinal" onclick="switchMode('sinal')" class="pb-2 px-3 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5">
+                    <button id="btnTabSinal" onclick="switchMode('sinal')" class="pb-2 px-2.5 sm:px-3 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5 shrink-0">
                         <span>🚩</span> Sinalizados
                     </button>
-                    <button id="btnTabHistorico" onclick="switchMode('historico')" class="pb-2 px-3 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5">
+                    <button id="btnTabHistorico" onclick="switchMode('historico')" class="pb-2 px-2.5 sm:px-3 text-xs md:text-sm font-bold text-slate-500 hover:text-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5 shrink-0">
                         <span>📜</span> Histórico
                     </button>
                 </div>
 
-                <div id="containerLote" class="flex flex-col flex-1 min-h-0 pt-4">
+                <div id="containerLote" class="flex flex-col flex-1 min-h-0 pt-3 sm:pt-4">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Itens ou Notas Fiscais para Processamento</label>
-                    <textarea id="inputDescricao" class="w-full h-28 md:h-36 p-3 md:p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none mb-3 shrink-0 resize-none text-xs md:text-sm leading-relaxed" placeholder="Cole os itens aqui (um por linha) com detalhes ou valores.&#10;Exemplos:&#10;- Recarga/Consumo de O2 Liquido para tanques da farmacia&#10;- Aluguel do tanque de gas medicinal do hospital&#10;- Brinquedos para recreacao do Pronto Atendimento&#10;- Aluguel do terreno do estacionamento com IPTU"></textarea>
+                    <textarea id="inputDescricao" class="w-full h-24 sm:h-32 md:h-36 p-3 md:p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none mb-3 shrink-0 resize-none text-xs md:text-sm leading-relaxed" placeholder="Cole os itens aqui (um por linha) com detalhes ou valores.&#10;Exemplos:&#10;- Recarga/Consumo de O2 Liquido para tanques da farmacia&#10;- Aluguel do tanque de gas medicinal do hospital&#10;- Brinquedos para recreacao do Pronto Atendimento&#10;- Aluguel do terreno do estacionamento com IPTU"></textarea>
                     
                     <button onclick="processarLote()" class="w-full bg-blue-600 text-white font-bold py-3 rounded-xl hover:bg-blue-700 active:scale-[0.99] transition shadow-sm shrink-0 text-xs md:text-sm flex items-center justify-center gap-2">
                         <span>🔍</span> Analisar & Alocar (Conta + Centro de Custo)
                     </button>
 
-                    <div id="resultadoContainerLote" class="hidden mt-4 p-3 md:p-4 bg-slate-50 rounded-xl border border-slate-200 flex-1 min-h-0 overflow-y-auto scrollbar-thin">
+                    <div id="resultadoContainerLote" class="hidden mt-3 sm:mt-4 p-3 md:p-4 bg-slate-50 rounded-xl border border-slate-200 flex-1 min-h-0 overflow-y-auto scrollbar-thin">
                         <div id="resultadoIA" class="text-slate-700 text-xs md:text-sm space-y-3"></div>
                     </div>
                 </div>
 
-                <div id="containerChat" class="hidden flex-col flex-1 min-h-0 pt-4">
+                <div id="containerChat" class="hidden flex-col flex-1 min-h-0 pt-3 sm:pt-4">
                     <div class="flex justify-between items-center mb-2 shrink-0">
                         <span class="text-xs text-slate-500 font-medium">Consultor Sênior em Controladoria Hospitalar</span>
                         <button onclick="novoChat()" class="px-3 py-1.5 bg-slate-100 hover:bg-slate-200 text-slate-700 border border-slate-300 rounded-lg text-xs font-bold transition flex items-center gap-1">
@@ -94,25 +94,25 @@
                     </div>
                     <div class="flex gap-2 shrink-0">
                         <textarea id="inputChat" rows="2" class="flex-1 border border-slate-300 rounded-xl p-2.5 md:p-3 outline-none focus:ring-2 focus:ring-blue-500 resize-none text-xs md:text-sm" placeholder="Pergunte sobre um lançamento, CC ou conta... (Enter para enviar)"></textarea>
-                        <button onclick="enviarChat()" class="bg-blue-600 text-white px-4 md:px-6 rounded-xl font-bold hover:bg-blue-700 transition shadow-sm text-xs md:text-sm flex items-center justify-center">
+                        <button onclick="enviarChat()" class="bg-blue-600 text-white px-3 sm:px-6 rounded-xl font-bold hover:bg-blue-700 transition shadow-sm text-xs md:text-sm flex items-center justify-center shrink-0">
                             Enviar
                         </button>
                     </div>
                 </div>
 
-                <div id="containerSinal" class="hidden flex-col flex-1 min-h-0 pt-4">
+                <div id="containerSinal" class="hidden flex-col flex-1 min-h-0 pt-3 sm:pt-4">
                     <div id="listaSinalizados" class="flex-1 overflow-y-auto space-y-3 pr-1 min-h-0 scrollbar-thin">
                         <p class="text-slate-500 italic text-center mt-4 text-xs">Carregando sinalizados...</p>
                     </div>
                 </div>
 
-                <div id="containerHistorico" class="hidden flex-col flex-1 min-h-0 pt-4">
-                    <div class="flex justify-between items-center mb-2 shrink-0">
+                <div id="containerHistorico" class="hidden flex-col flex-1 min-h-0 pt-3 sm:pt-4">
+                    <div class="flex justify-between items-center mb-2 shrink-0 flex-wrap gap-2">
                         <label class="flex items-center gap-2 cursor-pointer group">
                             <input type="checkbox" id="checkSelecionarTudo" onchange="toggleSelecionarTudo()" class="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 cursor-pointer transition">
                             <span class="text-xs text-slate-600 font-bold group-hover:text-blue-700 transition">Selecionar Todos</span>
                         </label>
-                        <button onclick="excluirHistoricoSelecionado()" class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-xl text-xs font-bold transition shadow-sm hidden ml-auto" id="btnExcluirHistorico">
+                        <button onclick="excluirHistoricoSelecionado()" class="px-3 py-1.5 bg-red-50 text-red-600 hover:bg-red-100 border border-red-200 rounded-xl text-xs font-bold transition shadow-sm hidden" id="btnExcluirHistorico">
                             🗑 Excluir Selecionados
                         </button>
                     </div>
@@ -122,8 +122,8 @@
                 </div>
             </div>
 
-            <!-- RIGHT PANEL: Reference Manuals (Centros de Custos & Plano de Contas) (5 cols) -->
-            <div class="lg:col-span-5 bg-white p-4 md:p-6 rounded-2xl shadow-sm border border-slate-200 h-[650px] md:h-[750px] flex flex-col">
+            <!-- RIGHT PANEL: Reference Manuals (Plano de Contas & Centros de Custos) (5 cols) -->
+            <div class="lg:col-span-5 bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-200 h-[580px] sm:h-[680px] lg:h-[750px] flex flex-col">
                 
                 <!-- Side Panel Tabs -->
                 <div class="flex gap-2 border-b border-slate-200 mb-4 pb-2 shrink-0 overflow-x-auto scrollbar-thin">
