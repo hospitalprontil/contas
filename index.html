@@ -27,12 +27,12 @@
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen antialiased">
 
-    <div class="max-w-7xl mx-auto p-3 sm:p-6 md:p-8">
+    <div class="max-w-7xl mx-auto p-4 sm:p-6 md:p-8">
         <header class="mb-4 sm:mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm">
             <div>
                 <div class="flex items-center gap-2 flex-wrap">
                     <span class="bg-blue-600 text-white font-black text-[10px] sm:text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">Hospital Prontil</span>
-                    <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 2.0 • Matrix CC & Plano de Contas</span>
+                    <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 2.0 5/8/26 - 08:44 • Matrix CC & Plano de Contas</span>
                 </div>
                 <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-blue-950 mt-2">Classificação de Centros de Custos & ERP</h1>
                 <p class="text-xs md:text-sm text-slate-600 mt-1">Classifique notas, automatize auditorias de lançamentos e consulte a matriz corporativa de custos.</p>
@@ -49,7 +49,7 @@
         <div class="grid lg:grid-cols-12 gap-4 sm:gap-6">
             
             <!-- LEFT PANEL: Operations & Interaction Tools (7 cols) -->
-            <div class="lg:col-span-7 bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-200 h-[580px] sm:h-[680px] lg:h-[750px] flex flex-col">
+            <div class="lg:col-span-7 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 h-[580px] sm:h-[680px] lg:h-[750px] flex flex-col">
                 
                 <!-- Main Tabs Navigation -->
                 <div class="flex gap-1.5 sm:gap-2 border-b border-slate-200 overflow-x-auto shrink-0 pb-1 scrollbar-thin">
@@ -123,7 +123,7 @@
             </div>
 
             <!-- RIGHT PANEL: Reference Manuals (Plano de Contas & Centros de Custos) (5 cols) -->
-            <div class="lg:col-span-5 bg-white p-3 sm:p-6 rounded-2xl shadow-sm border border-slate-200 h-[580px] sm:h-[680px] lg:h-[750px] flex flex-col">
+            <div class="lg:col-span-5 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 h-[580px] sm:h-[680px] lg:h-[750px] flex flex-col">
                 
                 <!-- Side Panel Tabs -->
                 <div class="flex gap-2 border-b border-slate-200 mb-4 pb-2 shrink-0 overflow-x-auto scrollbar-thin">
@@ -156,39 +156,39 @@
                         </div>
                         <div class="p-3 bg-slate-50 text-xs space-y-2">
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('100 - Pronto Atendimento', '100')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-blue-700 font-bold">100</span> — Pronto Atendimento</span>
+                                <button onclick="toggleExemplosCC('Pronto Atendimento', 'pa')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Pronto Atendimento</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-100" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-pa" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('110 - Ambulatório', '110')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-blue-700 font-bold">110</span> — Ambulatório</span>
+                                <button onclick="toggleExemplosCC('Ambulatório', 'amb')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Ambulatório</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-110" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-amb" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('120 - Internação', '120')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-blue-700 font-bold">120</span> — Internação</span>
+                                <button onclick="toggleExemplosCC('Internação', 'int')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Internação</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-120" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-int" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('130 - Centro Cirúrgico', '130')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-blue-700 font-bold">130</span> — Centro Cirúrgico</span>
+                                <button onclick="toggleExemplosCC('Centro Cirúrgico', 'ccir')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Centro Cirúrgico</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-130" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-ccir" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('140 - Radiologia', '140')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-blue-700 font-bold">140</span> — Radiologia</span>
+                                <button onclick="toggleExemplosCC('Radiologia', 'rad')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Radiologia</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-140" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-rad" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                         </div>
                     </div>
@@ -201,20 +201,20 @@
                         </div>
                         <div class="p-3 bg-slate-50 text-xs space-y-2">
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('200 - Farmácia', '200')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-emerald-700 font-bold">200</span> — Farmácia</span>
+                                <button onclick="toggleExemplosCC('Farmácia', 'farm')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Farmácia</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-emerald-600 transition">▼</span>
                                 </button>
                                 <p class="text-[10px] text-slate-500 font-normal mt-0.5">Central, Dispensação e Responsabilidade Técnica do O2 Líquido.</p>
-                                <div id="exemplos-cc-200" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-emerald-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-farm" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-emerald-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('220 - SND / Lactário', '220')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-emerald-700 font-bold">220</span> — SND / Lactário</span>
+                                <button onclick="toggleExemplosCC('SND / Lactário', 'snd')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">SND / Lactário</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-emerald-600 transition">▼</span>
                                 </button>
                                 <p class="text-[10px] text-slate-500 font-normal mt-0.5">Nutrição de Pacientes e Serviços de Copa Geral do Hospital.</p>
-                                <div id="exemplos-cc-220" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-emerald-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-snd" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-emerald-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                         </div>
                     </div>
@@ -227,47 +227,47 @@
                         </div>
                         <div class="p-3 bg-slate-50 text-xs space-y-2">
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('300 - Recepção / Autorizações', '300')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-purple-700 font-bold">300</span> — Recepção / Autorizações</span>
+                                <button onclick="toggleExemplosCC('Recepção / Autorizações', 'recep')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Recepção / Autorizações</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-300" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-recep" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('310 - Almoxarifado / Compras', '310')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-purple-700 font-bold">310</span> — Almoxarifado / Compras</span>
+                                <button onclick="toggleExemplosCC('Almoxarifado / Compras', 'almox')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Almoxarifado / Compras</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-310" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-almox" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('320 - Faturamento', '320')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-purple-700 font-bold">320</span> — Faturamento</span>
+                                <button onclick="toggleExemplosCC('Faturamento', 'fat')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Faturamento</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-320" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-fat" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('330 - Administração / RH / Financeiro', '330')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-purple-700 font-bold">330</span> — Administração / RH / Financeiro</span>
+                                <button onclick="toggleExemplosCC('Administração / RH / Financeiro', 'adm')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Administração / RH / Financeiro</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-330" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-adm" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('340 - Gerência de Enfermagem / Qualidade', '340')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-purple-700 font-bold">340</span> — Gerência de Enfermagem / Qualidade</span>
+                                <button onclick="toggleExemplosCC('Gerência de Enfermagem / Qualidade', 'ger')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Gerência de Enfermagem / Qualidade</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-340" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-ger" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('350 - Diretoria', '350')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-purple-700 font-bold">350</span> — Diretoria</span>
+                                <button onclick="toggleExemplosCC('Diretoria', 'dir')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Diretoria</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
                                 </button>
                                 <p class="text-[10px] text-slate-500 font-normal mt-0.5">Governança, CAPEX, Negócios Corporativos e Imobiliários (ex: Estacionamento).</p>
-                                <div id="exemplos-cc-350" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-dir" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                         </div>
                     </div>
@@ -280,26 +280,26 @@
                         </div>
                         <div class="p-3 bg-slate-50 text-xs space-y-2">
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('400 - Limpeza / Lavanderia / Enxoval', '400')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-slate-700 font-bold">400</span> — Limpeza / Lavanderia / Enxoval</span>
+                                <button onclick="toggleExemplosCC('Limpeza / Lavanderia / Enxoval', 'limp')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Limpeza / Lavanderia / Enxoval</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-slate-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-400" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-limp" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('410 - Manutenção', '410')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-slate-700 font-bold">410</span> — Manutenção</span>
+                                <button onclick="toggleExemplosCC('Manutenção', 'manut')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Manutenção</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-slate-600 transition">▼</span>
                                 </button>
                                 <p class="text-[10px] text-slate-500 font-normal mt-0.5">Preservação Predial, Engenharia Clínica, Utilidades e Aluguel de Tanque de O2.</p>
-                                <div id="exemplos-cc-410" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-manut" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                             <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('420 - Telefonia / TI / Processos', '420')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold"><span class="text-slate-700 font-bold">420</span> — Telefonia / TI / Processos</span>
+                                <button onclick="toggleExemplosCC('Telefonia / TI / Processos', 'ti')" class="w-full text-left flex justify-between items-center group">
+                                    <span class="font-semibold text-slate-800">Telefonia / TI / Processos</span>
                                     <span class="text-[10px] text-slate-400 group-hover:text-slate-600 transition">▼</span>
                                 </button>
-                                <div id="exemplos-cc-420" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                                <div id="exemplos-cc-ti" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
                             </div>
                         </div>
                     </div>
@@ -309,10 +309,10 @@
                         <span class="font-bold block uppercase text-[10px] text-red-700">🚫 Setores Unificados / Inativados (Sem CC próprio):</span>
                         <ul class="list-disc pl-4 space-y-1 text-[11px] text-slate-700">
                             <li><strong>Laboratório:</strong> Sem CC. Apurado via DRE (Receita 4.1.05 vs Custo 7.11).</li>
-                            <li><strong>Estacionamento:</strong> Alocar despesas e receitas no CC 350 (Diretoria).</li>
-                            <li><strong>Brinquedoteca:</strong> Alocar custos diretos no CC Consumidor (100 PA ou 120 Internação).</li>
-                            <li><strong>CME / Esterilização:</strong> Integrado ao CC 130 ou CC 200.</li>
-                            <li><strong>Segurança do Trabalho:</strong> Unificado no CC 330 (ADM/RH).</li>
+                            <li><strong>Estacionamento:</strong> Alocar despesas e receitas na Diretoria.</li>
+                            <li><strong>Brinquedoteca:</strong> Alocar custos diretos no CC Consumidor (Pronto Atendimento ou Internação).</li>
+                            <li><strong>CME / Esterilização:</strong> Integrado ao Centro Cirúrgico ou Farmácia.</li>
+                            <li><strong>Segurança do Trabalho:</strong> Unificado na Administração / RH / Financeiro.</li>
                         </ul>
                     </div>
                 </div>
@@ -339,24 +339,24 @@
         const cacheExemplos = {}; 
         let contextoChatTexto = [];
 
-        // Official Structure - 16 Centros de Custos
+        // Official Structure - 16 Centros de Custos (Removed Numeric Codes)
         const centrosDeCustosMatriz = [
-            { codigo: "100", nome: "Pronto Atendimento", macro: "Produtivos Assistenciais" },
-            { codigo: "110", nome: "Ambulatório", macro: "Produtivos Assistenciais" },
-            { codigo: "120", nome: "Internação", macro: "Produtivos Assistenciais" },
-            { codigo: "130", nome: "Centro Cirúrgico", macro: "Produtivos Assistenciais" },
-            { codigo: "140", nome: "Radiologia", macro: "Produtivos Assistenciais" },
-            { codigo: "200", nome: "Farmácia", macro: "Auxiliares Assistenciais" },
-            { codigo: "220", nome: "SND / Lactário", macro: "Auxiliares Assistenciais" },
-            { codigo: "300", nome: "Recepção / Autorizações", macro: "Administrativos e Gestão" },
-            { codigo: "310", nome: "Almoxarifado / Compras", macro: "Administrativos e Gestão" },
-            { codigo: "320", nome: "Faturamento", macro: "Administrativos e Gestão" },
-            { codigo: "330", nome: "Administração / RH / Financeiro", macro: "Administrativos e Gestão" },
-            { codigo: "340", nome: "Gerência de Enfermagem / Qualidade", macro: "Administrativos e Gestão" },
-            { codigo: "350", nome: "Diretoria", macro: "Administrativos e Gestão" },
-            { codigo: "400", nome: "Limpeza / Lavanderia / Enxoval", macro: "Infraestrutura e Apoio" },
-            { codigo: "410", nome: "Manutenção", macro: "Infraestrutura e Apoio" },
-            { codigo: "420", nome: "Telefonia / TI / Processos", macro: "Infraestrutura e Apoio" }
+            { nome: "Pronto Atendimento", macro: "Produtivos Assistenciais" },
+            { nome: "Ambulatório", macro: "Produtivos Assistenciais" },
+            { nome: "Internação", macro: "Produtivos Assistenciais" },
+            { nome: "Centro Cirúrgico", macro: "Produtivos Assistenciais" },
+            { nome: "Radiologia", macro: "Produtivos Assistenciais" },
+            { nome: "Farmácia", macro: "Auxiliares Assistenciais" },
+            { nome: "SND / Lactário", macro: "Auxiliares Assistenciais" },
+            { nome: "Recepção / Autorizações", macro: "Administrativos e Gestão" },
+            { nome: "Almoxarifado / Compras", macro: "Administrativos e Gestão" },
+            { nome: "Faturamento", macro: "Administrativos e Gestão" },
+            { nome: "Administração / RH / Financeiro", macro: "Administrativos e Gestão" },
+            { nome: "Gerência de Enfermagem / Qualidade", macro: "Administrativos e Gestão" },
+            { nome: "Diretoria", macro: "Administrativos e Gestão" },
+            { nome: "Limpeza / Lavanderia / Enxoval", macro: "Infraestrutura e Apoio" },
+            { nome: "Manutenção", macro: "Infraestrutura e Apoio" },
+            { nome: "Telefonia / TI / Processos", macro: "Infraestrutura e Apoio" }
         ];
 
         // Official Structure - 9 Modules Chart of Accounts
@@ -373,7 +373,7 @@
         ];
 
         const planoStr = planoDeContas.map(m => `${m.modulo}: ${m.contas.join(', ')}`).join('\n');
-        const ccStr = centrosDeCustosMatriz.map(c => `${c.codigo} - ${c.nome} (${c.macro})`).join('\n');
+        const ccStr = centrosDeCustosMatriz.map(c => `${c.nome} (${c.macro})`).join('\n');
 
         document.getElementById('inputChat').addEventListener('keypress', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
@@ -592,26 +592,22 @@
             if (tipo === 'lote') {
                 inst = `Você é o Controller Sênior do Hospital Prontil (Hospital Pediátrico).
 
-ESTRUTURA OFICIAL DE 16 CENTROS DE CUSTOS (Alocação rigorosa):
+ESTRUTURA OFICIAL DE 16 CENTROS DE CUSTOS:
 ${ccStr}
 
-PLANO DE CONTAS DE 9 MÓDULOS (Natureza da despesa):
+PLANO DE CONTAS DE 9 MÓDULOS:
 ${planoStr}
 
-MISSÃO: Classifique os itens com precisão absoluta de auditoria, cruzando Módulo, Conta e Centro de Custo (CC).
+MISSÃO: Classifique os itens com precisão absoluta de auditoria, cruzando Módulo, Conta e Centro de Custo.
 
 DIRETRIZES CRÍTICAS PARA CENTROS DE CUSTOS E PLANO DE CONTAS:
-1. Princípio do Consumidor Final: Aloque a despesa no CC que EFETIVAMENTE CONSOME o item, não no setor que apenas compra/gerencia estoques (ex: seringas vão para o PA/Internação/CCirúrgico, não para o Almoxarifado).
-2. Itens Assistenciais/Médicos: Destinam-se aos CCs Produtivos (100 a 140) ou Farmácia (200).
-3. Infraestrutura/Predial/TI: Destinam-se estritamente aos CCs de Infraestrutura (400, 410, 420).
-4. Alimentos/Dietas: Destinam-se exclusivamente ao SND / Lactário (220).
-5. Administrativo corporativo: Destina-se aos CCs de Apoio (300 a 350) dependendo do setor exato.
-6. SEJA EXPECÍFICO: Evite alocar no CC genérico "330 - Administração" se houver um CC produtivo ou de infraestrutura óbvio para a despesa.
-7. CAPEX vs BENS DE PEQUENO VALOR: Para bens duráveis (ar condicionado, ferramentas, equipamentos médicos, móveis), a classificação entre o MÓDULO 8 (Investimentos/CAPEX) e as contas de "Bens de Pequeno Valor" (2.7, 4.2 ou 5.8) depende do VALOR de aquisição. Exemplo: Furadeira de R$ 350 é Material de Manutenção/Bem de Pequeno Valor; Ar Condicionado de R$ 2.000 é Equipamento/CAPEX.
-8. DADOS INSUFICIENTES (PERGUNTE): Se o item for muito genérico (ex: "Papel", "Luvas") OU se for um bem durável sem preço informado na descrição (ex: "Mesa", "Ar condicionado", "Furadeira"), NÃO CHUTE. Retorne a palavra "PENDENTE" no Módulo, Conta ou CC. E OBRIGATORIAMENTE, na "Justificativa", escreva UMA PERGUNTA DIRETA (ex: "Para qual setor esse produto irá?", "Qual o valor unitário do item para definir se é CAPEX ou OPEX?"). Defina a precisão como "0%".
+1. REGRA DE ESTOQUE (MÓDULOS 1, 2, 3, 4 e 5): Produtos físicos (medicamentos, materiais, alimentos, limpeza, ferramentas de baixo valor) dão entrada apenas no estoque. OBRIGATORIAMENTE, retorne "N/A" no campo de Centro de Custo para estes itens. NÃO aproprie nenhum outro Centro de Custo aqui.
+2. REGRA DE DESPESA DIRETA (MÓDULOS 6, 7, 8 e 9): Serviços, honorários, folha de pagamento, locações, CAPEX e despesas financeiras NÃO passam pelo almoxarifado. Aplique o "Princípio do Consumidor Final" e aloque DIRETAMENTE no CC que solicitou ou consumiu a despesa (ex: Conserto predial vai para a Manutenção; Médico terceirizado vai para os CCs assistenciais correspondentes).
+3. CAPEX vs BENS DE PEQUENO VALOR: Para bens duráveis, a classificação entre o MÓDULO 8 (CAPEX) e as contas de "Pequeno Valor" depende estritamente do VALOR de aquisição. 
+4. DADOS INSUFICIENTES (PERGUNTE): Se o item for genérico demais (ex: "Serviços", "Luvas") OU se for um bem durável sem preço (ex: "Ar condicionado", "Furadeira"), NÃO CHUTE. Retorne "PENDENTE" no Módulo, Conta ou CC. Na "Justificativa", escreva UMA PERGUNTA DIRETA (ex: "Para qual setor esse serviço foi prestado?", "Qual o valor unitário do item?"). Defina a precisão como "0%".
 
 FORMATO RIGOROSO DE RETORNO (Separe exatamente por ponto e vírgula):
-Item original ; MÓDULO (ou PENDENTE) ; CONTA (ou PENDENTE) ; CENTRO DE CUSTO (ou PENDENTE) ; Justificativa técnica ou Pergunta Direcionada ; % precisão
+Item original ; MÓDULO (ou PENDENTE) ; CONTA (ou PENDENTE) ; CENTRO DE CUSTO (ou N/A ou PENDENTE) ; Justificativa técnica ou Pergunta Direcionada ; % precisão
 
 Restrição OBRIGATÓRIA:
 - Retorne EXATAMENTE uma linha por item.
@@ -632,15 +628,14 @@ Plano de Contas (9 Módulos):
 ${planoStr}
 
 DIRETRIZES DE ALOCAÇÃO DE CC E CONTAS:
-Sempre oriente alocar o custo no setor que efetivamente consome o recurso (Princípio do Consumidor Final). 
-CAPEX vs OPEX: Para bens duráveis (computadores, móveis, ferramentas), a classificação entre Investimento (Módulo 8) e Bem de Pequeno Valor (Contas 2.7, 4.2, 5.8) depende estritamente do valor (ticket).
+1. REGRA DE ESTOQUE (MÓDULOS 1 A 5): Todos os materiais e produtos físicos (medicamentos, nutrição, descartáveis) dão entrada no estoque. NÃO devem receber classificação de Centro de Custo no momento da compra (ficam com CC N/A).
+2. REGRA DE DESPESA DIRETA (MÓDULOS 6 A 9): Serviços, folha, CAPEX e despesas financeiras são despesas diretas. Devem ser alocadas diretamente no Centro de Custo do consumidor final.
+3. CAPEX vs OPEX: Para bens duráveis, a classificação entre Investimento (Módulo 8) e Bem de Pequeno Valor (Contas 2.7, 4.2, 5.8) depende estritamente do valor monetário (ticket).
 
-POSTURA CONSULTIVA E REFINAMENTO (MUITO IMPORTANTE):
-Se o usuário solicitar a classificação de um item genérico (ex: "canetas", "conserto") OU de um bem durável sem informar o preço (ex: "ar condicionado", "furadeira"), e faltarem informações críticas (como o setor solicitante, finalidade ou valor monetário), NÃO DÊ A RESPOSTA FINAL IMEDIATAMENTE. Faça 1 ou 2 perguntas curtas e direcionadas (ex: "Para qual setor será destinado?", "Qual o valor estimado para avaliarmos se é CAPEX ou Pequeno Valor?") para coletar o contexto necessário antes de dar o parecer definitivo.
+POSTURA CONSULTIVA E REFINAMENTO:
+Se o usuário solicitar a classificação de um item e faltarem informações críticas (como o setor solicitante para serviços, ou valor monetário para bens duráveis), NÃO DÊ A RESPOSTA FINAL IMEDIATAMENTE. Faça perguntas curtas e direcionadas para coletar o contexto necessário antes de dar o parecer definitivo.
 
-Sua missão é ajudar o usuário com o enquadramento de notas, rateio de custos e conciliação.
-Forneça orientações técnicas, diretas e fundamentadas, garantindo a classificação mais perfeita possível, respeitando estritamente a matriz de CCs e o Plano de Contas fornecidos. 
-
+Forneça orientações técnicas, diretas e fundamentadas.
 HISTÓRICO DA CONVERSA:
 ${pergunta}`;
             }
@@ -715,7 +710,7 @@ ${pergunta}`;
                     <div class="flex flex-wrap gap-1.5 my-1">
                         <span class="${tagColor} text-[10px] font-bold px-2 py-0.5 rounded border">${m}</span>
                         <span class="${tagIndColor} text-[10px] font-bold px-2 py-0.5 rounded border">${c}</span>
-                        <span class="${tagCCColor} text-[10px] font-black px-2 py-0.5 rounded border">🏢 CC: ${cc}</span>
+                        <span class="${tagCCColor} text-[10px] font-black px-2 py-0.5 rounded border">${cc.includes('N/A') ? '📦' : '🏢'} CC: ${cc}</span>
                     </div>
 
                     ${d ? `<div class="text-[11px] text-slate-600 italic bg-slate-50 p-2 rounded-lg border border-slate-100 whitespace-pre-line leading-relaxed">${d}</div>` : ''}
@@ -773,8 +768,14 @@ ${pergunta}`;
             const promptInline = `Contexto: Estávamos classificando o item hospitalar "${itemNome}" no Hospital Prontil e ele ficou pendente.
 O usuário respondeu à dúvida com: "${txt}"
 
-Com base nessa resposta e nas regras dos 16 Centros de Custos e Plano de Contas de 9 Módulos, forneça a classificação final e direta no seguinte formato estrito separados por ponto e vírgula:
-Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO ; Justificativa rápida da definição ; 100%`;
+LEMBRETE DE REGRAS CRÍTICAS: 
+1. Se enquadrar nos MÓDULOS 1, 2, 3, 4 e 5 (Materiais/Produtos): O Centro de Custo deve ser OBRIGATORIAMENTE "N/A" (pois dão entrada apenas no estoque).
+2. Se enquadrar nos MÓDULOS 6, 7, 8 e 9 (Serviços, Pessoal, CAPEX): O Centro de Custo deve ser o do consumidor final que solicitou o serviço/bem.
+3. CAPEX vs Pequeno Valor: A escolha do módulo para bens duráveis depende estritamente do valor.
+
+Com base nessa resposta e nas diretrizes, forneça a classificação final e direta no seguinte formato estrito separados por ponto e vírgula. 
+RETORNE ÚNICA E EXCLUSIVAMENTE A LINHA ABAIXO, SEM NENHUM TEXTO ANTES OU DEPOIS:
+Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO (ou N/A) ; Justificativa rápida da definição ; 100%`;
 
             const respostaIA = await chamarAPI(promptInline, 'lote');
             
@@ -789,7 +790,7 @@ Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO ; Justificativa rápida da de
                     <div class="font-bold text-emerald-800">✓ Classificação Resolvida!</div>
                     <div><strong>Módulo:</strong> ${m}</div>
                     <div><strong>Conta:</strong> ${c}</div>
-                    <div><strong>CC:</strong> ${cc}</div>
+                    <div><strong>${cc.includes('N/A') ? '📦' : '🏢'} CC:</strong> ${cc}</div>
                     <div class="text-[10px] text-slate-600 italic mt-1">${d}</div>
                 </div>`;
             } else {
