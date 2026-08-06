@@ -39,7 +39,7 @@
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
                         <span class="bg-blue-600 text-white font-black text-[10px] sm:text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">Hospital Prontil</span>
-                        <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 3.0 (06/08/2026 às 12:12) • Matriz CC & Plano de Contas</span>
+                        <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 3.2 (06/08/2026 às 19:15) • Matriz CC & Plano de Contas</span>
                     </div>
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-blue-950 mt-2">Classificação de Centros de Custos & ERP</h1>
                     <p class="text-xs md:text-sm text-slate-600 mt-1">Classifique notas, automatize auditorias de lançamentos e consulte a matriz corporativa de custos.</p>
@@ -348,41 +348,42 @@
         let contextoChatTexto = [];
         let currentChatId = null; // Variável global para rastrear o chat ativo
 
-        // Official Structure - 16 Centros de Custos (Removed Numeric Codes)
+        // Official Structure - 16 Centros de Custos ENRIQUECIDOS (Com Escopo)
         const centrosDeCustosMatriz = [
-            { nome: "Pronto Atendimento", macro: "Produtivos Assistenciais" },
-            { nome: "Ambulatório", macro: "Produtivos Assistenciais" },
-            { nome: "Internação", macro: "Produtivos Assistenciais" },
-            { nome: "Centro Cirúrgico", macro: "Produtivos Assistenciais" },
-            { nome: "Radiologia", macro: "Produtivos Assistenciais" },
-            { nome: "Farmácia", macro: "Auxiliares Assistenciais" },
-            { nome: "SND / Lactário", macro: "Auxiliares Assistenciais" },
-            { nome: "Recepção / Autorizações", macro: "Administrativos e Gestão" },
-            { nome: "Almoxarifado / Compras", macro: "Administrativos e Gestão" },
-            { nome: "Faturamento", macro: "Administrativos e Gestão" },
-            { nome: "Administração / RH / Financeiro", macro: "Administrativos e Gestão" },
-            { nome: "Gerência de Enfermagem / Qualidade", macro: "Administrativos e Gestão" },
-            { nome: "Diretoria", macro: "Administrativos e Gestão" },
-            { nome: "Limpeza / Lavanderia / Enxoval", macro: "Infraestrutura e Apoio" },
-            { nome: "Manutenção", macro: "Infraestrutura e Apoio" },
-            { nome: "Telefonia / TI / Processos", macro: "Infraestrutura e Apoio" }
+            { nome: "Pronto Atendimento", macro: "Produtivos Assistenciais", desc: "Atendimentos de urgência/emergência pediátrica, triagem, consultórios de porta. Recebe custos diretos de brinquedos da humanização." },
+            { nome: "Ambulatório", macro: "Produtivos Assistenciais", desc: "Consultas eletivas, especialidades pediátricas agendadas." },
+            { nome: "Internação", macro: "Produtivos Assistenciais", desc: "Leitos de enfermaria e UTI pediátrica. Recebe custos de humanização do leito e recreação de pacientes internados." },
+            { nome: "Centro Cirúrgico", macro: "Produtivos Assistenciais", desc: "Salas de cirurgia, recuperação anestésica (RPA). Absorve esterilização (CME) e materiais cirúrgicos." },
+            { nome: "Radiologia", macro: "Produtivos Assistenciais", desc: "Exames de imagem (Raio-X, Tomografia, USG)." },
+            { nome: "Farmácia", macro: "Auxiliares Assistenciais", desc: "Gestão do estoque de medicamentos, dispensação, controle de psicotrópicos, responsabilidade técnica e aquisição do O2 Líquido." },
+            { nome: "SND / Lactário", macro: "Auxiliares Assistenciais", desc: "Nutrição de pacientes, preparo de fórmulas infantis (lactário), refeitório e copa geral." },
+            { nome: "Recepção / Autorizações", macro: "Administrativos e Gestão", desc: "Recepção principal, atendimento ao cliente e liberação de guias de convênio (TISS/TUSS)." },
+            { nome: "Almoxarifado / Compras", macro: "Administrativos e Gestão", desc: "Gestão de compras e guarda do estoque físico. DESTINO OBRIGATÓRIO (CC) de todos os itens materiais (Módulos 1 a 5)." },
+            { nome: "Faturamento", macro: "Administrativos e Gestão", desc: "Auditoria de contas médicas, repasses e envio de faturas às operadoras." },
+            { nome: "Administração / RH / Financeiro", macro: "Administrativos e Gestão", desc: "Folha de pagamento da base administrativa, recrutamento, financeiro, contabilidade, segurança do trabalho (unificada), ações de endomarketing, luto (coroas de flores) e homenagens a colaboradores." },
+            { nome: "Gerência de Enfermagem / Qualidade", macro: "Administrativos e Gestão", desc: "Diretoria assistencial, controle de infecção (CCIH), ouvidoria e gestão de qualidade/acreditação (ONA/JCI)." },
+            { nome: "Diretoria", macro: "Administrativos e Gestão", desc: "Governança corporativa, relações institucionais, CAPEX geral, gestão de estacionamento e despesas corporativas (marketing institucional, relações públicas)." },
+            { nome: "Limpeza / Lavanderia / Enxoval", macro: "Infraestrutura e Apoio", desc: "Saneamento predial, higienização, gestão de resíduos, lavagem de enxoval e rouparia." },
+            { nome: "Manutenção", macro: "Infraestrutura e Apoio", desc: "Engenharia predial, engenharia clínica (conserto de equipamentos), calibrações, gases prediais e aluguel do tanque de gases (cilindros metálicos)." },
+            { nome: "Telefonia / TI / Processos", macro: "Infraestrutura e Apoio", desc: "Infraestrutura de rede, servidores, licenciamento de softwares (ERP), telefonia e internet." }
         ];
 
-        // Official Structure - 9 Modules Chart of Accounts
+        // Official Structure - 9 Modules Chart of Accounts ENRIQUECIDOS (Com Escopo)
         const planoDeContas = [
-            { modulo: "MÓDULO 1 – MEDICAMENTOS", contas: ["1.1 Antibióticos e Antimicrobianos", "1.2 Anestésicos, Sedativos e Controlados", "1.3 Psicotrópicos / Controlados", "1.4 Soluções Parenterais, Diluentes e Eletrólitos", "1.5 Gases Medicinais", "1.6 Cardiovasculares e Respiratórios", "1.7 Medicamentos Especiais, Alto Custo e Imunobiológicos", "1.8 Endócrino / Hematologia", "1.9 Gastrointestinais", "1.10 Medicamentos de Uso Geral e Sintomáticos", "1.11 Medicamentos Tópicos e Cuidados de Pele", "1.12 Não Padronizados"] },
-            { modulo: "MÓDULO 2 – MATERIAL HOSPITALAR", contas: ["2.1 Descartáveis / Alto Giro Assistencial", "2.2 Acessórios de Equipamentos Médicos", "2.3 Materiais Respiratórios, Aspiração e Cateteres", "2.4 OPME", "2.5 Insumos de Esterilização e Consumíveis de CME", "2.6 Testes Rápidos / Reagentes / Kits de Laboratório", "2.7 Bens Duráveis de Pequeno Valor", "2.8 Curativos, Coberturas e Hemostáticos", "2.9 Fios Cirúrgicos", "2.10 Materiais Cirúrgicos", "2.11 Materiais de Infusão e Acesso Vascular", "2.12 Sondas Diversas", "2.13 Material Não Padrão", "2.14 EPI´s Assistenciais"] },
-            { modulo: "MÓDULO 3 – NUTRIÇÃO / SND", contas: ["3.1 Dietas e Suplementos Industrializados", "3.2 Gêneros Alimentícios (Perecíveis e Secos / Cozinha e Refeitório)", "3.3 Utensílios de Cozinha e Refeitório", "3.4 Descartáveis e Embalagens de Cozinha", "3.5 Gás de Cozinha", "3.6 Saneantes / Higienização - SND"] },
-            { modulo: "MÓDULO 4 – INFRAESTRUTURA E MANUTENÇÃO", contas: ["4.1 Materiais de Manutenção", "4.2 Bens, Ferramentas e Utensílios de Pequeno Valor", "4.3 Combustíveis, Aditivos, Óleos e Lubrificantes", "4.4 Peças e Componentes de Reposição para Equipamentos Médicos"] },
-            { modulo: "MÓDULO 5 – HIGIENE, HOTELARIA E ADM", contas: ["5.1 Materiais de Limpeza, Higienização e Saneantes Hospitalares", "5.2 Enxoval, Encapamentos e Hotelaria de Leito", "5.3 Brinquedoteca, Humanização e Recreação", "5.4 Material de Escritório e Apoio Operacional", "5.5 Impressos Padronizados e Formulários", "5.6 Descartáveis, Consumo de Apoio e Copa Geral", "5.7 Material de Informática", "5.8 Bens, Mobiliário ou Equipamentos de Pequeno Valor"] },
-            { modulo: "MÓDULO 6 – PESSOAL, ENCARGOS E RH", contas: ["6.1 Uniformes, Enxoval Profissional e Vestuários", "6.2 EPIs de Segurança/Medicina do Trabalho", "6.3 Benefícios de Pessoal", "6.4 Eventos e Programas Institucionais", "6.5 Folha de Pagamento, Encargos Sociais e Obrigações Trabalhistas", "6.6 Treinamento, Educação Continuada e Desenvolvimento", "6.7 Medicina e Segurança do Trabalho"] },
-            { modulo: "MÓDULO 7 – SERVIÇOS DE TERCEIROS", contas: ["7.1 Corpo Clínico e Honorários Médicos", "7.2 Serviços Assistenciais Terceirizados", "7.3 Serviços de Apoio Logístico / Hoteleiro", "7.4 Contratos de Equipamentos, Manutenção e Calibração", "7.5 Serviços de Pequenos Reparos, Consertos e Manutenção Predial", "7.6 Sistemas de Gestão, Licenças de Software", "7.7 Utilidades Básicas e Telecomunicações", "7.8 Marketing, Publicidade e Comunicação", "7.9 Recrutamento, Seleção e Mão de Obra Temporária", "7.10 Serviços Administrativos e Profissionais Especializados", "7.11 Serviços Diagnósticos Externos", "7.12 Locação de Equipamentos Médicos e Mobiliário Assistencial", "7.13 Locação de Equipamentos de TI", "7.14 Locação de Mobiliário e Utensílios Administrativos/Gerais"] },
-            { modulo: "MÓDULO 8 – INVESTIMENTOS / CAPEX", contas: ["8.1 Equipamentos Médicos e Hospitalares", "8.2 Instrumental Cirúrgico Reutilizável e Caixas Cirúrgicas", "8.3 Mobiliário, Utensílios e Infraestrutura Não Assistencial", "8.4 T.I. e Hardware", "8.5 Infraestrutura Predial e Obras", "8.6 Equipamentos de Manutenção"] },
-            { modulo: "MÓDULO 9 – FINANCEIRO, TRIBUTÁRIO E SOCIETÁRIO", contas: ["9.1 Despesas Financeiras", "9.2 Empréstimos e Financiamentos", "9.3 Tributos e Obrigações Governamentais", "9.4 Retenções Tributárias", "9.5 Seguros Corporativos", "9.6 Eventos Societários e Distribuição de Resultados", "9.7 Contingências, Processos e Acordos Judiciais", "9.8 Ajustes Contábeis e Exceções", "9.9 Taxas, Licenças e Anuidades"] }
+            { modulo: "MÓDULO 1 – MEDICAMENTOS", desc: "Insumos farmacológicos e terapias. Entrada obrigatória no estoque.", contas: ["1.1 Antibióticos e Antimicrobianos", "1.2 Anestésicos, Sedativos e Controlados", "1.3 Psicotrópicos / Controlados", "1.4 Soluções Parenterais, Diluentes e Eletrólitos", "1.5 Gases Medicinais", "1.6 Cardiovasculares e Respiratórios", "1.7 Medicamentos Especiais, Alto Custo e Imunobiológicos", "1.8 Endócrino / Hematologia", "1.9 Gastrointestinais", "1.10 Medicamentos de Uso Geral e Sintomáticos", "1.11 Medicamentos Tópicos e Cuidados de Pele", "1.12 Não Padronizados"] },
+            { modulo: "MÓDULO 2 – MATERIAL HOSPITALAR", desc: "Materiais médicos, cirúrgicos, EPIs assistenciais e insumos laboratoriais. Entrada no estoque.", contas: ["2.1 Descartáveis / Alto Giro Assistencial", "2.2 Acessórios de Equipamentos Médicos", "2.3 Materiais Respiratórios, Aspiração e Cateteres", "2.4 OPME", "2.5 Insumos de Esterilização e Consumíveis de CME", "2.6 Testes Rápidos / Reagentes / Kits de Laboratório", "2.7 Bens Duráveis de Pequeno Valor", "2.8 Curativos, Coberturas e Hemostáticos", "2.9 Fios Cirúrgicos", "2.10 Materiais Cirúrgicos", "2.11 Materiais de Infusão e Acesso Vascular", "2.12 Sondas Diversas", "2.13 Material Não Padrão", "2.14 EPI´s Assistenciais"] },
+            { modulo: "MÓDULO 3 – NUTRIÇÃO / SND", desc: "Dietas, gêneros alimentícios, utensílios e gás de cozinha. Entrada no estoque.", contas: ["3.1 Dietas e Suplementos Industrializados", "3.2 Gêneros Alimentícios (Perecíveis e Secos / Cozinha e Refeitório)", "3.3 Utensílios de Cozinha e Refeitório", "3.4 Descartáveis e Embalagens de Cozinha", "3.5 Gás de Cozinha", "3.6 Saneantes / Higienização - SND"] },
+            { modulo: "MÓDULO 4 – INFRAESTRUTURA E MANUTENÇÃO", desc: "Peças de reposição, ferramentas de baixo valor e materiais de manutenção predial. Entrada no estoque.", contas: ["4.1 Materiais de Manutenção", "4.2 Bens, Ferramentas e Utensílios de Pequeno Valor", "4.3 Combustíveis, Aditivos, Óleos e Lubrificantes", "4.4 Peças e Componentes de Reposição para Equipamentos Médicos"] },
+            { modulo: "MÓDULO 5 – HIGIENE, HOTELARIA E ADM", desc: "Materiais de limpeza, papelaria, TI básico (tokens físicos, mouses, pen drives, teclados), uniformes e itens de brinquedoteca. Entrada no estoque.", contas: ["5.1 Materiais de Limpeza, Higienização e Saneantes Hospitalares", "5.2 Enxoval, Encapamentos e Hotelaria de Leito", "5.3 Brinquedoteca, Humanização e Recreação", "5.4 Material de Escritório e Apoio Operacional", "5.5 Impressos Padronizados e Formulários", "5.6 Descartáveis, Consumo de Apoio e Copa Geral", "5.7 Material de Informática", "5.8 Bens, Mobiliário ou Equipamentos de Pequeno Valor"] },
+            { modulo: "MÓDULO 6 – PESSOAL, ENCARGOS E RH", desc: "Folha, benefícios, uniformes, exames ocupacionais, treinamentos, homenagens, coroas de flores e eventos institucionais internos (Despesa Direta).", contas: ["6.1 Uniformes, Enxoval Profissional e Vestuários", "6.2 EPIs de Segurança/Medicina do Trabalho", "6.3 Benefícios de Pessoal", "6.4 Eventos e Programas Institucionais", "6.5 Folha de Pagamento, Encargos Sociais e Obrigações Trabalhistas", "6.6 Treinamento, Educação Continuada e Desenvolvimento", "6.7 Medicina e Segurança do Trabalho"] },
+            { modulo: "MÓDULO 7 – SERVIÇOS DE TERCEIROS", desc: "Honorários, contratos de PJ, manutenção terceirizada, locações, marketing e sistemas intangíveis/cloud (Despesa Direta).", contas: ["7.1 Corpo Clínico e Honorários Médicos", "7.2 Serviços Assistenciais Terceirizados", "7.3 Serviços de Apoio Logístico / Hoteleiro", "7.4 Contratos de Equipamentos, Manutenção e Calibração", "7.5 Serviços de Pequenos Reparos, Consertos e Manutenção Predial", "7.6 Sistemas de Gestão, Licenças de Software", "7.7 Utilidades Básicas e Telecomunicações", "7.8 Marketing, Publicidade e Comunicação", "7.9 Recrutamento, Seleção e Mão de Obra Temporária", "7.10 Serviços Administrativos e Profissionais Especializados", "7.11 Serviços Diagnósticos Externos", "7.12 Locação de Equipamentos Médicos e Mobiliário Assistencial", "7.13 Locação de Equipamentos de TI", "7.14 Locação de Mobiliário e Utensílios Administrativos/Gerais"] },
+            { modulo: "MÓDULO 8 – INVESTIMENTOS / CAPEX", desc: "Aquisição de bens duráveis de alto valor (imobilizado), equipamentos médicos caros e obras estruturais. Depende estritamente do valor/ticket (Despesa Direta).", contas: ["8.1 Equipamentos Médicos e Hospitalares", "8.2 Instrumental Cirúrgico Reutilizável e Caixas Cirúrgicas", "8.3 Mobiliário, Utensílios e Infraestrutura Não Assistencial", "8.4 T.I. e Hardware", "8.5 Infraestrutura Predial e Obras", "8.6 Equipamentos de Manutenção"] },
+            { modulo: "MÓDULO 9 – FINANCEIRO, TRIBUTÁRIO E SOCIETÁRIO", desc: "Impostos, multas, seguros, juros, alvarás e contingências judiciais (Despesa Direta).", contas: ["9.1 Despesas Financeiras", "9.2 Empréstimos e Financiamentos", "9.3 Tributos e Obrigações Governamentais", "9.4 Retenções Tributárias", "9.5 Seguros Corporativos", "9.6 Eventos Societários e Distribuição de Resultados", "9.7 Contingências, Processos e Acordos Judiciais", "9.8 Ajustes Contábeis e Exceções", "9.9 Taxas, Licenças e Anuidades"] }
         ];
 
-        const planoStr = planoDeContas.map(m => `${m.modulo}: ${m.contas.join(', ')}`).join('\n');
-        const ccStr = centrosDeCustosMatriz.map(c => `${c.nome} (${c.macro})`).join('\n');
+        // Montagem inteligente das strings para alimentar o cérebro da I.A com as descrições
+        const planoStr = planoDeContas.map(m => `[${m.modulo}] - Escopo: ${m.desc}\nContas: ${m.contas.join(', ')}`).join('\n\n');
+        const ccStr = centrosDeCustosMatriz.map(c => `- ${c.nome} (Macro: ${c.macro}) | Escopo e regras: ${c.desc}`).join('\n');
 
         // Helper anti-bugs: previne que aspas simples, duplas ou quebras de linha da IA corrompam os botões HTML
         function escapeStringForHTML(str) {
