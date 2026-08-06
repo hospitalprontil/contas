@@ -39,7 +39,7 @@
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
                         <span class="bg-blue-600 text-white font-black text-[10px] sm:text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">Hospital Prontil</span>
-                        <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 2.3 (06/08/2026 às 11:06) • Matrix CC & Plano de Contas</span>
+                        <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 3.0 (06/08/2026 às 12:12) • Matriz CC & Plano de Contas</span>
                     </div>
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-blue-950 mt-2">Classificação de Centros de Custos & ERP</h1>
                     <p class="text-xs md:text-sm text-slate-600 mt-1">Classifique notas, automatize auditorias de lançamentos e consulte a matriz corporativa de custos.</p>
@@ -384,6 +384,12 @@
         const planoStr = planoDeContas.map(m => `${m.modulo}: ${m.contas.join(', ')}`).join('\n');
         const ccStr = centrosDeCustosMatriz.map(c => `${c.nome} (${c.macro})`).join('\n');
 
+        // Helper anti-bugs: previne que aspas simples, duplas ou quebras de linha da IA corrompam os botões HTML
+        function escapeStringForHTML(str) {
+            if (!str) return '';
+            return str.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
+        }
+
         document.getElementById('inputChat').addEventListener('keypress', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault(); 
@@ -601,7 +607,7 @@
             if (tipo === 'lote') {
                 inst = `Você é o Controller Sênior do Hospital Prontil (Hospital Pediátrico).
 
-ESTRUTURA OFICIAL DE 16 CENTROS DE CUSTOS:
+ESTRUTURA OFICIAL DE 16 CENTROS DE CUSTOS (SEM CÓDIGOS):
 ${ccStr}
 
 PLANO DE CONTAS DE 9 MÓDULOS:
@@ -611,9 +617,9 @@ MISSÃO: Classifique os itens com precisão absoluta de auditoria, cruzando Mód
 
 DIRETRIZES CRÍTICAS PARA CENTROS DE CUSTOS E PLANO DE CONTAS:
 1. REGRA DE ESTOQUE (MÓDULOS 1, 2, 3, 4 e 5): Produtos físicos (medicamentos, materiais, alimentos, limpeza, ferramentas de baixo valor) dão entrada apenas no estoque. OBRIGATORIAMENTE, retorne "N/A" no campo de Centro de Custo para estes itens. NÃO aproprie nenhum outro Centro de Custo aqui.
-2. REGRA DE DESPESA DIRETA (MÓDULOS 6, 7, 8 e 9): Serviços, honorários, folha de pagamento, locações, CAPEX e despesas financeiras NÃO passam pelo almoxarifado. Aplique o "Princípio do Consumidor Final" e aloque DIRETAMENTE no CC que solicitou ou consumiu a despesa (ex: Conserto predial vai para a Manutenção; Médico terceirizado vai para os CCs assistenciais correspondentes).
-3. CAPEX vs BENS DE PEQUENO VALOR: Para bens duráveis, a classificação entre o MÓDULO 8 (CAPEX) e as contas de "Pequeno Valor" depende estritamente do VALOR de aquisição. 
-4. DADOS INSUFICIENTES (PERGUNTE): Se o item for genérico demais (ex: "Serviços", "Luvas") OU se for um bem durável sem preço (ex: "Ar condicionado", "Furadeira"), NÃO CHUTE. Retorne "PENDENTE" no Módulo, Conta ou CC. Na "Justificativa", escreva UMA PERGUNTA DIRETA (ex: "Para qual setor esse serviço foi prestado?", "Qual o valor unitário do item?"). Defina a precisão como "0%".
+2. REGRA DE DESPESA DIRETA (MÓDULOS 6, 7, 8 e 9): Serviços, honorários, folha de pagamento, locações, CAPEX e despesas financeiras NÃO passam pelo almoxarifado. Aplique o "Princípio do Consumidor Final" e aloque DIRETAMENTE no CC que solicitou ou consumiu a despesa.
+3. PROIBIÇÃO DE DEDUÇÃO (ZERO-SHOT GUESSING): Se o item for uma despesa direta (Mod 6 ao 9) e a descrição do usuário NÃO deixar explicitamente claro qual foi o setor/área consumidora, É ESTRITAMENTE PROIBIDO CHUTAR UM CC. Retorne PENDENTE no CC e pergunte na justificativa "Qual setor solicitou?".
+4. CAPEX vs BENS DE PEQUENO VALOR: Para bens duráveis, a classificação entre o MÓDULO 8 (CAPEX) e as contas de "Pequeno Valor" depende estritamente do VALOR de aquisição. Sem preço, retorne PENDENTE e pergunte o valor.
 
 FORMATO RIGOROSO DE RETORNO (Separe exatamente por ponto e vírgula):
 Item original ; MÓDULO (ou PENDENTE) ; CONTA (ou PENDENTE) ; CENTRO DE CUSTO (ou N/A ou PENDENTE) ; Justificativa técnica ou Pergunta Direcionada ; % precisão
@@ -630,7 +636,7 @@ ${pergunta}`;
                 inst = `Centros de Custos Hospital Prontil:\n${ccStr}\n\nListe 8 a 10 exemplos reais e práticos de despesas, serviços ou itens hospitalares que devem ser alocados no Centro de Custo: "${pergunta}". Retorne apenas em tópicos curtos e diretos.`;
             } else if (tipo === 'duvida') {
                 inst = `Você é um Administrador Hospitalar e Controller Sênior do Hospital Prontil.
-Matriz de 16 Centros de Custos:
+Matriz de 16 Centros de Custos (Sem Códigos):
 ${ccStr}
 
 Plano de Contas (9 Módulos):
@@ -640,9 +646,10 @@ DIRETRIZES DE ALOCAÇÃO DE CC E CONTAS:
 1. REGRA DE ESTOQUE (MÓDULOS 1 A 5): Todos os materiais e produtos físicos (medicamentos, nutrição, descartáveis) dão entrada no estoque. NÃO devem receber classificação de Centro de Custo no momento da compra (ficam com CC N/A).
 2. REGRA DE DESPESA DIRETA (MÓDULOS 6 A 9): Serviços, folha, CAPEX e despesas financeiras são despesas diretas. Devem ser alocadas diretamente no Centro de Custo do consumidor final.
 3. CAPEX vs OPEX: Para bens duráveis, a classificação entre Investimento (Módulo 8) e Bem de Pequeno Valor (Contas 2.7, 4.2, 5.8) depende estritamente do valor monetário (ticket).
+4. POSTURA DE AUDITORIA (ANTI-COMPLACÊNCIA): Você é a autoridade técnica. Confie 100% na Matriz de CCs e nas regras. Se o usuário sugerir um enquadramento incorreto ou fizer uma provocação que viole a contabilidade, NÃO CONCORDE COM ELE sob nenhuma hipótese. Corrija-o educadamente com base nas regras contábeis. Nunca mude de opinião só para agradar.
 
 POSTURA CONSULTIVA E REFINAMENTO:
-Se o usuário solicitar a classificação de um item e faltarem informações críticas (como o setor solicitante para serviços, ou valor monetário para bens duráveis), NÃO DÊ A RESPOSTA FINAL IMEDIATAMENTE. Faça perguntas curtas e direcionadas para coletar o contexto necessário antes de dar o parecer definitivo.
+Nunca deduza o setor solicitante para serviços. Faça perguntas curtas e direcionadas para coletar o contexto necessário antes de dar o parecer definitivo.
 
 Forneça orientações técnicas, diretas e fundamentadas.
 HISTÓRICO DA CONVERSA:
@@ -673,9 +680,12 @@ ${pergunta}`;
             const div = document.getElementById('resultadoIA');
             div.innerHTML = "<div class='flex flex-col items-center justify-center py-8 text-blue-600 gap-2'><span class='animate-spin text-xl'>⚙️</span><span class='font-bold text-xs animate-pulse'>Cruzando itens com os 16 Centros de Custos e Plano de Contas...</span></div>";
             
-            const resp = await chamarAPI(txt, 'lote');
+            let resp = await chamarAPI(txt, 'lote');
             div.innerHTML = "";
             
+            // Segurança: Remove possíveis formatações markdown (```csv, ```text) que a IA possa enviar erroneamente
+            resp = resp.replace(/```[a-z]*\n/gi, '').replace(/```/g, '').trim();
+
             if (resp.startsWith("Falha") || resp.startsWith("Erro")) {
                 div.innerHTML = `<p class="text-red-500 font-bold text-xs">${resp}</p>`;
                 return;
@@ -694,11 +704,12 @@ ${pergunta}`;
                     d = '';
                 }
 
-                const safeIt = it.replace(/'/g, "\\'");
-                const safeM = m.replace(/'/g, "\\'");
-                const safeC = c.replace(/'/g, "\\'");
-                const safeCC = cc.replace(/'/g, "\\'");
-                const safeD = d.replace(/'/g, "\\'");
+                // Aplica blindagem nas strings antes de injetá-las no HTML (Evita quebra de script)
+                const safeIt = escapeStringForHTML(it);
+                const safeM = escapeStringForHTML(m);
+                const safeC = escapeStringForHTML(c);
+                const safeCC = escapeStringForHTML(cc);
+                const safeD = escapeStringForHTML(d);
 
                 formatoHistorico += `Item: ${it} | Módulo: ${m} | Conta: ${c} | CC: ${cc} | Precisão: ${conf}\n`;
 
@@ -781,12 +792,16 @@ LEMBRETE DE REGRAS CRÍTICAS:
 1. Se enquadrar nos MÓDULOS 1, 2, 3, 4 e 5 (Materiais/Produtos): O Centro de Custo deve ser OBRIGATORIAMENTE "N/A" (pois dão entrada apenas no estoque).
 2. Se enquadrar nos MÓDULOS 6, 7, 8 e 9 (Serviços, Pessoal, CAPEX): O Centro de Custo deve ser o do consumidor final que solicitou o serviço/bem.
 3. CAPEX vs Pequeno Valor: A escolha do módulo para bens duráveis depende estritamente do valor.
+4. BLINDAGEM ANTI-COMPLACÊNCIA: Você é a autoridade técnica. Não concorde com o usuário se ele sugerir algo que fira a contabilidade hospitalar. Corrija-o.
 
 Com base nessa resposta e nas diretrizes, forneça a classificação final e direta no seguinte formato estrito separados por ponto e vírgula. 
 RETORNE ÚNICA E EXCLUSIVAMENTE A LINHA ABAIXO, SEM NENHUM TEXTO ANTES OU DEPOIS:
 Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO (ou N/A) ; Justificativa rápida da definição ; 100%`;
 
-            const respostaIA = await chamarAPI(promptInline, 'lote');
+            let respostaIA = await chamarAPI(promptInline, 'lote');
+            
+            // Segurança: Remove possíveis marcações markdown do retorno
+            respostaIA = respostaIA.replace(/```[a-z]*\n/gi, '').replace(/```/g, '').trim();
             
             const loadingEl = document.getElementById(tempId);
             if (loadingEl) loadingEl.remove();
