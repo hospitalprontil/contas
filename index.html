@@ -39,7 +39,7 @@
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
                         <span class="bg-blue-600 text-white font-black text-[10px] sm:text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">Hospital Prontil</span>
-                        <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 3.2 (06/08/2026 às 19:15) • Matriz CC & Plano de Contas</span>
+                        <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 3.3 (06/08/2026 às 19:22) • Matriz CC & Plano de Contas</span>
                     </div>
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-blue-950 mt-2">Classificação de Centros de Custos & ERP</h1>
                     <p class="text-xs md:text-sm text-slate-600 mt-1">Classifique notas, automatize auditorias de lançamentos e consulte a matriz corporativa de custos.</p>
@@ -617,17 +617,17 @@ ${planoStr}
 MISSÃO: Classifique os itens com precisão absoluta de auditoria, cruzando Módulo, Conta e Centro de Custo.
 
 DIRETRIZES CRÍTICAS PARA CENTROS DE CUSTOS E PLANO DE CONTAS:
-1. REGRA DE ESTOQUE (MÓDULOS 1, 2, 3, 4 e 5): Produtos físicos (medicamentos, materiais, alimentos, limpeza, ferramentas de baixo valor) dão entrada apenas no estoque. OBRIGATORIAMENTE, retorne "N/A" no campo de Centro de Custo para estes itens. NÃO aproprie nenhum outro Centro de Custo aqui.
-2. REGRA DE DESPESA DIRETA (MÓDULOS 6, 7, 8 e 9): Serviços, honorários, folha de pagamento, locações, CAPEX e despesas financeiras NÃO passam pelo almoxarifado. Aplique o "Princípio do Consumidor Final" e aloque DIRETAMENTE no CC que solicitou ou consumiu a despesa.
-3. PROIBIÇÃO DE DEDUÇÃO (ZERO-SHOT GUESSING): Se o item for uma despesa direta (Mod 6 ao 9) e a descrição do usuário NÃO deixar explicitamente claro qual foi o setor/área consumidora, É ESTRITAMENTE PROIBIDO CHUTAR UM CC. Retorne PENDENTE no CC e pergunte na justificativa "Qual setor solicitou?".
-4. CAPEX vs BENS DE PEQUENO VALOR: Para bens duráveis, a classificação entre o MÓDULO 8 (CAPEX) e as contas de "Pequeno Valor" depende estritamente do VALOR de aquisição. Sem preço, retorne PENDENTE e pergunte o valor.
+1. REGRA DE ESTOQUE (MÓDULOS 1, 2, 3, 4 e 5): Produtos físicos dão entrada apenas no estoque. OBRIGATORIAMENTE, retorne "N/A" no campo de Centro de Custo para estes itens. NÃO aproprie CC aqui.
+2. REGRA DE DESPESA DIRETA (MÓDULOS 6, 7, 8 e 9): Serviços, honorários, folha de pagamento, locações e CAPEX NÃO passam pelo almoxarifado. Aloque DIRETAMENTE no CC que solicitou/consumiu.
+3. PROIBIÇÃO DE DEDUÇÃO: Se for uma despesa direta (Mod 6 ao 9) e faltar o setor consumidor, É PROIBIDO CHUTAR. Retorne PENDENTE e pergunte: "Qual setor solicitou?".
+4. CAPEX vs PEQUENO VALOR: Depende do valor. Sem preço, retorne PENDENTE e pergunte o valor.
+5. USO DA WEB (SEARCH GROUNDING): Você tem permissão para pesquisar na web para descobrir o que é um item complexo, equipamento médico ou medicamento desconhecido. Contudo, o enquadramento final DEVE respeitar ESTRITAMENTE a matriz de 16 CCs e 9 Módulos do Hospital Prontil. A regra interna do hospital sobrepõe qualquer prática externa.
 
 FORMATO RIGOROSO DE RETORNO (Separe exatamente por ponto e vírgula):
 Item original ; MÓDULO (ou PENDENTE) ; CONTA (ou PENDENTE) ; CENTRO DE CUSTO (ou N/A ou PENDENTE) ; Justificativa técnica ou Pergunta Direcionada ; % precisão
 
 Restrição OBRIGATÓRIA:
 - Retorne EXATAMENTE uma linha por item.
-- Não use quebras de linha dentro da justificativa.
 - Não adicione textos de introdução.
 Itens para classificar:
 ${pergunta}`;
@@ -637,31 +637,34 @@ ${pergunta}`;
                 inst = `Centros de Custos Hospital Prontil:\n${ccStr}\n\nListe 8 a 10 exemplos reais e práticos de despesas, serviços ou itens hospitalares que devem ser alocados no Centro de Custo: "${pergunta}". Retorne apenas em tópicos curtos e diretos.`;
             } else if (tipo === 'duvida') {
                 inst = `Você é um Administrador Hospitalar e Controller Sênior do Hospital Prontil.
-Matriz de 16 Centros de Custos (Sem Códigos):
+Matriz de 16 Centros de Custos:
 ${ccStr}
 
 Plano de Contas (9 Módulos):
 ${planoStr}
 
-DIRETRIZES DE ALOCAÇÃO DE CC E CONTAS:
-1. REGRA DE ESTOQUE (MÓDULOS 1 A 5): Todos os materiais e produtos físicos (medicamentos, nutrição, descartáveis) dão entrada no estoque. NÃO devem receber classificação de Centro de Custo no momento da compra (ficam com CC N/A).
-2. REGRA DE DESPESA DIRETA (MÓDULOS 6 A 9): Serviços, folha, CAPEX e despesas financeiras são despesas diretas. Devem ser alocadas diretamente no Centro de Custo do consumidor final.
-3. CAPEX vs OPEX: Para bens duráveis, a classificação entre Investimento (Módulo 8) e Bem de Pequeno Valor (Contas 2.7, 4.2, 5.8) depende estritamente do valor monetário (ticket).
-4. POSTURA DE AUDITORIA (ANTI-COMPLACÊNCIA): Você é a autoridade técnica. Confie 100% na Matriz de CCs e nas regras. Se o usuário sugerir um enquadramento incorreto ou fizer uma provocação que viole a contabilidade, NÃO CONCORDE COM ELE sob nenhuma hipótese. Corrija-o educadamente com base nas regras contábeis. Nunca mude de opinião só para agradar.
+DIRETRIZES:
+1. REGRA DE ESTOQUE (MÓD 1 A 5): Produtos físicos vão para o estoque (CC = N/A).
+2. REGRA DE DESPESA DIRETA (MÓD 6 A 9): Serviços e CAPEX vão direto para o CC consumidor.
+3. BLINDAGEM DE AUDITORIA: Você é a autoridade técnica. Confie 100% na nossa Matriz. Se o usuário sugerir uma classificação incorreta, NÃO CONCORDE COM ELE. Corrija-o educadamente.
+4. PESQUISA NA WEB: Utilize sua ferramenta de busca no Google para pesquisar itens específicos, regras da ANS ou legislações, mas a decisão final sempre obedece à nossa Matriz.
 
-POSTURA CONSULTIVA E REFINAMENTO:
-Nunca deduza o setor solicitante para serviços. Faça perguntas curtas e direcionadas para coletar o contexto necessário antes de dar o parecer definitivo.
-
-Forneça orientações técnicas, diretas e fundamentadas.
+POSTURA: Nunca deduza o setor solicitante para serviços, pergunte.
 HISTÓRICO DA CONVERSA:
 ${pergunta}`;
             }
 
             try {
+                // Injetamos a propriedade 'tools' para ativar a busca na web (Google Search Grounding)
+                const payload = {
+                    contents: [{ parts: [{ text: inst }] }],
+                    tools: [{ google_search: {} }]
+                };
+
                 const r = await fetch(BACKEND_URL, { 
                     method: 'POST', 
                     headers: {'Content-Type': 'application/json'}, 
-                    body: JSON.stringify({ contents: [{ parts: [{ text: inst }] }] }) 
+                    body: JSON.stringify(payload) 
                 });
                 
                 if (!r.ok) throw new Error("Erro na API");
