@@ -23,6 +23,13 @@
         .scrollbar-thin::-webkit-scrollbar-thumb:hover {
             background: #94a3b8;
         }
+        
+        /* Previne a seleção de texto indesejada para dar aspecto de aplicativo nativo */
+        .no-select {
+            user-select: none;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+        }
     </style>
 </head>
 <body class="bg-slate-50 text-slate-800 font-sans min-h-screen antialiased overflow-x-hidden">
@@ -31,17 +38,17 @@
     <img src="Prontil-Logo-768x768.png" alt="Marca D'água Prontil" class="fixed bottom-[-20px] left-[-20px] md:bottom-4 md:left-4 w-40 h-40 md:w-64 md:h-64 opacity-[0.04] object-contain pointer-events-none z-0">
 
     <div class="max-w-7xl mx-auto p-4 sm:p-6 md:p-8 w-full relative z-10">
-        <header class="mb-4 sm:mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm w-full">
+        <header class="mb-4 sm:mb-6 md:mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4 bg-white p-4 sm:p-6 rounded-2xl border border-slate-200 shadow-sm w-full min-w-0">
             <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4 sm:gap-6">
                 <!-- Logo no Cabeçalho -->
-                <img src="Prontil-Logo-768x768.png" alt="Logo Hospital Prontil" class="h-14 sm:h-16 md:h-20 w-auto object-contain shrink-0">
+                <img src="Prontil-Logo-768x768.png" alt="Logo Hospital Prontil" class="h-14 sm:h-16 md:h-20 w-auto object-contain shrink-0 no-select pointer-events-none">
                 
                 <div>
                     <div class="flex items-center gap-2 flex-wrap">
                         <span class="bg-blue-600 text-white font-black text-[10px] sm:text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">Hospital Prontil</span>
-                        <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 3.3 (06/08/2026 às 19:22) • Matriz CC & Plano de Contas</span>
+                        <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 3.4 (07/08/2026 às 09:58) • Matriz CC & Plano de Contas</span>
                     </div>
-                    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-blue-950 mt-2">Classificação de Centros de Custos & ERP</h1>
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-blue-950 mt-2 tracking-tight">Classificação de Centros de Custos & ERP</h1>
                     <p class="text-xs md:text-sm text-slate-600 mt-1">Classifique notas, automatize auditorias de lançamentos e consulte a matriz corporativa de custos.</p>
                 </div>
             </div>
@@ -60,7 +67,7 @@
             <div class="lg:col-span-7 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 h-[580px] sm:h-[680px] lg:h-[750px] flex flex-col min-w-0 w-full overflow-hidden">
                 
                 <!-- Main Tabs Navigation -->
-                <div class="flex gap-1.5 sm:gap-2 border-b border-slate-200 overflow-x-auto shrink-0 pb-1 scrollbar-thin">
+                <div class="flex gap-1.5 sm:gap-2 border-b border-slate-200 overflow-x-auto shrink-0 pb-1 scrollbar-thin no-select">
                     <button id="btnTabLote" onclick="switchMode('lote')" class="pb-2 px-2.5 sm:px-3 text-xs md:text-sm font-bold text-blue-600 border-b-2 border-blue-600 whitespace-nowrap transition-colors flex items-center gap-1.5 shrink-0">
                         <span>⚡</span> Classificar Lote
                     </button>
@@ -74,7 +81,6 @@
                         <span>📜</span> Histórico
                     </button>
                 </div>
-
                 <div id="containerLote" class="flex flex-col flex-1 min-h-0 pt-3 sm:pt-4">
                     <label class="block text-xs font-bold uppercase tracking-wider text-slate-500 mb-2">Itens ou Notas Fiscais para Processamento</label>
                     <textarea id="inputDescricao" class="w-full h-24 sm:h-32 md:h-36 p-3 md:p-4 border border-slate-300 rounded-xl focus:ring-2 focus:ring-blue-500 focus:border-blue-500 outline-none mb-3 shrink-0 resize-none text-xs md:text-sm leading-relaxed" placeholder="Cole os itens aqui (um por linha) com detalhes ou valores.&#10;Exemplos:&#10;- Recarga/Consumo de O2 Liquido para tanques da farmacia&#10;- Aluguel do tanque de gas medicinal do hospital&#10;- Brinquedos para recreacao do Pronto Atendimento&#10;- Aluguel do terreno do estacionamento com IPTU"></textarea>
@@ -97,7 +103,7 @@
                     </div>
                     <div id="chatHistory" class="flex-1 overflow-y-auto mb-3 border p-3 md:p-4 bg-slate-50 rounded-xl text-xs md:text-sm space-y-4 shadow-inner min-h-0 scrollbar-thin">
                         <div class="text-slate-500 italic text-center text-xs my-4 bg-white p-4 rounded-xl border border-slate-200">
-                            👋 Olá! Sou o consultor especialista do **Hospital Prontil**.<br>Tire suas dúvidas sobre enquadramento em **Centros de Custos (16 CCs)**, **Plano de Contas**, faturamento TISS/TUSS ou regras de rateio.
+                            👋 Olá! Sou o consultor especialista do **Hospital Prontil**.<br>Tire suas dúvidas sobre enquadramento em **Centros de Custos**, **Plano de Contas**, faturamento TISS/TUSS ou regras de rateio.
                         </div>
                     </div>
                     <div class="flex gap-2 shrink-0">
@@ -116,7 +122,7 @@
 
                 <div id="containerHistorico" class="hidden flex-col flex-1 min-h-0 pt-3 sm:pt-4">
                     <div class="flex justify-between items-center mb-2 shrink-0 flex-wrap gap-2">
-                        <label class="flex items-center gap-2 cursor-pointer group">
+                        <label class="flex items-center gap-2 cursor-pointer group no-select">
                             <input type="checkbox" id="checkSelecionarTudo" onchange="toggleSelecionarTudo()" class="w-4 h-4 text-blue-600 bg-slate-100 border-slate-300 rounded focus:ring-blue-500 cursor-pointer transition">
                             <span class="text-xs text-slate-600 font-bold group-hover:text-blue-700 transition">Selecionar Todos</span>
                         </label>
@@ -134,7 +140,7 @@
             <div class="lg:col-span-5 bg-white p-4 sm:p-6 rounded-2xl shadow-sm border border-slate-200 h-[580px] sm:h-[680px] lg:h-[750px] flex flex-col min-w-0 w-full overflow-hidden">
                 
                 <!-- Side Panel Tabs -->
-                <div class="flex gap-2 border-b border-slate-200 mb-4 pb-2 shrink-0 overflow-x-auto scrollbar-thin">
+                <div class="flex gap-2 border-b border-slate-200 mb-4 pb-2 shrink-0 overflow-x-auto scrollbar-thin no-select">
                     <button id="btnRefPlano" onclick="switchRefTab('plano')" class="px-3 py-1.5 text-xs font-bold text-blue-600 bg-blue-50 border border-blue-200 rounded-lg whitespace-nowrap transition">
                         📑 Plano de Contas (9 Mód)
                     </button>
@@ -156,164 +162,10 @@
                         Estrutura estrita de <strong>16 CCs Ativos</strong>. Não criar novos CCs sem aprovação da Controller. Setores como Laboratório, Brinquedoteca e Estacionamento são <strong>unificados/inativados</strong>.
                     </div>
 
-                    <!-- Macro A -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                        <div class="bg-blue-900 text-white p-2.5 font-bold text-xs uppercase tracking-wider flex justify-between items-center">
-                            <span>A. PRODUTIVOS ASSISTENCIAIS</span>
-                            <span class="bg-blue-800 text-[10px] px-2 py-0.5 rounded">5 CCs</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 text-xs space-y-2">
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Pronto Atendimento', 'pa')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Pronto Atendimento</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-pa" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Ambulatório', 'amb')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Ambulatório</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-amb" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Internação', 'int')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Internação</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-int" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Centro Cirúrgico', 'ccir')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Centro Cirúrgico</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-ccir" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Radiologia', 'rad')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Radiologia</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-blue-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-rad" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-blue-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Macro B -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                        <div class="bg-emerald-800 text-white p-2.5 font-bold text-xs uppercase tracking-wider flex justify-between items-center">
-                            <span>B. AUXILIARES ASSISTENCIAIS</span>
-                            <span class="bg-emerald-700 text-[10px] px-2 py-0.5 rounded">2 CCs</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 text-xs space-y-2">
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Farmácia', 'farm')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Farmácia</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-emerald-600 transition">▼</span>
-                                </button>
-                                <p class="text-[10px] text-slate-500 font-normal mt-0.5">Central, Dispensação e Responsabilidade Técnica do O2 Líquido.</p>
-                                <div id="exemplos-cc-farm" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-emerald-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('SND / Lactário', 'snd')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">SND / Lactário</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-emerald-600 transition">▼</span>
-                                </button>
-                                <p class="text-[10px] text-slate-500 font-normal mt-0.5">Nutrição de Pacientes e Serviços de Copa Geral do Hospital.</p>
-                                <div id="exemplos-cc-snd" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-emerald-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Macro C -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                        <div class="bg-purple-900 text-white p-2.5 font-bold text-xs uppercase tracking-wider flex justify-between items-center">
-                            <span>C. ADMINISTRATIVOS E GESTÃO</span>
-                            <span class="bg-purple-800 text-[10px] px-2 py-0.5 rounded">6 CCs</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 text-xs space-y-2">
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Recepção / Autorizações', 'recep')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Recepção / Autorizações</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-recep" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Almoxarifado / Compras', 'almox')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Almoxarifado / Compras</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-almox" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Faturamento', 'fat')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Faturamento</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-fat" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Administração / RH / Financeiro', 'adm')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Administração / RH / Financeiro</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-adm" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Gerência de Enfermagem / Qualidade', 'ger')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Gerência de Enfermagem / Qualidade</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-ger" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Diretoria', 'dir')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Diretoria</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-purple-600 transition">▼</span>
-                                </button>
-                                <p class="text-[10px] text-slate-500 font-normal mt-0.5">Governança, CAPEX, Negócios Corporativos e Imobiliários (ex: Estacionamento).</p>
-                                <div id="exemplos-cc-dir" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-purple-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Macro D -->
-                    <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
-                        <div class="bg-slate-800 text-white p-2.5 font-bold text-xs uppercase tracking-wider flex justify-between items-center">
-                            <span>D. INFRAESTRUTURA E APOIO</span>
-                            <span class="bg-slate-700 text-[10px] px-2 py-0.5 rounded">3 CCs</span>
-                        </div>
-                        <div class="p-3 bg-slate-50 text-xs space-y-2">
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Limpeza / Lavanderia / Enxoval', 'limp')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Limpeza / Lavanderia / Enxoval</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-slate-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-limp" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Manutenção', 'manut')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Manutenção</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-slate-600 transition">▼</span>
-                                </button>
-                                <p class="text-[10px] text-slate-500 font-normal mt-0.5">Preservação Predial, Engenharia Clínica, Utilidades e Aluguel de Tanque de O2.</p>
-                                <div id="exemplos-cc-manut" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                            <div class="bg-white p-2 rounded border border-slate-200">
-                                <button onclick="toggleExemplosCC('Telefonia / TI / Processos', 'ti')" class="w-full text-left flex justify-between items-center group">
-                                    <span class="font-semibold text-slate-800">Telefonia / TI / Processos</span>
-                                    <span class="text-[10px] text-slate-400 group-hover:text-slate-600 transition">▼</span>
-                                </button>
-                                <div id="exemplos-cc-ti" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-slate-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
-                            </div>
-                        </div>
-                    </div>
+                    <div id="centrosCustosAccordion" class="space-y-4"></div>
 
                     <!-- Inactivated Sectors Guide -->
-                    <div class="bg-red-50 border border-red-200 p-3 rounded-xl text-xs space-y-2 text-red-900">
+                    <div class="bg-red-50 border border-red-200 p-3 rounded-xl text-xs space-y-2 text-red-900 mt-2">
                         <span class="font-bold block uppercase text-[10px] text-red-700">🚫 Setores Unificados / Inativados (Sem CC próprio):</span>
                         <ul class="list-disc pl-4 space-y-1 text-[11px] text-slate-700">
                             <li><strong>Laboratório:</strong> Sem CC. Apurado via DRE (Receita 4.1.05 vs Custo 7.11).</li>
@@ -326,12 +178,48 @@
                 </div>
 
             </div>
-
         </div>
     </div>
-
+    
     <script>
+        // ==========================================
+        // TRAVAS DE SEGURANÇA E PROTEÇÃO DO CÓDIGO
+        // ==========================================
+        
+        // Bloqueia o clique direito (Menu de contexto)
+        document.addEventListener('contextmenu', event => event.preventDefault());
+
+        // Bloqueia atalhos comuns de desenvolvedor
+        document.addEventListener('keydown', event => {
+            // F12 (Inspecionar)
+            if (event.key === 'F12') {
+                event.preventDefault();
+            }
+            // Ctrl+Shift+I / Cmd+Option+I (Inspecionar)
+            if ((event.ctrlKey || event.metaKey) && event.shiftKey && (event.key === 'I' || event.key === 'i')) {
+                event.preventDefault();
+            }
+            // Ctrl+Shift+J / Cmd+Option+J (Console)
+            if ((event.ctrlKey || event.metaKey) && event.shiftKey && (event.key === 'J' || event.key === 'j')) {
+                event.preventDefault();
+            }
+            // Ctrl+Shift+C / Cmd+Shift+C (Selecionar Elemento)
+            if ((event.ctrlKey || event.metaKey) && event.shiftKey && (event.key === 'C' || event.key === 'c')) {
+                event.preventDefault();
+            }
+            // Ctrl+U / Cmd+U (Código Fonte)
+            if ((event.ctrlKey || event.metaKey) && (event.key === 'U' || event.key === 'u')) {
+                event.preventDefault();
+            }
+            // Ctrl+S / Cmd+S (Salvar Página)
+            if ((event.ctrlKey || event.metaKey) && (event.key === 'S' || event.key === 's')) {
+                event.preventDefault();
+            }
+        });
+
+        // ==========================================
         // Firebase Configuration & Initialization
+        // ==========================================
         const firebaseConfig = {
             apiKey: "AIzaSyCDzbDhQ3Fgi_JzpCoUOcDokaSyohX1Qgs",
             authDomain: "plano-de-contas-8c8cd.firebaseapp.com",
@@ -346,9 +234,12 @@
         const BACKEND_URL = 'https://prontil-api.onrender.com/api/gemini';
         const cacheExemplos = {}; 
         let contextoChatTexto = [];
-        let currentChatId = null; // Variável global para rastrear o chat ativo
+        let currentChatId = null;
 
-        // Official Structure - 16 Centros de Custos ENRIQUECIDOS (Com Escopo)
+        // ==========================================
+        // Dicionário Oficial (Semantic Grounding)
+        // ==========================================
+
         const centrosDeCustosMatriz = [
             { nome: "Pronto Atendimento", macro: "Produtivos Assistenciais", desc: "Atendimentos de urgência/emergência pediátrica, triagem, consultórios de porta. Recebe custos diretos de brinquedos da humanização." },
             { nome: "Ambulatório", macro: "Produtivos Assistenciais", desc: "Consultas eletivas, especialidades pediátricas agendadas." },
@@ -360,37 +251,37 @@
             { nome: "Recepção / Autorizações", macro: "Administrativos e Gestão", desc: "Recepção principal, atendimento ao cliente e liberação de guias de convênio (TISS/TUSS)." },
             { nome: "Almoxarifado / Compras", macro: "Administrativos e Gestão", desc: "Gestão de compras e guarda do estoque físico. DESTINO OBRIGATÓRIO (CC) de todos os itens materiais (Módulos 1 a 5)." },
             { nome: "Faturamento", macro: "Administrativos e Gestão", desc: "Auditoria de contas médicas, repasses e envio de faturas às operadoras." },
-            { nome: "Administração / RH / Financeiro", macro: "Administrativos e Gestão", desc: "Folha de pagamento da base administrativa, recrutamento, financeiro, contabilidade, segurança do trabalho (unificada), ações de endomarketing, luto (coroas de flores) e homenagens a colaboradores." },
+            { nome: "Administração / RH / Financeiro", macro: "Administrativos e Gestão", desc: "Folha de pagamento da base administrativa, recrutamento, financeiro, contabilidade, medicina/segurança do trabalho (unificada), luto (coroas de flores) e homenagens a colaboradores/corpo clínico." },
             { nome: "Gerência de Enfermagem / Qualidade", macro: "Administrativos e Gestão", desc: "Diretoria assistencial, controle de infecção (CCIH), ouvidoria e gestão de qualidade/acreditação (ONA/JCI)." },
-            { nome: "Diretoria", macro: "Administrativos e Gestão", desc: "Governança corporativa, relações institucionais, CAPEX geral, gestão de estacionamento e despesas corporativas (marketing institucional, relações públicas)." },
+            { nome: "Diretoria", macro: "Administrativos e Gestão", desc: "Governança corporativa, relações institucionais, CAPEX geral, gestão de estacionamento e despesas corporativas estratégicas (marketing institucional, relações públicas)." },
             { nome: "Limpeza / Lavanderia / Enxoval", macro: "Infraestrutura e Apoio", desc: "Saneamento predial, higienização, gestão de resíduos, lavagem de enxoval e rouparia." },
             { nome: "Manutenção", macro: "Infraestrutura e Apoio", desc: "Engenharia predial, engenharia clínica (conserto de equipamentos), calibrações, gases prediais e aluguel do tanque de gases (cilindros metálicos)." },
             { nome: "Telefonia / TI / Processos", macro: "Infraestrutura e Apoio", desc: "Infraestrutura de rede, servidores, licenciamento de softwares (ERP), telefonia e internet." }
         ];
 
-        // Official Structure - 9 Modules Chart of Accounts ENRIQUECIDOS (Com Escopo)
         const planoDeContas = [
             { modulo: "MÓDULO 1 – MEDICAMENTOS", desc: "Insumos farmacológicos e terapias. Entrada obrigatória no estoque.", contas: ["1.1 Antibióticos e Antimicrobianos", "1.2 Anestésicos, Sedativos e Controlados", "1.3 Psicotrópicos / Controlados", "1.4 Soluções Parenterais, Diluentes e Eletrólitos", "1.5 Gases Medicinais", "1.6 Cardiovasculares e Respiratórios", "1.7 Medicamentos Especiais, Alto Custo e Imunobiológicos", "1.8 Endócrino / Hematologia", "1.9 Gastrointestinais", "1.10 Medicamentos de Uso Geral e Sintomáticos", "1.11 Medicamentos Tópicos e Cuidados de Pele", "1.12 Não Padronizados"] },
             { modulo: "MÓDULO 2 – MATERIAL HOSPITALAR", desc: "Materiais médicos, cirúrgicos, EPIs assistenciais e insumos laboratoriais. Entrada no estoque.", contas: ["2.1 Descartáveis / Alto Giro Assistencial", "2.2 Acessórios de Equipamentos Médicos", "2.3 Materiais Respiratórios, Aspiração e Cateteres", "2.4 OPME", "2.5 Insumos de Esterilização e Consumíveis de CME", "2.6 Testes Rápidos / Reagentes / Kits de Laboratório", "2.7 Bens Duráveis de Pequeno Valor", "2.8 Curativos, Coberturas e Hemostáticos", "2.9 Fios Cirúrgicos", "2.10 Materiais Cirúrgicos", "2.11 Materiais de Infusão e Acesso Vascular", "2.12 Sondas Diversas", "2.13 Material Não Padrão", "2.14 EPI´s Assistenciais"] },
             { modulo: "MÓDULO 3 – NUTRIÇÃO / SND", desc: "Dietas, gêneros alimentícios, utensílios e gás de cozinha. Entrada no estoque.", contas: ["3.1 Dietas e Suplementos Industrializados", "3.2 Gêneros Alimentícios (Perecíveis e Secos / Cozinha e Refeitório)", "3.3 Utensílios de Cozinha e Refeitório", "3.4 Descartáveis e Embalagens de Cozinha", "3.5 Gás de Cozinha", "3.6 Saneantes / Higienização - SND"] },
             { modulo: "MÓDULO 4 – INFRAESTRUTURA E MANUTENÇÃO", desc: "Peças de reposição, ferramentas de baixo valor e materiais de manutenção predial. Entrada no estoque.", contas: ["4.1 Materiais de Manutenção", "4.2 Bens, Ferramentas e Utensílios de Pequeno Valor", "4.3 Combustíveis, Aditivos, Óleos e Lubrificantes", "4.4 Peças e Componentes de Reposição para Equipamentos Médicos"] },
-            { modulo: "MÓDULO 5 – HIGIENE, HOTELARIA E ADM", desc: "Materiais de limpeza, papelaria, TI básico (tokens físicos, mouses, pen drives, teclados), uniformes e itens de brinquedoteca. Entrada no estoque.", contas: ["5.1 Materiais de Limpeza, Higienização e Saneantes Hospitalares", "5.2 Enxoval, Encapamentos e Hotelaria de Leito", "5.3 Brinquedoteca, Humanização e Recreação", "5.4 Material de Escritório e Apoio Operacional", "5.5 Impressos Padronizados e Formulários", "5.6 Descartáveis, Consumo de Apoio e Copa Geral", "5.7 Material de Informática", "5.8 Bens, Mobiliário ou Equipamentos de Pequeno Valor"] },
+            { modulo: "MÓDULO 5 – HIGIENE, HOTELARIA E ADM", desc: "Materiais de limpeza, papelaria, TI básico (tokens físicos, mouses, periféricos, pen drives), uniformes e itens de brinquedoteca. Entrada no estoque.", contas: ["5.1 Materiais de Limpeza, Higienização e Saneantes Hospitalares", "5.2 Enxoval, Encapamentos e Hotelaria de Leito", "5.3 Brinquedoteca, Humanização e Recreação", "5.4 Material de Escritório e Apoio Operacional", "5.5 Impressos Padronizados e Formulários", "5.6 Descartáveis, Consumo de Apoio e Copa Geral", "5.7 Material de Informática", "5.8 Bens, Mobiliário ou Equipamentos de Pequeno Valor"] },
             { modulo: "MÓDULO 6 – PESSOAL, ENCARGOS E RH", desc: "Folha, benefícios, uniformes, exames ocupacionais, treinamentos, homenagens, coroas de flores e eventos institucionais internos (Despesa Direta).", contas: ["6.1 Uniformes, Enxoval Profissional e Vestuários", "6.2 EPIs de Segurança/Medicina do Trabalho", "6.3 Benefícios de Pessoal", "6.4 Eventos e Programas Institucionais", "6.5 Folha de Pagamento, Encargos Sociais e Obrigações Trabalhistas", "6.6 Treinamento, Educação Continuada e Desenvolvimento", "6.7 Medicina e Segurança do Trabalho"] },
-            { modulo: "MÓDULO 7 – SERVIÇOS DE TERCEIROS", desc: "Honorários, contratos de PJ, manutenção terceirizada, locações, marketing e sistemas intangíveis/cloud (Despesa Direta).", contas: ["7.1 Corpo Clínico e Honorários Médicos", "7.2 Serviços Assistenciais Terceirizados", "7.3 Serviços de Apoio Logístico / Hoteleiro", "7.4 Contratos de Equipamentos, Manutenção e Calibração", "7.5 Serviços de Pequenos Reparos, Consertos e Manutenção Predial", "7.6 Sistemas de Gestão, Licenças de Software", "7.7 Utilidades Básicas e Telecomunicações", "7.8 Marketing, Publicidade e Comunicação", "7.9 Recrutamento, Seleção e Mão de Obra Temporária", "7.10 Serviços Administrativos e Profissionais Especializados", "7.11 Serviços Diagnósticos Externos", "7.12 Locação de Equipamentos Médicos e Mobiliário Assistencial", "7.13 Locação de Equipamentos de TI", "7.14 Locação de Mobiliário e Utensílios Administrativos/Gerais"] },
+            { modulo: "MÓDULO 7 – SERVIÇOS DE TERCEIROS", desc: "Honorários, contratos de PJ, manutenção terceirizada, locações de equipamentos e imóveis, marketing e sistemas intangíveis/nuvem/softwares (Despesa Direta).", contas: ["7.1 Corpo Clínico e Honorários Médicos", "7.2 Serviços Assistenciais Terceirizados", "7.3 Serviços de Apoio Logístico / Hoteleiro", "7.4 Contratos de Equipamentos, Manutenção e Calibração", "7.5 Serviços de Pequenos Reparos, Consertos e Manutenção Predial", "7.6 Sistemas de Gestão, Licenças de Software", "7.7 Utilidades Básicas e Telecomunicações", "7.8 Marketing, Publicidade e Comunicação", "7.9 Recrutamento, Seleção e Mão de Obra Temporária", "7.10 Serviços Administrativos e Profissionais Especializados", "7.11 Serviços Diagnósticos Externos", "7.12 Locação de Equipamentos Médicos e Mobiliário Assistencial", "7.13 Locação de Equipamentos de TI", "7.14 Locação de Mobiliário e Utensílios Administrativos/Gerais"] },
             { modulo: "MÓDULO 8 – INVESTIMENTOS / CAPEX", desc: "Aquisição de bens duráveis de alto valor (imobilizado), equipamentos médicos caros e obras estruturais. Depende estritamente do valor/ticket (Despesa Direta).", contas: ["8.1 Equipamentos Médicos e Hospitalares", "8.2 Instrumental Cirúrgico Reutilizável e Caixas Cirúrgicas", "8.3 Mobiliário, Utensílios e Infraestrutura Não Assistencial", "8.4 T.I. e Hardware", "8.5 Infraestrutura Predial e Obras", "8.6 Equipamentos de Manutenção"] },
             { modulo: "MÓDULO 9 – FINANCEIRO, TRIBUTÁRIO E SOCIETÁRIO", desc: "Impostos, multas, seguros, juros, alvarás e contingências judiciais (Despesa Direta).", contas: ["9.1 Despesas Financeiras", "9.2 Empréstimos e Financiamentos", "9.3 Tributos e Obrigações Governamentais", "9.4 Retenções Tributárias", "9.5 Seguros Corporativos", "9.6 Eventos Societários e Distribuição de Resultados", "9.7 Contingências, Processos e Acordos Judiciais", "9.8 Ajustes Contábeis e Exceções", "9.9 Taxas, Licenças e Anuidades"] }
         ];
 
-        // Montagem inteligente das strings para alimentar o cérebro da I.A com as descrições
-        const planoStr = planoDeContas.map(m => `[${m.modulo}] - Escopo: ${m.desc}\nContas: ${m.contas.join(', ')}`).join('\n\n');
-        const ccStr = centrosDeCustosMatriz.map(c => `- ${c.nome} (Macro: ${c.macro}) | Escopo e regras: ${c.desc}`).join('\n');
+        // Montagem inteligente das strings
+        const planoStr = planoDeContas.map(m => `[${m.modulo}]\nESCOPO/REGRAS: ${m.desc}\nContas Associadas: ${m.contas.join(', ')}`).join('\n\n');
+        const ccStr = centrosDeCustosMatriz.map(c => `- ${c.nome} (Macro: ${c.macro}) | ESCOPO/REGRAS: ${c.desc}`).join('\n');
 
-        // Helper anti-bugs: previne que aspas simples, duplas ou quebras de linha da IA corrompam os botões HTML
+        // Helper anti-bugs: previne XSS e quebra de DOM (HTML Injection)
         function escapeStringForHTML(str) {
             if (!str) return '';
             return str.replace(/'/g, "\\'").replace(/"/g, '&quot;').replace(/\n/g, ' ');
         }
 
+        // Event Listeners
         document.getElementById('inputChat').addEventListener('keypress', function (e) {
             if (e.key === 'Enter' && !e.shiftKey) {
                 e.preventDefault(); 
@@ -428,7 +319,6 @@
         function switchRefTab(tab) {
             const refCC = document.getElementById('refCentrosCustos');
             const refPlano = document.getElementById('refPlanoContas');
-
             const btnCC = document.getElementById('btnRefCC');
             const btnPlano = document.getElementById('btnRefPlano');
 
@@ -437,7 +327,6 @@
 
             refCC.classList.add('hidden');
             refPlano.classList.add('hidden');
-
             btnCC.className = inactiveBtn;
             btnPlano.className = inactiveBtn;
 
@@ -528,7 +417,7 @@
                     const d = doc.data();
                     const id = doc.id;
                     const dataFormatada = d.data ? d.data.toDate().toLocaleString('pt-BR') : '';
-                    const tipoLabel = d.tipo === 'lote' ? '<span class="bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded font-bold border border-blue-200">Lote</span>' : '<span class="bg-purple-100 text-purple-800 text-[10px] px-2 py-0.5 rounded font-bold border border-purple-200">Consultor IA</span>';
+                    const tipoLabel = d.tipo === 'lote' ? '<span class="bg-blue-100 text-blue-800 text-[10px] px-2 py-0.5 rounded font-bold border border-blue-200">Lote / Inline</span>' : '<span class="bg-purple-100 text-purple-800 text-[10px] px-2 py-0.5 rounded font-bold border border-purple-200">Consultor IA</span>';
                     
                     list.innerHTML += `
                     <div class="p-3 bg-white border border-slate-200 rounded-xl shadow-sm relative transition hover:border-blue-300 text-xs">
@@ -560,28 +449,19 @@
             } else {
                 btnExcluir.classList.add('hidden');
             }
-            
-            // Sincroniza o estado do checkbox "Selecionar Todos"
-            if (checkTodos) {
-                checkTodos.checked = (checkados.length === totalCheckboxes.length && totalCheckboxes.length > 0);
-            }
+            if (checkTodos) checkTodos.checked = (checkados.length === totalCheckboxes.length && totalCheckboxes.length > 0);
         }
         
         function toggleSelecionarTudo() {
             const checkTodos = document.getElementById('checkSelecionarTudo');
             const checkboxes = document.querySelectorAll('.hist-checkbox');
-            
-            checkboxes.forEach(cb => {
-                cb.checked = checkTodos.checked;
-            });
-            
+            checkboxes.forEach(cb => cb.checked = checkTodos.checked);
             toggleBtnExcluir();
         }
 
         async function excluirHistoricoSelecionado() {
             const checkados = document.querySelectorAll('.hist-checkbox:checked');
             if (checkados.length === 0) return;
-
             const btnExcluir = document.getElementById('btnExcluirHistorico');
             btnExcluir.disabled = true;
             btnExcluir.innerText = "Excluindo...";
@@ -593,7 +473,6 @@
                     batch.delete(docRef);
                 });
                 await batch.commit();
-                
                 btnExcluir.disabled = false; 
                 carregarHistorico(); 
             } catch (error) {
@@ -608,7 +487,7 @@
             if (tipo === 'lote') {
                 inst = `Você é o Controller Sênior do Hospital Prontil (Hospital Pediátrico).
 
-ESTRUTURA OFICIAL DE 16 CENTROS DE CUSTOS (SEM CÓDIGOS):
+ESTRUTURA OFICIAL DE 16 CENTROS DE CUSTOS (Apenas Nomes):
 ${ccStr}
 
 PLANO DE CONTAS DE 9 MÓDULOS:
@@ -616,40 +495,38 @@ ${planoStr}
 
 MISSÃO: Classifique os itens com precisão absoluta de auditoria, cruzando Módulo, Conta e Centro de Custo.
 
-DIRETRIZES CRÍTICAS PARA CENTROS DE CUSTOS E PLANO DE CONTAS:
-1. REGRA DE ESTOQUE (MÓDULOS 1, 2, 3, 4 e 5): Produtos físicos dão entrada apenas no estoque. OBRIGATORIAMENTE, retorne "N/A" no campo de Centro de Custo para estes itens. NÃO aproprie CC aqui.
-2. REGRA DE DESPESA DIRETA (MÓDULOS 6, 7, 8 e 9): Serviços, honorários, folha de pagamento, locações e CAPEX NÃO passam pelo almoxarifado. Aloque DIRETAMENTE no CC que solicitou/consumiu.
-3. PROIBIÇÃO DE DEDUÇÃO: Se for uma despesa direta (Mod 6 ao 9) e faltar o setor consumidor, É PROIBIDO CHUTAR. Retorne PENDENTE e pergunte: "Qual setor solicitou?".
-4. CAPEX vs PEQUENO VALOR: Depende do valor. Sem preço, retorne PENDENTE e pergunte o valor.
-5. USO DA WEB (SEARCH GROUNDING): Você tem permissão para pesquisar na web para descobrir o que é um item complexo, equipamento médico ou medicamento desconhecido. Contudo, o enquadramento final DEVE respeitar ESTRITAMENTE a matriz de 16 CCs e 9 Módulos do Hospital Prontil. A regra interna do hospital sobrepõe qualquer prática externa.
+DIRETRIZES CRÍTICAS (PROIBIDO DESCUMPRIR):
+1. REGRA DE ESTOQUE (Módulos 1 ao 5 - Materiais, Remédios, etc): OBRIGATORIAMENTE, retorne "N/A" no campo de Centro de Custo. Itens de estoque não afetam CC na compra.
+2. REGRA DE DESPESA DIRETA (Módulos 6 ao 9 - Serviços, Folha, CAPEX): Aloque DIRETAMENTE no CC do Setor que consumiu ou solicitou.
+3. PROIBIDO CHUTAR / DEDUZIR SETOR: Para despesas diretas (Mod 6 ao 9), se a frase do usuário não deixar óbvio qual setor solicitou (ex: "Serviço de limpeza de ar", "Manutenção", "Assinatura"), é PROIBIDO chutar. Retorne PENDENTE e pergunte: "Qual setor solicitou?".
+4. CAPEX vs PEQUENO VALOR: Depende do ticket/valor. Se faltar preço no texto do usuário para itens duráveis, retorne PENDENTE e pergunte o valor.
+5. USO DA WEB (SEARCH GROUNDING): Você pode e deve pesquisar na web para descobrir o que é um medicamento/material desconhecido. Porém, o enquadramento final DEVE respeitar ESTRITAMENTE nossa Matriz de CCs e Contas. Não invente nomes fora da nossa base.
 
 FORMATO RIGOROSO DE RETORNO (Separe exatamente por ponto e vírgula):
 Item original ; MÓDULO (ou PENDENTE) ; CONTA (ou PENDENTE) ; CENTRO DE CUSTO (ou N/A ou PENDENTE) ; Justificativa técnica ou Pergunta Direcionada ; % precisão
 
-Restrição OBRIGATÓRIA:
-- Retorne EXATAMENTE uma linha por item.
-- Não adicione textos de introdução.
+Restrição OBRIGATÓRIA: Retorne EXATAMENTE uma linha por item. Sem textos de introdução.
 Itens para classificar:
 ${pergunta}`;
             } else if (tipo === 'exemplo') {
                 inst = `Plano de Contas Hospital Prontil:\n${planoStr}\n\nListe 8 a 10 exemplos reais e práticos de itens hospitalares que se enquadram na conta: "${pergunta}". Retorne em tópicos diretos.`;
             } else if (tipo === 'exemplo-cc') {
-                inst = `Centros de Custos Hospital Prontil:\n${ccStr}\n\nListe 8 a 10 exemplos reais e práticos de despesas, serviços ou itens hospitalares que devem ser alocados no Centro de Custo: "${pergunta}". Retorne apenas em tópicos curtos e diretos.`;
+                inst = `Centros de Custos Hospital Prontil:\n${ccStr}\n\nListe 8 a 10 exemplos reais e práticos de despesas diretas ou serviços que devem ser alocados no Centro de Custo: "${pergunta}". Retorne apenas em tópicos curtos e diretos.`;
             } else if (tipo === 'duvida') {
                 inst = `Você é um Administrador Hospitalar e Controller Sênior do Hospital Prontil.
-Matriz de 16 Centros de Custos:
+Matriz de 16 Centros de Custos (Nomes):
 ${ccStr}
 
 Plano de Contas (9 Módulos):
 ${planoStr}
 
 DIRETRIZES:
-1. REGRA DE ESTOQUE (MÓD 1 A 5): Produtos físicos vão para o estoque (CC = N/A).
-2. REGRA DE DESPESA DIRETA (MÓD 6 A 9): Serviços e CAPEX vão direto para o CC consumidor.
-3. BLINDAGEM DE AUDITORIA: Você é a autoridade técnica. Confie 100% na nossa Matriz. Se o usuário sugerir uma classificação incorreta, NÃO CONCORDE COM ELE. Corrija-o educadamente.
-4. PESQUISA NA WEB: Utilize sua ferramenta de busca no Google para pesquisar itens específicos, regras da ANS ou legislações, mas a decisão final sempre obedece à nossa Matriz.
+1. REGRA DE ESTOQUE (MÓD 1 A 5): O CC na aquisição é obrigatoriamente "N/A" (vai pro almoxarifado).
+2. REGRA DE DESPESA DIRETA (MÓD 6 A 9): Vai direto para o CC consumidor (se não souber qual é, pergunte ao usuário).
+3. BLINDAGEM ANTI-COMPLACÊNCIA: Você é a autoridade máxima de auditoria. Confie 100% na nossa Matriz corporativa. Se o usuário sugerir uma classificação incorreta que fira as regras (ex: colocar marketing na manutenção), NÃO CONCORDE COM ELE sob nenhuma hipótese. Corrija-o educadamente.
+4. PESQUISA NA WEB: Utilize a busca no Google para desvendar itens técnicos, licenças ou regras da ANS, mas a decisão contábil obedece nossa Matriz.
 
-POSTURA: Nunca deduza o setor solicitante para serviços, pergunte.
+POSTURA: Nunca deduza. Seja técnico, direto e inflexível com as regras.
 HISTÓRICO DA CONVERSA:
 ${pergunta}`;
             }
@@ -682,12 +559,12 @@ ${pergunta}`;
 
             document.getElementById('resultadoContainerLote').classList.remove('hidden');
             const div = document.getElementById('resultadoIA');
-            div.innerHTML = "<div class='flex flex-col items-center justify-center py-8 text-blue-600 gap-2'><span class='animate-spin text-xl'>⚙️</span><span class='font-bold text-xs animate-pulse'>Cruzando itens com os 16 Centros de Custos e Plano de Contas...</span></div>";
+            div.innerHTML = "<div class='flex flex-col items-center justify-center py-8 text-blue-600 gap-2'><span class='animate-spin text-xl'>⚙️</span><span class='font-bold text-xs animate-pulse'>Cruzando itens com a Matriz Oficial e Pesquisando na Web...</span></div>";
             
             let resp = await chamarAPI(txt, 'lote');
             div.innerHTML = "";
             
-            // Segurança: Remove possíveis formatações markdown (```csv, ```text) que a IA possa enviar erroneamente
+            // Segurança: Remove possíveis formatações markdown e aspas erradas
             resp = resp.replace(/```[a-z]*\n/gi, '').replace(/```/g, '').trim();
 
             if (resp.startsWith("Falha") || resp.startsWith("Erro")) {
@@ -702,13 +579,9 @@ ${pergunta}`;
                 let partes = l.split(';').map(s => s ? s.trim() : '');
                 let [it, m, c, cc, d, conf] = [partes[0]||'', partes[1]||'', partes[2]||'', partes[3]||'', partes[4]||'', partes[5]||''];
                 
-                // Fallback for indexing alignment
-                if(!conf && d.includes('%')) {
-                    conf = d;
-                    d = '';
-                }
+                if(!conf && d.includes('%')) { conf = d; d = ''; }
 
-                // Aplica blindagem nas strings antes de injetá-las no HTML (Evita quebra de script)
+                // Tratamento anti quebra de DOM HTML
                 const safeIt = escapeStringForHTML(it);
                 const safeM = escapeStringForHTML(m);
                 const safeC = escapeStringForHTML(c);
@@ -734,7 +607,7 @@ ${pergunta}`;
                     <div class="flex flex-wrap gap-1.5 my-1">
                         <span class="${tagColor} text-[10px] font-bold px-2 py-0.5 rounded border">${m}</span>
                         <span class="${tagIndColor} text-[10px] font-bold px-2 py-0.5 rounded border">${c}</span>
-                        <span class="${tagCCColor} text-[10px] font-black px-2 py-0.5 rounded border">${cc.includes('N/A') ? '📦' : '🏢'} CC: ${cc}</span>
+                        <span class="${tagCCColor} text-[10px] font-black px-2 py-0.5 rounded border">${cc.includes('N/A') ? '📦 Estoque' : '🏢 ' + cc}</span>
                     </div>
 
                     ${d ? `<div class="text-[11px] text-slate-600 italic bg-slate-50 p-2 rounded-lg border border-slate-100 whitespace-pre-line leading-relaxed">${d}</div>` : ''}
@@ -743,32 +616,26 @@ ${pergunta}`;
                     <div class="mt-2 pt-2 border-t border-amber-100 bg-amber-50/50 p-2.5 rounded-lg">
                         <div id="inline-chat-box-${index}" class="space-y-2 mb-2 max-h-36 overflow-y-auto scrollbar-thin">
                             <div class="text-[10px] text-amber-800 bg-amber-100/70 p-2 rounded border border-amber-200">
-                                🤖 <strong>Solicitação de esclarecimento:</strong> Responda abaixo para resolvimento imediato do enquadramento.
+                                🤖 <strong>Atenção de Auditoria:</strong> Responda abaixo para resolvimento imediato do enquadramento.
                             </div>
                         </div>
                         <div class="flex gap-1.5">
-                            <input type="text" id="inline-input-${index}" placeholder="Digite a resposta ou detalhe o item..." class="flex-1 text-[11px] border border-amber-300 rounded-lg px-2.5 py-1.5 outline-none focus:ring-1 focus:ring-amber-500 bg-white" onkeypress="if(event.key === 'Enter') enviarChatInline(${index}, '${safeIt}', '${safeD}')">
+                            <input type="text" id="inline-input-${index}" placeholder="Digite a resposta (Setor, Valor...)" class="flex-1 text-[11px] border border-amber-300 rounded-lg px-2.5 py-1.5 outline-none focus:ring-1 focus:ring-amber-500 bg-white" onkeypress="if(event.key === 'Enter') enviarChatInline(${index}, '${safeIt}', '${safeD}')">
                             <button onclick="enviarChatInline(${index}, '${safeIt}', '${safeD}')" class="bg-amber-600 hover:bg-amber-700 text-white font-bold px-3 py-1.5 rounded-lg text-[10px] transition shrink-0">Enviar</button>
                         </div>
                     </div>` : ''}
 
                     <div class="flex items-center justify-end gap-2 mt-2 pt-2 border-t border-slate-100">
-                        <button onclick="levarParaDuvida('${safeIt}', '${safeM}', '${safeC}', '${safeCC}', '${safeD}')" 
-                                class="px-2.5 py-1 bg-blue-50 text-blue-700 hover:bg-blue-100 border border-blue-200 rounded-md transition text-[10px] font-bold flex items-center gap-1" 
-                                title="Tirar dúvidas de alocação no Consultor IA">
-                            <span>❓</span> Consultor IA
-                        </button>
                         <button onclick="saveForReview(this, '${safeIt}', '${safeM}', '${safeC}', '${safeCC}', '${safeD}')" 
-                                class="px-2.5 py-1 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-md transition text-[10px] font-bold flex items-center gap-1" 
-                                title="Sinalizar para auditoria da Controller">
-                            <span>🚩</span> Reportar
+                                class="px-2.5 py-1 bg-red-50 text-red-700 hover:bg-red-100 border border-red-200 rounded-md transition text-[10px] font-bold flex items-center gap-1">
+                            <span>🚩</span> Reportar Erro
                         </button>
                     </div>
                 </div>`;
             });
             
             if(div.innerHTML === "") {
-                div.innerHTML = "<p class='text-slate-500 text-xs'>A IA não conseguiu formatar a resposta. Tente simplificar a lista de itens.</p>";
+                div.innerHTML = "<p class='text-slate-500 text-xs'>A IA não conseguiu formatar a resposta. Tente simplificar a lista.</p>";
             } else {
                 salvarNoHistorico('lote', txt, formatoHistorico);
             }
@@ -780,31 +647,26 @@ ${pergunta}`;
             const txt = input.value.trim();
             if (!txt) return;
 
-            // Append user response
             chatBox.innerHTML += `<div class="bg-blue-600 text-white p-2 rounded-lg text-[11px] ml-auto max-w-[85%] whitespace-pre-line"><strong>Você:</strong> ${txt}</div>`;
             input.value = "";
             chatBox.scrollTop = chatBox.scrollHeight;
 
             const tempId = `inline-loading-${Date.now()}`;
-            chatBox.innerHTML += `<div id="${tempId}" class="bg-white border border-slate-200 p-2 rounded-lg text-[11px] text-slate-500 italic">Analisando resposta...</div>`;
+            chatBox.innerHTML += `<div id="${tempId}" class="bg-white border border-slate-200 p-2 rounded-lg text-[11px] text-slate-500 italic">Analisando regras contábeis...</div>`;
             chatBox.scrollTop = chatBox.scrollHeight;
 
             const promptInline = `Contexto: Estávamos classificando o item hospitalar "${itemNome}" no Hospital Prontil e ele ficou pendente.
 O usuário respondeu à dúvida com: "${txt}"
 
-LEMBRETE DE REGRAS CRÍTICAS: 
-1. Se enquadrar nos MÓDULOS 1, 2, 3, 4 e 5 (Materiais/Produtos): O Centro de Custo deve ser OBRIGATORIAMENTE "N/A" (pois dão entrada apenas no estoque).
-2. Se enquadrar nos MÓDULOS 6, 7, 8 e 9 (Serviços, Pessoal, CAPEX): O Centro de Custo deve ser o do consumidor final que solicitou o serviço/bem.
-3. CAPEX vs Pequeno Valor: A escolha do módulo para bens duráveis depende estritamente do valor.
-4. BLINDAGEM ANTI-COMPLACÊNCIA: Você é a autoridade técnica. Não concorde com o usuário se ele sugerir algo que fira a contabilidade hospitalar. Corrija-o.
+LEMBRETE DE REGRAS CRÍTICAS (NÃO DESCUMPRA): 
+1. Se MÓDULOS 1 ao 5: O CC é OBRIGATORIAMENTE "N/A" (vai pro estoque).
+2. Se MÓDULOS 6 ao 9: O CC é do consumidor final.
+3. BLINDAGEM: Você é a autoridade. Não concorde com o usuário se ele sugerir um CC errado ou módulo errado de acordo com a nossa matriz corporativa. Corrija-o educadamente e crave o correto.
 
-Com base nessa resposta e nas diretrizes, forneça a classificação final e direta no seguinte formato estrito separados por ponto e vírgula. 
-RETORNE ÚNICA E EXCLUSIVAMENTE A LINHA ABAIXO, SEM NENHUM TEXTO ANTES OU DEPOIS:
+Forneça a classificação final no formato separado por ponto e vírgula:
 Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO (ou N/A) ; Justificativa rápida da definição ; 100%`;
 
             let respostaIA = await chamarAPI(promptInline, 'lote');
-            
-            // Segurança: Remove possíveis marcações markdown do retorno
             respostaIA = respostaIA.replace(/```[a-z]*\n/gi, '').replace(/```/g, '').trim();
             
             const loadingEl = document.getElementById(tempId);
@@ -823,7 +685,6 @@ Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO (ou N/A) ; Justificativa ráp
                     <div><strong>${cc.includes('N/A') ? '📦' : '🏢'} CC:</strong> ${cc}</div>
                     <div class="text-[10px] text-slate-600 italic mt-1">${d}</div>
                 </div>`;
-                
                 formatacaoParaHistorico = `🤖 IA Perguntou:\n"${originalJustificativa}"\n\n👤 Você Respondeu:\n"${txt}"\n\n✅ Veredito Final:\nMódulo: ${m} | Conta: ${c} | CC: ${cc}\nJustificativa: ${d}`;
             } else {
                 chatBox.innerHTML += `<div class="bg-white text-slate-800 border border-slate-200 p-2 rounded-lg text-[11px]">${respostaIA}</div>`;
@@ -831,63 +692,18 @@ Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO (ou N/A) ; Justificativa ráp
             }
             chatBox.scrollTop = chatBox.scrollHeight;
 
-            // Salva a interação do chat inline no histórico de forma automática e narrativa
-            salvarNoHistorico('lote', `[Card Resolvido] ${itemNome}`, formatacaoParaHistorico).then(() => {
-                if (!document.getElementById('containerHistorico').classList.contains('hidden')) {
-                    carregarHistorico();
-                }
+            salvarNoHistorico('lote', `[Refinamento Inline] ${itemNome}`, formatacaoParaHistorico).then(() => {
+                if (!document.getElementById('containerHistorico').classList.contains('hidden')) carregarHistorico();
             });
         }
 
         async function novoChat() {
             contextoChatTexto = [];
-            currentChatId = null; // Reseta o ID do chat para criar um novo documento
-            
+            currentChatId = null; 
             const h = document.getElementById('chatHistory');
             h.innerHTML = `<div class="text-slate-500 italic text-center text-xs my-4 bg-white p-4 rounded-xl border border-slate-200">
-                👋 Olá! Sou o consultor especialista do **Hospital Prontil**.<br>Tire suas dúvidas sobre enquadramento em **Centros de Custos (16 CCs)**, **Plano de Contas**, faturamento TISS/TUSS ou regras de rateio.
+                👋 Olá! Sou o consultor especialista do **Hospital Prontil**.<br>Tire suas dúvidas sobre enquadramento em **Centros de Custos**, **Plano de Contas**, faturamento TISS/TUSS ou regras de rateio.
             </div>`;
-        }
-
-        function levarParaDuvida(item, modulo, conta, cc, justificativa = "") {
-            if (contextoChatTexto.length > 0) novoChat();
-
-            switchMode('duvida');
-            const h = document.getElementById('chatHistory');
-            
-            const isPendente = cc.includes('PENDENTE') || conta.includes('PENDENTE') || modulo.includes('PENDENTE');
-            let instrucaoSistema = "";
-            let primeiraPerguntaText = "";
-            let mensagemSistemaHTML = "";
-
-            if (isPendente) {
-                instrucaoSistema = `[INSTRUÇÃO DE SISTEMA]\nO usuário quer classificar o item "${item}", mas faltaram dados. A IA apontou na análise a seguinte necessidade: "${justificativa}". Inicie aguardando a resposta do usuário para, em seguida, determinar o Centro de Custo e a Conta correta.`;
-                primeiraPerguntaText = `📋 **Item Pendente:** ${item}\n\nPara eu conseguir cravar o Centro de Custo e a Conta Contábil, preciso de um detalhe: **${justificativa}**`;
-                mensagemSistemaHTML = `
-                    <div class="font-bold mb-1 text-amber-700">⚠️ Refinamento Necessário: <span class="text-slate-800">${item}</span></div>
-                    <div class="text-[11px] text-slate-600 mb-2">Para eu classificar com 100% de certeza, me tire a seguinte dúvida:</div>
-                    <strong>${justificativa}</strong>
-                `;
-            } else {
-                instrucaoSistema = `[INSTRUÇÃO DE SISTEMA]\nO usuário deseja revisar a alocação do item "${item}". A sugestão preliminar foi "${modulo} | ${conta} | Centro de Custo: ${cc}".\nPara dar um parecer definitivo, faça até 3 perguntas curtas (uma por vez) sobre a utilidade, setor solicitante e natureza antes de emitir a posição final.`;
-                primeiraPerguntaText = `📋 **Análise do Item:** ${item}\nSugestão inicial: **${cc}** | **${conta}**.\n\nPara confirmarmos com 100% de precisão de auditoria: qual o setor/área final consumidora deste item e a utilidade direta?`;
-                mensagemSistemaHTML = `
-                    <div class="font-bold mb-1">📋 Análise de Refinamento: <span class="text-blue-700">${item}</span></div>
-                    <div class="text-[11px] text-slate-600 mb-2">Sugestão Atual: <strong>${cc}</strong> | <strong>${conta}</strong></div>
-                    Para confirmarmos com total precisão de auditoria: <strong>qual o setor/área final consumidora deste item e qual a utilidade direta?</strong>
-                `;
-            }
-            
-            contextoChatTexto.push({role: 'user', text: instrucaoSistema});
-            contextoChatTexto.push({role: 'ai', text: primeiraPerguntaText});
-            
-            const bgClass = isPendente ? 'bg-amber-50 text-amber-950 border-amber-200' : 'bg-blue-50 text-blue-950 border-blue-200';
-
-            h.innerHTML += `<div class="${bgClass} border p-3.5 rounded-xl self-start max-w-[90%] text-xs leading-relaxed shadow-sm">${mensagemSistemaHTML}</div>`;
-            h.scrollTop = h.scrollHeight;
-            
-            const input = document.getElementById('inputChat');
-            input.focus();
         }
 
         async function enviarChat() {
@@ -901,15 +717,16 @@ Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO (ou N/A) ; Justificativa ráp
             h.scrollTop = h.scrollHeight;
 
             const tempId = "msg-" + Date.now();
-            h.innerHTML += `<div id="${tempId}" class="bg-slate-200 p-3 rounded-xl self-start max-w-[85%] text-slate-600 italic flex items-center gap-2 text-xs"><span class="animate-bounce">●</span> Consultando diretrizes de controladoria...</div>`;
+            h.innerHTML += `<div id="${tempId}" class="bg-slate-200 p-3 rounded-xl self-start max-w-[85%] text-slate-600 italic flex items-center gap-2 text-xs"><span class="animate-bounce">●</span> Consultando diretrizes (Web/Base)...</div>`;
             h.scrollTop = h.scrollHeight;
 
             contextoChatTexto.push({ role: 'user', text: txt });
 
             let logConversaIA = contextoChatTexto.map(msg => `${msg.role === 'user' ? 'Usuário' : 'Consultor'}: ${msg.text}`).join('\n\n');
 
-            const res = await chamarAPI(logConversaIA, 'duvida');
-            
+            let res = await chamarAPI(logConversaIA, 'duvida');
+            res = res.replace(/```[a-z]*\n/gi, '').replace(/```/g, '').trim();
+
             document.getElementById(tempId).outerHTML = `<div class="bg-white text-slate-800 border border-slate-200 p-3.5 rounded-xl self-start max-w-[90%] leading-relaxed shadow-sm whitespace-pre-line text-xs">${res}</div>`;
             h.scrollTop = h.scrollHeight;
 
@@ -919,35 +736,24 @@ Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO (ou N/A) ; Justificativa ráp
                 contextoChatTexto.pop();
             }
 
-            // Salvamento do chat em tempo real no histórico do banco de dados
             if (contextoChatTexto.length > 0 && !res.startsWith("Falha de comunicação")) {
-                let primeiraPergunta = contextoChatTexto.find(m => m.role === 'user' && !m.text.includes("[INSTRUÇÃO DE SISTEMA]"))?.text;
-                if (!primeiraPergunta) {
-                    primeiraPergunta = contextoChatTexto.find(m => m.role === 'user')?.text || "Dúvida Geral sobre CCs e Plano de Contas";
-                }
-                
-                if (primeiraPergunta.includes("INSTRUÇÃO DE SISTEMA")) {
-                     primeiraPergunta = "Análise de Refinamento de Item";
-                } else if (primeiraPergunta.length > 60) {
-                     primeiraPergunta = primeiraPergunta.substring(0, 60) + "...";
-                }
+                let primeiraPergunta = contextoChatTexto.find(m => m.role === 'user' && !m.text.includes("[INSTRUÇÃO DE SISTEMA]"))?.text || "Dúvida de Classificação";
+                if (primeiraPergunta.length > 60) primeiraPergunta = primeiraPergunta.substring(0, 60) + "...";
 
                 let logCompleto = contextoChatTexto
-                    .filter(msg => !msg.text.includes("[INSTRUÇÃO DE SISTEMA]")) // Oculta as regras de sistema do histórico visual
+                    .filter(msg => !msg.text.includes("[INSTRUÇÃO DE SISTEMA]")) 
                     .map(msg => `**${msg.role === 'user' ? 'Você' : 'Consultor IA'}**:\n${msg.text}`)
                     .join('\n\n---\n\n');
 
                 try {
                     if (currentChatId) {
-                        // Se o chat já começou, apenas atualiza o documento existente
                         await db.collection("historico").doc(currentChatId).update({ resposta: logCompleto, data: new Date() });
                     } else {
-                        // Se for a primeira mensagem, cria um novo documento no histórico
                         const docRef = await db.collection("historico").add({ tipo: 'duvida', pergunta: primeiraPergunta, resposta: logCompleto, data: new Date() });
                         currentChatId = docRef.id;
                     }
                 } catch (e) {
-                    console.error("Erro ao salvar chat no histórico em tempo real:", e);
+                    console.error("Erro ao salvar chat no histórico:", e);
                 }
             }
         }
@@ -956,9 +762,7 @@ Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO (ou N/A) ; Justificativa ráp
             const id = `exemplos-${conta.replace(/[^a-zA-Z0-9]/g, '_')}`;
             const div = document.getElementById(id);
             if (!div) return;
-            
             div.classList.toggle('hidden');
-            
             if (!div.classList.contains('hidden') && !cacheExemplos[conta]) {
                 div.innerHTML = "<span class='text-blue-600 animate-pulse text-[11px] font-medium'>Buscando exemplos na base hospitalar...</span>";
                 const exemplos = await chamarAPI(conta, 'exemplo');
@@ -971,9 +775,7 @@ Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO (ou N/A) ; Justificativa ráp
             const id = `exemplos-cc-${idCC}`;
             const div = document.getElementById(id);
             if (!div) return;
-            
             div.classList.toggle('hidden');
-            
             if (!div.classList.contains('hidden') && !cacheExemplos[nomeCC]) {
                 div.innerHTML = "<span class='text-blue-600 animate-pulse text-[11px] font-medium'>Buscando exemplos de alocação...</span>";
                 const exemplos = await chamarAPI(nomeCC, 'exemplo-cc');
@@ -985,17 +787,16 @@ Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO (ou N/A) ; Justificativa ráp
         function renderPlanoAccordeon() {
             const container = document.getElementById('planoContasAccordion');
             container.innerHTML = "";
-            
             planoDeContas.forEach((m, index) => {
                 const div = document.createElement('div');
                 div.className = "border border-slate-200 rounded-xl overflow-hidden shadow-sm transition hover:border-blue-300";
-                
                 div.innerHTML = `
                     <button onclick="document.getElementById('modulo-acc-${index}').classList.toggle('hidden')" class="w-full text-left p-3 bg-slate-50 font-bold text-xs text-blue-950 hover:bg-blue-50 flex justify-between items-center transition">
                         <span>${m.modulo}</span>
                         <span class="text-[10px] text-slate-400">▼</span>
                     </button>
                     <div id="modulo-acc-${index}" class="hidden p-3 bg-white border-t border-slate-100 text-xs">
+                        <p class="text-[10px] text-slate-500 mb-2 italic border-b pb-1">${m.desc}</p>
                         <ul class="space-y-2">
                             ${m.contas.map(c => `
                                 <li>
@@ -1012,8 +813,64 @@ Item corrigido ; MÓDULO ; CONTA ; CENTRO DE CUSTO (ou N/A) ; Justificativa ráp
                 container.appendChild(div);
             });
         }
+
+        function renderCentrosCustosAccordeon() {
+            const container = document.getElementById('centrosCustosAccordion');
+            container.innerHTML = "";
+            
+            const grupos = {};
+            centrosDeCustosMatriz.forEach(cc => {
+                if(!grupos[cc.macro]) grupos[cc.macro] = [];
+                grupos[cc.macro].push(cc);
+            });
+
+            const cores = {
+                "Produtivos Assistenciais": "bg-blue-900",
+                "Auxiliares Assistenciais": "bg-emerald-800",
+                "Administrativos e Gestão": "bg-purple-900",
+                "Infraestrutura e Apoio": "bg-slate-800"
+            };
+            const coresLight = {
+                "Produtivos Assistenciais": "blue",
+                "Auxiliares Assistenciais": "emerald",
+                "Administrativos e Gestão": "purple",
+                "Infraestrutura e Apoio": "slate"
+            };
+
+            let i = 0;
+            for(let macro in grupos) {
+                const bgHeader = cores[macro] || "bg-slate-800";
+                const cLight = coresLight[macro] || "slate";
+                
+                let htmlStr = `
+                <div class="border border-slate-200 rounded-xl overflow-hidden shadow-sm">
+                    <div class="${bgHeader} text-white p-2.5 font-bold text-xs uppercase tracking-wider flex justify-between items-center">
+                        <span>${macro}</span>
+                        <span class="bg-black/20 text-[10px] px-2 py-0.5 rounded">${grupos[macro].length} CCs</span>
+                    </div>
+                    <div class="p-3 bg-slate-50 text-xs space-y-2">`;
+                
+                grupos[macro].forEach(cc => {
+                    const safeId = cc.nome.replace(/[^a-zA-Z0-9]/g, '_');
+                    htmlStr += `
+                        <div class="bg-white p-2 rounded border border-slate-200 transition hover:border-${cLight}-300">
+                            <button onclick="toggleExemplosCC('${cc.nome}', '${safeId}')" class="w-full text-left flex justify-between items-center group">
+                                <span class="font-semibold text-slate-800">${cc.nome}</span>
+                                <span class="text-[10px] text-slate-400 group-hover:text-${cLight}-600 transition">▼</span>
+                            </button>
+                            <p class="text-[10px] text-slate-500 font-normal mt-0.5 leading-relaxed">${cc.desc}</p>
+                            <div id="exemplos-cc-${safeId}" class="hidden pl-2 mt-2 text-slate-600 text-[10px] border-l-2 border-${cLight}-300 ml-1 py-1 leading-relaxed bg-slate-50 p-2 rounded"></div>
+                        </div>`;
+                });
+                
+                htmlStr += `</div></div>`;
+                container.innerHTML += htmlStr;
+                i++;
+            }
+        }
         
         renderPlanoAccordeon();
+        renderCentrosCustosAccordeon();
     </script>
 </body>
 </html>
