@@ -44,9 +44,89 @@
                 <img src="Prontil-Logo-768x768.png" alt="Logo Hospital Prontil" class="h-14 sm:h-16 md:h-20 w-auto object-contain shrink-0 no-select pointer-events-none">
                 
                 <div>
-                    <div class="flex items-center gap-2 flex-wrap">
+                    <div class="flex items-center gap-2 flex-wrap relative">
                         <span class="bg-blue-600 text-white font-black text-[10px] sm:text-xs px-2.5 py-1 rounded-md uppercase tracking-wider">Hospital Prontil</span>
-                        <span class="text-[11px] sm:text-xs text-slate-400 font-semibold">Versão 3.8 (10/08/2026 às 12:00) • Matriz CC & Plano de Contas</span>
+                        
+                        <!-- Hover Wrapper para o Histórico de Versões -->
+                        <div class="relative group inline-block z-50">
+                            <span class="text-[11px] sm:text-xs text-slate-500 hover:text-blue-700 font-semibold cursor-help border-b border-dashed border-slate-300 transition-colors flex items-center gap-1">
+                                Versão 3.8 (10/08/2026 às 13:53) <span>ℹ️</span>
+                            </span>
+                            
+                            <!-- Tooltip Popup (Changelog) -->
+                            <div class="absolute left-0 top-full mt-2 w-[280px] sm:w-[350px] bg-white border border-slate-200 rounded-xl shadow-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-200 overflow-hidden flex flex-col pointer-events-auto">
+                                <div class="bg-slate-50 border-b border-slate-100 px-3 py-2.5 font-bold text-[11px] text-blue-900 flex justify-between items-center shrink-0">
+                                    <span>📜 Histórico de Atualizações</span>
+                                    <span class="text-[9px] bg-blue-100 text-blue-700 px-1.5 py-0.5 rounded uppercase tracking-wider">Últimas 10</span>
+                                </div>
+                                
+                                <div class="max-h-[300px] overflow-y-auto scrollbar-thin p-3 sm:p-4 text-left">
+                                    <div class="flex flex-col gap-3 relative pl-3.5 border-l-2 border-slate-100">
+                                        <!-- V3.8 -->
+                                        <div class="relative">
+                                            <div class="absolute -left-[19px] top-1 w-2.5 h-2.5 bg-blue-500 rounded-full border-2 border-white shadow-sm"></div>
+                                            <p class="text-[10px] font-bold text-slate-800">v3.8 <span class="font-normal text-slate-400 font-mono ml-1">10/08/26</span></p>
+                                            <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Relocação da Medicina do Trabalho p/ Serv. Terceirizados (Mód 7.15).</p>
+                                        </div>
+                                        <!-- V3.7 -->
+                                        <div class="relative">
+                                            <div class="absolute -left-[19px] top-1 w-2.5 h-2.5 bg-slate-300 rounded-full border-2 border-white"></div>
+                                            <p class="text-[10px] font-bold text-slate-700">v3.7 <span class="font-normal text-slate-400 font-mono ml-1">08/08/26</span></p>
+                                            <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Evolução do Prompt p/ Chain of Thought (Triagem Externa + Refino).</p>
+                                        </div>
+                                        <!-- V3.6 -->
+                                        <div class="relative">
+                                            <div class="absolute -left-[19px] top-1 w-2.5 h-2.5 bg-slate-300 rounded-full border-2 border-white"></div>
+                                            <p class="text-[10px] font-bold text-slate-700">v3.6 <span class="font-normal text-slate-400 font-mono ml-1">07/08/26</span></p>
+                                            <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Reset de contexto ao acionar "Discutir com IA", evitando alucinações.</p>
+                                        </div>
+                                        <!-- V3.5 -->
+                                        <div class="relative">
+                                            <div class="absolute -left-[19px] top-1 w-2.5 h-2.5 bg-slate-300 rounded-full border-2 border-white"></div>
+                                            <p class="text-[10px] font-bold text-slate-700">v3.5 <span class="font-normal text-slate-400 font-mono ml-1">07/08/26</span></p>
+                                            <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Adição de botão p/ atalho direto de debate IA nos cards do lote.</p>
+                                        </div>
+                                        <!-- V3.4 -->
+                                        <div class="relative">
+                                            <div class="absolute -left-[19px] top-1 w-2.5 h-2.5 bg-slate-300 rounded-full border-2 border-white"></div>
+                                            <p class="text-[10px] font-bold text-slate-700">v3.4 <span class="font-normal text-slate-400 font-mono ml-1">07/08/26</span></p>
+                                            <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Travas de Segurança: Bloqueio DevTools, botão direito e F12.</p>
+                                        </div>
+                                        <!-- V3.3 -->
+                                        <div class="relative">
+                                            <div class="absolute -left-[19px] top-1 w-2.5 h-2.5 bg-slate-300 rounded-full border-2 border-white"></div>
+                                            <p class="text-[10px] font-bold text-slate-700">v3.3 <span class="font-normal text-slate-400 font-mono ml-1">07/08/26</span></p>
+                                            <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Ativação do Google Search Grounding (Acesso Web à IA).</p>
+                                        </div>
+                                        <!-- V3.2 -->
+                                        <div class="relative">
+                                            <div class="absolute -left-[19px] top-1 w-2.5 h-2.5 bg-slate-300 rounded-full border-2 border-white"></div>
+                                            <p class="text-[10px] font-bold text-slate-700">v3.2 <span class="font-normal text-slate-400 font-mono ml-1">06/08/26</span></p>
+                                            <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Refino nas regras corporativas de Luto (RH) e Tokens (Almoxarifado).</p>
+                                        </div>
+                                        <!-- V3.1 -->
+                                        <div class="relative">
+                                            <div class="absolute -left-[19px] top-1 w-2.5 h-2.5 bg-slate-300 rounded-full border-2 border-white"></div>
+                                            <p class="text-[10px] font-bold text-slate-700">v3.1 <span class="font-normal text-slate-400 font-mono ml-1">06/08/26</span></p>
+                                            <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Injeção de Semantic Grounding (Descrições profundas dos CCs).</p>
+                                        </div>
+                                        <!-- V2.4 -->
+                                        <div class="relative">
+                                            <div class="absolute -left-[19px] top-1 w-2.5 h-2.5 bg-slate-300 rounded-full border-2 border-white"></div>
+                                            <p class="text-[10px] font-bold text-slate-700">v2.4 <span class="font-normal text-slate-400 font-mono ml-1">06/08/26</span></p>
+                                            <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Blindagem Anti-Complacência e bloqueio de "Zero-Shot Guessing".</p>
+                                        </div>
+                                        <!-- V2.3 -->
+                                        <div class="relative">
+                                            <div class="absolute -left-[19px] top-1 w-2.5 h-2.5 bg-slate-300 rounded-full border-2 border-white"></div>
+                                            <p class="text-[10px] font-bold text-slate-700">v2.3 <span class="font-normal text-slate-400 font-mono ml-1">05/08/26</span></p>
+                                            <p class="text-[10px] text-slate-500 leading-tight mt-0.5">Aprimoramento do Histórico com leitura narrativa contínua.</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-extrabold text-blue-950 mt-2 tracking-tight">Classificação de Centros de Custos & ERP</h1>
                     <p class="text-xs md:text-sm text-slate-600 mt-1">Classifique notas, automatize auditorias de lançamentos e consulte a matriz corporativa de custos.</p>
